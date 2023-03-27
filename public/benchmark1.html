@@ -1,6 +1,29 @@
 <html>
     <head>
         <title>Fizz Run Game Design Document</title>
+        <script type="module">
+            // Import the functions you need from the SDKs you need
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js";
+            import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-analytics.js";
+            // TODO: Add SDKs for Firebase products that you want to use
+            // https://firebase.google.com/docs/web/setup#available-libraries
+
+            // Your web app's Firebase configuration
+            // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+            const firebaseConfig = {
+                apiKey: "AIzaSyDyIkL1YhnIaavtrV8LJ3F-3cnMMHRyRIQ",
+                authDomain: "fizz-run.firebaseapp.com",
+                projectId: "fizz-run",
+                storageBucket: "fizz-run.appspot.com",
+                messagingSenderId: "44155211332",
+                appId: "1:44155211332:web:74c3fdb317021068fc3611",
+                measurementId: "G-122QH3Q1C2",
+            };
+
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+            const analytics = getAnalytics(app);
+        </script>
     </head>
 
     <body>
@@ -57,9 +80,9 @@
             </p>
 
             <p>
-                Every 2 levels you will save one of your friends, allowing for
-                you to switch them in said levels to help you solve the puzzles
-                in new and interesting ways.
+                In the first 4 levels you will save all of your friends, and as
+                you save them it will allow you to switch them in said levels to
+                help you solve the puzzles in new and interesting ways.
             </p>
             <br />
 
@@ -81,12 +104,15 @@
             <ul>
                 <li>Coca-Cola:</li>
                 <li>Fanta:</li>
-                <li>Sprite:</li>
+                <li>
+                    Sprite: Shoots out lemon particles and deals slow acidic
+                    damage to enemies. Can also corrode cracked walls.
+                </li>
             </ul>
 
             <p>
-                To change characters the player has to press the “” key and they
-                will be allowed to switch with no restriction.
+                To change characters the player has to press the “F” key and
+                they will be allowed to switch with no restriction.
             </p>
 
             <p>
@@ -119,16 +145,13 @@
                 <li><strong>RIGHT-ARROW</strong> - Move Right (same as D)</li>
                 <li><strong>SPACE</strong> - Jump</li>
                 <li>
-                    <strong>Character Selection Buttons</strong> You can change
-                    your character whenever you like when you press the
-                    character selection button. It will cycle between the
-                    characters as you press it.
+                    <strong>F</strong> Character selection. It will cycle
+                    between the characters as you press it.
                 </li>
                 <li>
                     <strong>ESC</strong> - This pauses the game and presents a
-                    pop-up window to the player asking them to continue when
-                    they are ready. If a game is not in progress, ESC does
-                    nothing.
+                    pop-up window to the player displaying buttons to resume or
+                    quitting back to the title screen.
                 </li>
             </ul>
             <br />
@@ -142,24 +165,18 @@
                     <strong>Splash Screen</strong> - The splash screen GUI
                     simply presents a game logo and a Start button for the user
                     to press when they are ready to play. Upon pressing it, a
-                    brief scripted sequence is played explaining a little about
-                    Spike and the back story for the game. While playing the
-                    message "Press ESC to Skip" should be displayed at the
-                    bottom of the screen. If pressed, the game should
-                    immediately start.
+                    brief scripted sequence is played explaining the backstory
+                    for the game. While playing the message "Press ESC to Skip''
+                    should be displayed at the bottom of the screen. If pressed,
+                    the game should immediately start.
                 </li>
                 <br />
-                Splash Screen - when the game first loads it should welcome the
-                user in with a graphic that intrigues/attracts the user. It's
-                supposed to tempt a player, getting them to want to play the
-                game. Clicking on that screen should bring the user to the main
-                menu.
-
-                <li><strong>Main Menu</strong></li>
+                <li>
+                    <strong>Main Menu</strong> This menu will have buttons to
+                    play/resume from last level , a select level button, a
+                    controls button, and a help button.
+                </li>
                 <br />
-                Main Menu - this screen should let the user start the game as
-                well as go to a levels selection screen, a controls screen, and
-                a help screen.
                 <li><strong>Level Selection Screen</strong></li>
                 <br />
                 Levels Selection Screen - this screen should nicely present the
@@ -237,8 +254,8 @@
                         <li>Popped Green Balloons/Green Balloons Remaining</li>
                         <li>Popped Blue Balloons/Blue Balloons Remaining</li>
                     </ul>
-                    In addition, three buttons will be be part of the in-game
-                    GUI, meaning overlayed on top of the game world. These are
+                    In addition, three buttons will be part of the in-game GUI,
+                    meaning overlayed on top of the game world. These are
                     buttons for selecting Red, Green, and Blue suits. These
                     buttons will only be selectable when Spike is standing in
                     front of the changing room door. If Spike is in front of the
@@ -283,21 +300,13 @@
                 <br />
 
                 <li>
-                    <strong>Ceiling, Floor, & Wall Tiles</strong> - The test
-                    chamber will have multiple floors and platforms to jump onto
-                    and off of. We'll use simple tiles for all
-                    walkable/collidable surfaces. These tiles will have to
-                    clearly define where the walkable surface is. We'll use
-                    straight, dark grey, slightly grooved walking surfaces.
+                    <strong>Ceiling, Floor, & Wall Tiles</strong> - The 6 levels
+                    will delve into different parts of the city, ranging from a
+                    park, to sewers, to busy streets. We'll use simple tiles for
+                    all walkable/collidable surfaces. These tiles will have to
+                    clearly define where the walkable surface is.
                 </li>
                 <br />
-
-                <li>
-                    <strong>Chamber Background Tiles</strong> - For
-                    non-collidable tiles that will go in the background of the
-                    chamber, we'll just use a black and white tile set arranged
-                    in some pattern.
-                </li>
             </ul>
             <br />
 
@@ -310,12 +319,12 @@
             <ul>
                 <li><strong>Walking</strong></li>
                 <li><strong>Landing on a Platform</strong></li>
-                <li><strong>Balloon Popping</strong></li>
-                <li><strong>Acid Absorbed by Suit</strong></li>
-                <li><strong>Acid Penetrating Suit</strong></li>
-                <li><strong>Spike Dying</strong></li>
-                <li><strong>Time Running Out</strong></li>
-                <li><strong>Spike Celebrating Clearing a Level</strong></li>
+                <li><strong>Dying</strong></li>
+                <li><strong></strong></li>
+                <li><strong></strong></li>
+                <li><strong></strong></li>
+                <li><strong></strong></li>
+                <li><strong></strong></li>
             </ul>
             <br />
 
