@@ -1,38 +1,15 @@
 <html>
     <head>
         <title>Fizz Run Game Design Document</title>
-        <script type="module">
-            // Import the functions you need from the SDKs you need
-            import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js";
-            import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-analytics.js";
-            // TODO: Add SDKs for Firebase products that you want to use
-            // https://firebase.google.com/docs/web/setup#available-libraries
-
-            // Your web app's Firebase configuration
-            // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-            const firebaseConfig = {
-                apiKey: "AIzaSyDyIkL1YhnIaavtrV8LJ3F-3cnMMHRyRIQ",
-                authDomain: "fizz-run.firebaseapp.com",
-                projectId: "fizz-run",
-                storageBucket: "fizz-run.appspot.com",
-                messagingSenderId: "44155211332",
-                appId: "1:44155211332:web:74c3fdb317021068fc3611",
-                measurementId: "G-122QH3Q1C2",
-            };
-
-            // Initialize Firebase
-            const app = initializeApp(firebaseConfig);
-            const analytics = getAnalytics(app);
-        </script>
     </head>
 
     <body>
-        <h2 style="width: 750px" align="center">
+        <h2 style="width: 100%" align="center">
             Fizz Run<br />
             Game Design Document
         </h2>
 
-        <h4 style="width: 750px" align="center">
+        <h4 style="width: 100%" align="center">
             by Rahul Sarker, Kevin Chen, Alan Huang
         </h4>
 
@@ -102,8 +79,11 @@
             </p>
 
             <ul>
-                <li>Coca-Cola:</li>
-                <li>Fanta:</li>
+                <li>Coca-Cola: Throws a cola bomb that blinds enemies.</li>
+                <li>
+                    Fanta: Can summon a healing bubble that also protects the
+                    sprite from projectiles
+                </li>
                 <li>
                     Sprite: Shoots out lemon particles and deals slow acidic
                     damage to enemies. Can also corrode cracked walls.
@@ -115,19 +95,47 @@
                 they will be allowed to switch with no restriction.
             </p>
 
+            <p>There also exists powerups across each level such as:</p>
+
+            <ul>
+                <li>
+                    Mentos: Increases the fizz meter of the sprite. If full, a
+                    countdown will start before unleashing a giant explosion.
+                    This explosion breaks walls and one shots all enemies on
+                    screen
+                </li>
+                <li>
+                    Sugar: Increase the movement speed of the sprite for a
+                    certain amount of time.
+                </li>
+                <li>
+                    Ice: Can make the drink icy and freeze water when it walks
+                    over it. Also increases damage for a certain amount of time.
+                </li>
+            </ul>
+
             <p>
-                There exists multiple different types of obstacles that prevent
-                the player from reaching the destination that must be maneuvered
-                around:
+                There exists multiple different types of obstacles and enemies
+                that prevent the player from reaching the destination that the
+                sprite must interact with or maneuver around:
             </p>
 
             <ul>
-                <li></li>
-                <li></li>
-                <li></li>
+                <li>
+                    Water pools: Insta kills the player unless they have the Ice
+                    powerup
+                </li>
+                <li>Cracked walls</li>
+                <li>Security guards</li>
+                <li>Lasers</li>
+                <li>Boxes</li>
+                <li>Pressure Plates</li>
             </ul>
 
-            <p>The abilities of the characters affect these obstacles</p>
+            <p>
+                The abilities of the characters affect these obstacles and
+                enemies
+            </p>
 
             <br />
 
@@ -172,98 +180,61 @@
                 </li>
                 <br />
                 <li>
-                    <strong>Main Menu</strong> This menu will have buttons to
-                    play/resume from last level , a select level button, a
-                    controls button, and a help button.
+                    <strong>Main Menu</strong> - This menu will have a select
+                    level button, a controls button, and a help button.
                 </li>
                 <br />
-                <li><strong>Level Selection Screen</strong></li>
-                <br />
-                Levels Selection Screen - this screen should nicely present the
-                playable levels such that the user may select one to play. Note
-                that levels will have to be unlocked in the final version of the
-                game. Meaning, the user will have to complete the first to play
-                the second, but for the first two builds you'll want to navigate
-                at will. For the final released game the user will be able to go
-                to this screen to navigate to levels they've already completed
-                as well as the next one up.
                 <li>
-                    <strong>In-Game Menu</strong> - While the game is in
-                    progress, we'll always have a game menu that allows the
-                    player to select from the following options:
+                    <strong>Level Selection Screen</strong> - This screen will
+                    list all the levels playable in the game. However, the
+                    player can only play a level when they completed the prior
+                    one first. When the player first plays the game, only level
+                    1 is unlocked and the 5 other levels are locked.
+                </li>
+                <br />
+                <li>
+                    <strong>In-Game Menu</strong> - When a player is playing a
+                    level, the ESC key can be pressed to pause the game. The
+                    pause menu will have the following buttons:
                     <ul>
                         <li>
-                            <strong>New Game</strong> - If a game is in
-                            progress, first we'll pop up a dialog to make sure
-                            the user really wants to quit the current game. If
-                            we conclude the user really wants to start a game,
-                            then the game state is reset and begun.
-                        </li>
-                        <li>
-                            <strong>Pause Game</strong> - This button is
-                            deactivated when a game is not in progress. If
-                            pressed, it will produce the same effect as the ESC
-                            key.
+                            <strong>Restart game</strong> - If pressed, the
+                            current level will be restarted.
                         </li>
                         <li>
                             <strong>Display Controls</strong> - If pressed, the
                             game will display an info screen that includes a
-                            description of all game controls.
+                            description of all game controls (keyboard and
+                            mouse).
                         </li>
                         <li>
-                            <strong>Best Times</strong> - If pressed, the game
-                            will display an info screen with the fastest times
-                            for clearing the level.
+                            <strong>Help</strong> - If pressed, the game will
+                            display information about the game (like obstacle
+                            information) and the creators.
                         </li>
                         <li>
-                            <strong>About</strong> - If pressed, the game will
-                            display an info screen with information about the
-                            game author.
-                        </li>
-                        <li>
-                            <strong>Exit</strong> - If pressed, the game program
-                            will exit.
+                            <strong>Main Menu</strong> - If pressed, the level
+                            will be abandoned and the game will return to the
+                            main menu.
                         </li>
                     </ul>
                 </li>
                 <br />
-                Controls Screen - this screen should neatly explain what user
-                input should be used (i.e. keyboard and mouse) to play the game.
-                Help Screen - this screen should tell the backstory for the
-                game, including explaining about any important characters. It
-                should also specify who the game developers are and finally,
-                list all of your cheat codes here. These are important for your
-                development team to be able to load and then jump to gameplay
-                scenarios for the purpose of testing. The graders will also need
-                these as well. Think of all the cheat codes you'll need in order
-                to test gameplay components without first having to traverse
-                entire levels. In-Game Screen - must have a means for
-                pausing/unpausing the game as well as whatever in-game controls
-                are necessary.
 
                 <li>
-                    <strong>In-Game GUI</strong> - Once a game starts, a
-                    5-4-3-2-1-Begin sequence is counted down and displayed for
-                    the player to see. At Begin, the changing room door opens
-                    and Spike pops out in his Red protective suit. Balloons will
-                    begin to be deployed about the chamber. While playing the
-                    following will be displayed at all times:
+                    <strong>In-Game GUI</strong> - Once a level starts,
+                    Coca-cola will be seen at the level spawn. As the sprite
+                    moves around, the viewport will follow it. This may reveal
+                    several obstacles and enemies that exist on the level map.
+                    While playing the following will be displayed at all times:
                     <ul>
-                        <li>Time Remaining</li>
-                        <li>Popped Red Balloons/Red Balloons Remaining</li>
-                        <li>Popped Green Balloons/Green Balloons Remaining</li>
-                        <li>Popped Blue Balloons/Blue Balloons Remaining</li>
+                        <li>Health Remaining Bar</li>
+                        <li>Fizz Meter Bar</li>
                     </ul>
-                    In addition, three buttons will be part of the in-game GUI,
-                    meaning overlayed on top of the game world. These are
-                    buttons for selecting Red, Green, and Blue suits. These
-                    buttons will only be selectable when Spike is standing in
-                    front of the changing room door. If Spike is in front of the
-                    door and the player clicks on a suit colored differently
-                    than the one Spike is currently wearing, then the door will
-                    slide open, Spike will disappear inside momentarily, the
-                    door will then slide closed, and then will slide open again,
-                    with Spike popping out in his new suit.
+                    In addition, a small HUD will be shown to show which soda
+                    flavor is currently selected as the sprite. Next to it, the
+                    abilities will be shown with their logo and cooldown if
+                    there is one at the moment.
                 </li>
             </ul>
             <br />
@@ -282,19 +253,26 @@
                     <ul>
                         <li>Walking Right</li>
                         <li>Walking Left</li>
-                        <li>Jumping Right</li>
-                        <li>Jumping Left</li>
                         <li>Jumping Up</li>
                         <li>Taking Damage</li>
                         <li>Dying</li>
+                        <li>Using Main Ability</li>
                     </ul>
                 </li>
                 <br />
                 <li>
-                    <strong>Obstacles</strong> - Simple sprites, each require
-                    animations for:
+                    <strong>Obstacles</strong> - Simple sprites:
                     <ul>
-                        <li>r</li>
+                        <li>Laser</li>
+                        <li>Box</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Enemies</strong> - They can move or are stationary,
+                    each require animations for:
+                    <ul>
+                        <li>Attacking</li>
+                        <li>Moving</li>
                     </ul>
                 </li>
                 <br />
@@ -304,7 +282,9 @@
                     will delve into different parts of the city, ranging from a
                     park, to sewers, to busy streets. We'll use simple tiles for
                     all walkable/collidable surfaces. These tiles will have to
-                    clearly define where the walkable surface is.
+                    clearly define where the walkable surface is. Breakable
+                    walls will use a different texture (most likely an overlay
+                    over an already existing texture).
                 </li>
                 <br />
             </ul>
@@ -318,13 +298,14 @@
             </p>
             <ul>
                 <li><strong>Walking</strong></li>
-                <li><strong>Landing on a Platform</strong></li>
+                <li><strong>Jumping</strong></li>
                 <li><strong>Dying</strong></li>
-                <li><strong></strong></li>
-                <li><strong></strong></li>
-                <li><strong></strong></li>
-                <li><strong></strong></li>
-                <li><strong></strong></li>
+                <li><strong>Picking Up Powerups</strong></li>
+                <li><strong>Using Abilities</strong></li>
+                <li><strong>Enemies taking damage</strong></li>
+                <li><strong>Enemies dying</strong></li>
+                <li><strong>Laser beam ambient sound</strong></li>
+                <li><strong>Box moving</strong></li>
             </ul>
             <br />
 
@@ -332,10 +313,36 @@
 
             <p>
                 Each of the 6 levels will have their own accompanying music
-                track to differentiate them from each other.
+                track to differentiate them from each other. Level complete
+                music will be played when the player finishes a level.
             </p>
             <br />
 
+            <!-- UI MockUp-->
+
+            <h3>Splash Screen</h3>
+
+            <img src="./assets/splash.png" alt="Splash Screen" />
+
+            <h3>Main Menu</h3>
+
+            <img src="./assets/main.png" alt="Main Menu" />
+
+            <h3>Level Selection Screen</h3>
+
+            <img src="./assets/levels.png" alt="Level Selection" />
+
+            <h3>Controls Screen</h3>
+
+            <img src="./assets/controls.png" alt="Controls Screen" />
+
+            <h3>Help Screen</h3>
+
+            <img src="./assets/help.png" alt="Help Screen" />
+
+            <h3>In Game GUI</h3>
+
+            <img src="./assets/ingame.png" alt="In Game GUI" />
             <hr />
 
             <p style="font-size: 9pt; text-align: center">
