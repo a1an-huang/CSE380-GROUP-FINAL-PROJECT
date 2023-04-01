@@ -6,6 +6,8 @@ import SceneManager from "../../Wolfie2D/Scene/SceneManager";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import HW4Level2 from "./HW3Level2";
 
+import { FizzRunResourceKeys } from "./HW3Level";
+
 /**
  * The first level for HW4 - should be the one with the grass and the clouds.
  */
@@ -68,6 +70,10 @@ export default class Level1 extends HW3Level {
         this.load.audio(this.levelMusicKey, Level1.LEVEL_MUSIC_PATH);
         this.load.audio(this.jumpAudioKey, Level1.JUMP_AUDIO_PATH);
         this.load.audio(this.tileDestroyedAudioKey, Level1.TILE_DESTROYED_PATH);
+
+        // LOAD IN REQUIRED ASSETS FOR IN GAME UI (done here because load scene not called in Hw3Level)
+        this.load.image(FizzRunResourceKeys.SPRITE_LOGO, "fizzrun_assets/images/sprite_logo.png");
+        this.load.image(FizzRunResourceKeys.SPRITE_ABILITY, "fizzrun_assets/images/sprite_ability.png");
     }
 
     /**
@@ -78,6 +84,10 @@ export default class Level1 extends HW3Level {
         this.load.keepAudio(this.levelMusicKey);
         this.load.keepAudio(this.jumpAudioKey);
         this.load.keepAudio(this.tileDestroyedAudioKey);
+
+        // Keep UI assets
+        this.load.keepImage(FizzRunResourceKeys.SPRITE_LOGO);
+        this.load.keepImage(FizzRunResourceKeys.SPRITE_ABILITY);
     }
 
     public startScene(): void {
