@@ -25,7 +25,6 @@ export default class MainMenu extends Scene {
 
     public startScene(): void {
         this.addUILayer(MenuLayers.MAIN);
-        let center = this.viewport.getCenter();
 
         // Center the viewport
         let size = this.viewport.getHalfSize();
@@ -34,7 +33,7 @@ export default class MainMenu extends Scene {
 
         // Add the splash image
         let menuSplash = this.add.sprite("MAINMENU_SPLASH", MenuLayers.MAIN);
-        menuSplash.position.set(center.x, center.y);
+        menuSplash.position.set(size.x, size.y);
         menuSplash.scale.set(1, 1.3);
 
         // Create a play button
