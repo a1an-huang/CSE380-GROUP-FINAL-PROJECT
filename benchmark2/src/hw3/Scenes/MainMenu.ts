@@ -20,23 +20,29 @@ export default class MainMenu extends Scene {
     public loadScene(): void {
         // Load the menu song
         this.load.audio(MainMenu.MUSIC_KEY, MainMenu.MUSIC_PATH);
+        this.load.image("MAINMENU_SPLASH", "fizzrun_assets/images/mainmenu_splash.png");
     }
 
     public startScene(): void {
         this.addUILayer(MenuLayers.MAIN);
+        let center = this.viewport.getCenter();
 
         // Center the viewport
         let size = this.viewport.getHalfSize();
         this.viewport.setFocus(size);
         this.viewport.setZoomLevel(1);
 
+        // Add the splash image
+        let menuSplash = this.add.sprite("MAINMENU_SPLASH", MenuLayers.MAIN);
+        menuSplash.position.set(center.x, center.y);
+        menuSplash.scale.set(1, 1.3);
+
         // Create a play button
-        let playBtn = <Button>this.add.uiElement(UIElementType.BUTTON, MenuLayers.MAIN, {position: new Vec2(size.x, size.y), text: "Play Game"});
-        playBtn.backgroundColor = Color.TRANSPARENT;
-        playBtn.borderColor = Color.WHITE;
+        let playBtn = <Button>this.add.uiElement(UIElementType.BUTTON, MenuLayers.MAIN, {position: new Vec2(size.x, size.y+200), text: "PLAY"});
+        playBtn.backgroundColor = new Color(255, 0, 64, 1);
         playBtn.borderRadius = 0;
+        playBtn.font = "Arial";
         playBtn.setPadding(new Vec2(50, 10));
-        playBtn.font = "PixelSimple";
 
         // When the play button is clicked, go to the next scene
         playBtn.onClick = () => {
