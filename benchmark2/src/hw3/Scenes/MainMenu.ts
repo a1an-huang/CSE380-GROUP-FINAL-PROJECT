@@ -1,7 +1,10 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
+import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
+import Layer from "../../Wolfie2D/Scene/Layer";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
 import Level1 from "./HW3Level1";
@@ -9,7 +12,19 @@ import Level1 from "./HW3Level1";
 
 // Layers for the main menu scene
 export const MenuLayers = {
-    MAIN: "MAIN"
+    SPLASH: "SPLASH", // Screen when first loaded
+    MAIN: "MAIN", //Screen with level selection, help, and controls
+    CONTROLS: "CONTROLS",
+    LEVELSELECT: "LEVELSELECT",
+    HELP: "HELP",
+} as const;
+
+const MainMenuEvent = {
+    // NOTE Maybe add splash event later
+	MENU: "MENU",
+    CONTROLS: "CONTROLS",
+    LEVELSELECT: "LEVELSELECT",
+    HELP: "HELP",
 } as const;
 
 export default class MainMenu extends Scene {
@@ -17,35 +32,66 @@ export default class MainMenu extends Scene {
     public static readonly MUSIC_KEY = "MAIN_MENU_MUSIC";
     public static readonly MUSIC_PATH = "hw4_assets/music/menu.mp3";
 
+    private splashScreen: Layer;
+    private mainMenuScreen: Layer;
+    private controlsScreen: Layer;
+    private levelSelectScreen: Layer;
+    private helpScreen: Layer;
+    private layerArr: Layer[];
+
     public loadScene(): void {
         // Load the menu song
         this.load.audio(MainMenu.MUSIC_KEY, MainMenu.MUSIC_PATH);
-        this.load.image("MAINMENU_SPLASH", "fizzrun_assets/images/mainmenu_splash.png");
+
+        // Load each menu bg image*
+        this.load.image("SPLASH_BG", "fizzrun_assets/images/splash_bg.png");
+        this.load.image("MENU_BG", "fizzrun_assets/images/menu_bg.png");
+        this.load.image("CONTROLS_BG", "fizzrun_assets/images/controls_bg.png");
+        this.load.image("LEVELSELECT_BG", "fizzrun_assets/images/levelselect_bg.png");
     }
 
     public startScene(): void {
-        this.addUILayer(MenuLayers.MAIN);
-
         // Center the viewport
         let size = this.viewport.getHalfSize();
         this.viewport.setFocus(size);
         this.viewport.setZoomLevel(1);
 
-        // Add the splash image
-        let menuSplash = this.add.sprite("MAINMENU_SPLASH", MenuLayers.MAIN);
-        menuSplash.position.set(size.x, size.y);
-        menuSplash.scale.set(1, 1.3);
+        /**********/
+        //SECTION To add a new layer, do the following* (after adding bg image to loadScene if needed):
 
-        // Create a play button
-        let playBtn = <Button>this.add.uiElement(UIElementType.BUTTON, MenuLayers.MAIN, {position: new Vec2(size.x, size.y+200), text: "PLAY"});
-        playBtn.backgroundColor = new Color(255, 0, 64, 1);
-        playBtn.borderRadius = 0;
-        playBtn.font = "Arial";
-        playBtn.setPadding(new Vec2(50, 10));
+        // Add each layer here*
+        this.splashScreen = this.addUILayer(MenuLayers.SPLASH);
+        this.mainMenuScreen = this.addUILayer(MenuLayers.MAIN);
+        this.controlsScreen = this.addUILayer(MenuLayers.CONTROLS);
+        this.levelSelectScreen = this.addUILayer(MenuLayers.LEVELSELECT);
+        this.helpScreen = this.addUILayer(MenuLayers.HELP);
+        
+        // Create each layer here*
+        this.createSplashScreen();
+        this.createMainMenuScreen();
+        this.createControlsScreen();
+        this.createLevelSelectScreen();
+        this.createHelpScreen();
 
-        // When the play button is clicked, go to the next scene
-        playBtn.onClick = () => {
-            this.sceneManager.changeToScene(Level1);
+        // Subscribe to an event to change menu screens*
+        this.receiver.subscribe(MainMenuEvent.MENU);
+        this.receiver.subscribe(MainMenuEvent.CONTROLS);
+        this.receiver.subscribe(MainMenuEvent.LEVELSELECT);
+        this.receiver.subscribe(MainMenuEvent.HELP);
+
+        //Add to layer array if needed*
+        this.layerArr = [
+            this.splashScreen, this.mainMenuScreen, this.controlsScreen, 
+            this.levelSelectScreen, this.helpScreen
+        ];
+
+        /**********/
+
+        // Hide each layer here
+        for (let layer of this.layerArr) {
+            if (layer !== this.splashScreen) {
+                layer.setHidden(true);
+            }
         }
 
         // Scene has started, so start playing music
@@ -55,6 +101,158 @@ export default class MainMenu extends Scene {
     public unloadScene(): void {
         // The scene is being destroyed, so we can stop playing the song
         this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
+    }
+
+    public updateScene(): void {
+        while(this.receiver.hasNextEvent()){
+            this.handleEvent(this.receiver.getNextEvent());
+        }
+    }
+
+    protected handleEvent(event: GameEvent): void {
+        switch(event.type) {
+            case MainMenuEvent.MENU: {
+                for (let layer of this.layerArr) {
+                    if (layer !== this.mainMenuScreen) {
+                        layer.setHidden(true);
+                    }
+                    else {
+                        layer.setHidden(false);
+                    }
+                }
+                break;
+            }
+            case MainMenuEvent.CONTROLS: {
+                for (let layer of this.layerArr) {
+                    if (layer !== this.controlsScreen) {
+                        layer.setHidden(true);
+                    }
+                    else {
+                        layer.setHidden(false);
+                    }
+                }
+                break;
+            }           
+            case MainMenuEvent.LEVELSELECT: {
+                for (let layer of this.layerArr) {
+                    if (layer !== this.levelSelectScreen) {
+                        layer.setHidden(true);
+                    }
+                    else {
+                        layer.setHidden(false);
+                    }
+                }
+                break;
+            }
+            case MainMenuEvent.HELP: {
+                for (let layer of this.layerArr) {
+                    if (layer !== this.helpScreen) {
+                        layer.setHidden(true);
+                    }
+                    else {
+                        layer.setHidden(false);
+                    }
+                }
+                break;
+            }           
+            default: {
+                throw new Error(`Unhandled event caught in MainMenu: "${event.type}"`);
+            }
+        }
+    }
+
+    protected createSplashScreen(): void {
+        let size = this.viewport.getHalfSize();
+        // Add the splash image
+        let menuSplash = this.add.sprite("SPLASH_BG", MenuLayers.SPLASH);
+        menuSplash.position.set(size.x, size.y);
+        menuSplash.scale.set(1, 1.3);
+
+        // Create a play button
+        let playBtn = <Button>this.add.uiElement(UIElementType.BUTTON, MenuLayers.SPLASH, {position: new Vec2(size.x, size.y+200), text: "PLAY"});
+        playBtn.backgroundColor = new Color(255, 0, 64, 1);
+        playBtn.borderRadius = 0;
+        playBtn.font = "Arial";
+        playBtn.setPadding(new Vec2(50, 10));
+
+        playBtn.onClickEventId = MainMenuEvent.MENU;
+    }
+
+    protected createMainMenuScreen(): void {
+        let size = this.viewport.getHalfSize();
+        // Add the menu bg image
+        let menuSplash = this.add.sprite("MENU_BG", MenuLayers.MAIN);
+        menuSplash.position.set(size.x, size.y);
+        menuSplash.scale.set(1, 1.3);
+
+        // Create each button
+        let levelSelectBtn = <Button>this.add.uiElement(UIElementType.BUTTON, MenuLayers.MAIN, {position: new Vec2(size.x, size.y-100), text: "Level Selection"});
+        let helpBtn = <Button>this.add.uiElement(UIElementType.BUTTON, MenuLayers.MAIN, {position: new Vec2(size.x, size.y), text: "Help"});
+        let controlsBtn = <Button>this.add.uiElement(UIElementType.BUTTON, MenuLayers.MAIN, {position: new Vec2(size.x, size.y+100), text: "Controls"});
+        let btnArr = [levelSelectBtn, helpBtn, controlsBtn];
+        for (const btn of btnArr) {
+            btn.backgroundColor = new Color(107, 192, 72, 1);
+            btn.borderRadius = 0;
+            btn.font = "Arial";
+            btn.setPadding(new Vec2(50, 10));
+        }
+        levelSelectBtn.onClickEventId = MainMenuEvent.LEVELSELECT;
+        helpBtn.onClickEventId = MainMenuEvent.HELP;
+        controlsBtn.onClickEventId = MainMenuEvent.CONTROLS;
+    }
+
+    protected createControlsScreen(): void {
+        let size = this.viewport.getHalfSize();
+        
+        let controlsSplash = this.add.sprite("CONTROLS_BG", MenuLayers.CONTROLS);
+        controlsSplash.position.set(size.x, size.y);
+        controlsSplash.scale.set(1, 1.3);
+
+        let backBtn = <Button>this.add.uiElement(UIElementType.BUTTON, MenuLayers.CONTROLS, {position: new Vec2(size.x, size.y+300), text: "Back"});
+        backBtn.backgroundColor = new Color(107, 192, 72, 1);
+        backBtn.borderRadius = 0;
+        backBtn.font = "Arial";
+        backBtn.setPadding(new Vec2(50, 10));        
+        backBtn.onClickEventId = MainMenuEvent.MENU;
+    }
+
+    protected createLevelSelectScreen(): void {
+        let size = this.viewport.getHalfSize();
+
+        let levelSelectSplash = this.add.sprite("LEVELSELECT_BG", MenuLayers.LEVELSELECT);
+        levelSelectSplash.position.set(size.x, size.y);
+        levelSelectSplash.scale.set(1, 1.3);
+
+        let backBtn = <Button>this.add.uiElement(UIElementType.BUTTON, MenuLayers.LEVELSELECT, {position: new Vec2(size.x, size.y+300), text: "Back"});
+        backBtn.backgroundColor = new Color(107, 192, 72, 1);
+        backBtn.borderRadius = 0;
+        backBtn.font = "Arial";
+        backBtn.setPadding(new Vec2(50, 10));        
+        backBtn.onClickEventId = MainMenuEvent.MENU;
+
+        // TODO TEMP PLAY BUTTON JUST TO GET INTO A GAME, CHANGE LATER
+        let playBtn = <Button>this.add.uiElement(UIElementType.BUTTON, MenuLayers.LEVELSELECT, {position: new Vec2(size.x, size.y+200), text: "Play"});
+        playBtn.onClick = () => {
+            this.sceneManager.changeToScene(Level1);
+        }
+
+    }
+
+    protected createHelpScreen(): void {
+        let size = this.viewport.getHalfSize();
+
+        let helpBg = this.add.graphic(GraphicType.RECT, MenuLayers.HELP, {
+            size: new Vec2(1200, 800),
+            position: new Vec2(size.x, size.y),
+        });
+        helpBg.color = new Color(107, 192, 72, 1);
+
+        let backBtn = <Button>this.add.uiElement(UIElementType.BUTTON, MenuLayers.HELP, {position: new Vec2(size.x, size.y+300), text: "Back"});
+        backBtn.backgroundColor = new Color(153, 217, 234, 1);
+        backBtn.borderRadius = 0;
+        backBtn.font = "Arial";
+        backBtn.setPadding(new Vec2(50, 10));        
+        backBtn.onClickEventId = MainMenuEvent.MENU;
     }
 }
 
