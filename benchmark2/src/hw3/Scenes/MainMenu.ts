@@ -249,6 +249,24 @@ export default class MainMenu extends Scene {
         controlsSplash.position.set(size.x, size.y);
         controlsSplash.scale.set(1, 1.3);
 
+        let controlsList: Array<String> = [
+            "A - Move Left",
+            "D - Move Right",
+            "SPACE - Jump",
+            "F - Cycle Character",
+            "E - Use Special Ability",
+            "X - Use Fizz",
+            "ESC - Pauses the game",
+            "Aim with mouse input",
+        ];
+
+        for (let i = 0; i < controlsList.length; i++) {
+            this.add.uiElement(UIElementType.LABEL, MenuLayers.CONTROLS, {
+                position: new Vec2(size.x, size.y - 200 + i * 50),
+                text: controlsList[i],
+            });
+        }
+
         let backBtn = <Button>this.add.uiElement(
             UIElementType.BUTTON,
             MenuLayers.CONTROLS,
@@ -393,18 +411,14 @@ export default class MainMenu extends Scene {
             `save his friends and together defeat Baron Vender by going through 6`,
             `different platforming puzzles staged in the urban sprawl of Sodaopolis.`,
             `He and his friends have to use their abilities to break and move around`,
-            `to get to the end of the stage while avoiding obstacles set by Baron Vender.`
-        ]
+            `to get to the end of the stage while avoiding obstacles set by Baron Vender.`,
+        ];
 
         for (let i = 0; i < stringArr.length; i++) {
-            this.add.uiElement(
-                UIElementType.LABEL,
-                MenuLayers.HELP,
-                {
-                    position: new Vec2(size.x, size.y - 270 + i * 50),
-                    text: stringArr[i],
-                }
-            );
+            this.add.uiElement(UIElementType.LABEL, MenuLayers.HELP, {
+                position: new Vec2(size.x, size.y - 270 + i * 50),
+                text: stringArr[i],
+            });
         }
 
         let titleTwoText: String = "Cheat Codes:";
@@ -412,21 +426,17 @@ export default class MainMenu extends Scene {
             UIElementType.LABEL,
             MenuLayers.HELP,
             {
-                position: new Vec2(size.x-220, size.y + 100),
+                position: new Vec2(size.x - 220, size.y + 100),
                 text: titleTwoText,
             }
         );
 
         let cheatCodesList: Array<String> = ["enemy", "laser", "box"];
         for (let i = 0; i < cheatCodesList.length; i++) {
-            this.add.uiElement(
-                UIElementType.LABEL,
-                MenuLayers.HELP,
-                {
-                    position: new Vec2(size.x-20+i*150, size.y + 100),
-                    text: cheatCodesList[i],
-                }
-            );
+            this.add.uiElement(UIElementType.LABEL, MenuLayers.HELP, {
+                position: new Vec2(size.x - 20 + i * 150, size.y + 100),
+                text: cheatCodesList[i],
+            });
         }
 
         let enterText: String = "Enter Cheatcode:";
