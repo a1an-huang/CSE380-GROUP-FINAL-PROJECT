@@ -4,6 +4,7 @@ import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
+import TextInput from "../../Wolfie2D/Nodes/UIElements/TextInput";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Scene from "../../Wolfie2D/Scene/Scene";
@@ -366,14 +367,6 @@ export default class MainMenu extends Scene {
         });
         helpBg.color = new Color(107, 192, 72, 1);
 
-        let titleOneText: String = "Backstory";
-        let titleTwoText: String = "Controls";
-
-        let backStoryText: String =
-            "Coca-Cola, Fanta, and Sprite are having a fun time exploring Sodaopolis when Baron Vender, the leader of the Vending Machines invades the city and kidnaps Fanta and Sprite to keep as hostages. Coca-Cola’s task is to save his friends and together defeat Baron Vender by going through 6 different platforming puzzles staged in the urban sprawl of Sodaopolis. He and his friends have to use their abilities to break and move around to get to the end of the stage while avoiding obstacles set by Baron Vender.";
-
-        let cheatCodesList: Array<String> = ["enemy", "laser", "box"];
-
         let backBtn = <Button>this.add.uiElement(
             UIElementType.BUTTON,
             MenuLayers.HELP,
@@ -383,6 +376,7 @@ export default class MainMenu extends Scene {
             }
         );
 
+        let titleOneText: String = "Backstory:";
         let titleOne: Label = <Label>this.add.uiElement(
             UIElementType.LABEL,
             MenuLayers.HELP,
@@ -392,30 +386,44 @@ export default class MainMenu extends Scene {
             }
         );
 
-        let backStory: Label = <Label>this.add.uiElement(
-            UIElementType.LABEL,
-            MenuLayers.HELP,
-            {
-                position: new Vec2(size.x, size.y - 150),
-                text: backStoryText,
-            }
-        );
+        let stringArr: String[] = [
+            `Coca-Cola, Fanta, and Sprite are having a fun time exploring Sodaopolis`,
+            `when Baron Vender, the leader of the Vending Machines invades the city`,
+            `and kidnaps Fanta and Sprite to keep as hostages. Coca-Cola’s task is to`,
+            `save his friends and together defeat Baron Vender by going through 6`,
+            `different platforming puzzles staged in the urban sprawl of Sodaopolis.`,
+            `He and his friends have to use their abilities to break and move around`,
+            `to get to the end of the stage while avoiding obstacles set by Baron Vender.`
+        ]
 
+        for (let i = 0; i < stringArr.length; i++) {
+            this.add.uiElement(
+                UIElementType.LABEL,
+                MenuLayers.HELP,
+                {
+                    position: new Vec2(size.x, size.y - 270 + i * 50),
+                    text: stringArr[i],
+                }
+            );
+        }
+
+        let titleTwoText: String = "Cheat Codes:";
         let titleTwo: Label = <Label>this.add.uiElement(
             UIElementType.LABEL,
             MenuLayers.HELP,
             {
-                position: new Vec2(size.x, size.y - 0),
+                position: new Vec2(size.x-220, size.y + 100),
                 text: titleTwoText,
             }
         );
 
+        let cheatCodesList: Array<String> = ["enemy", "laser", "box"];
         for (let i = 0; i < cheatCodesList.length; i++) {
-            let cheatCode: Label = <Label>this.add.uiElement(
+            this.add.uiElement(
                 UIElementType.LABEL,
                 MenuLayers.HELP,
                 {
-                    position: new Vec2(size.x, size.y + 50 + i * 50),
+                    position: new Vec2(size.x-20+i*150, size.y + 100),
                     text: cheatCodesList[i],
                 }
             );
@@ -432,9 +440,8 @@ export default class MainMenu extends Scene {
             }
         );
 
-        // Need to find input box and swap out instead of button
-        let inputBox: Button = <Button>this.add.uiElement(
-            UIElementType.BUTTON,
+        let inputBox: TextInput = <TextInput>this.add.uiElement(
+            UIElementType.TEXT_INPUT,
             MenuLayers.HELP,
             {
                 position: new Vec2(size.x + 175, size.y + 200),
