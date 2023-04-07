@@ -11,18 +11,18 @@ import FizzRun_CanvasNodeFactory from "./FizzRun_CanvasNodeFactory";
  * An extension of Wolfie2ds FactoryManager. I'm creating a more specific factory for my custom HW3Level. If you want to get custom
  * GameNodes into your scenes (with more specific properties) you'll have to extend the factory classes.
  */
-export default class HW3FactoryManager extends FactoryManager {
+export default class FizzRun_FactoryManager extends FactoryManager {
 
-    private hw3CanvasNodeFactory: FizzRun_CanvasNodeFactory;
+    private fizzrunCanvasNodeFactory: FizzRun_CanvasNodeFactory;
 
     public constructor(scene: FizzRun_Level, tilemaps: Tilemap[]) {
         super(scene, tilemaps)
-        this.hw3CanvasNodeFactory = new FizzRun_CanvasNodeFactory();
-        this.hw3CanvasNodeFactory.init(scene);
+        this.fizzrunCanvasNodeFactory = new FizzRun_CanvasNodeFactory();
+        this.fizzrunCanvasNodeFactory.init(scene);
     }
 
     public animatedSprite(key: string, layerName: FizzRun_Layers): FizzRun_AnimatedSprite {
-        return this.hw3CanvasNodeFactory.addAnimatedSprite(key, layerName);
+        return this.fizzrunCanvasNodeFactory.addAnimatedSprite(key, layerName);
     }
 
     public uiElement(type: string, layerName: FizzRun_Layers, options?: Record<string, any>): UIElement {

@@ -19,7 +19,7 @@ export default class Level1 extends FizzRun_Level {
     public static readonly PLAYER_SPRITE_PATH = "fizzrun_assets/spritesheets/Hero.json";
 
     public static readonly TILEMAP_KEY = "LEVEL1";
-    public static readonly TILEMAP_PATH = "fizzrun_assets/tilemaps/HW4Level1.json";
+    public static readonly TILEMAP_PATH = "fizzrun_assets/tilemaps/FizzRunTest.json";
     public static readonly TILEMAP_SCALE = new Vec2(2, 2);
     public static readonly DESTRUCTIBLE_LAYER_KEY = "Destructable";
     public static readonly WALLS_LAYER_KEY = "Main";
