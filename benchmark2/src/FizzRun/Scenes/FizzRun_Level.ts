@@ -341,60 +341,60 @@ export default abstract class FizzRun_Level extends Scene {
     protected initializeUI(): void {
 
         // HP Label
-		this.healthLabel = <Label>this.add.uiElement(UIElementType.LABEL, HW3Layers.UI, {position: new Vec2(20, 30), text: "Health "});
+		this.healthLabel = <Label>this.add.uiElement(UIElementType.LABEL, FizzRun_Layers.UI, {position: new Vec2(20, 30), text: "Health "});
 		this.healthLabel.size.set(300, 30);
 		this.healthLabel.fontSize = 24;
 		this.healthLabel.font = "Arial";
 
         // HealthBar
-		this.healthBar = <Label>this.add.uiElement(UIElementType.LABEL, HW3Layers.UI, {position: new Vec2(70, 30), text: ""});
+		this.healthBar = <Label>this.add.uiElement(UIElementType.LABEL, FizzRun_Layers.UI, {position: new Vec2(70, 30), text: ""});
 		this.healthBar.size = new Vec2(300, 25);
 		this.healthBar.backgroundColor = Color.GREEN;
 
         // HealthBar Border
-		this.healthBarBg = <Label>this.add.uiElement(UIElementType.LABEL, HW3Layers.UI, {position: new Vec2(70, 30), text: ""});
+		this.healthBarBg = <Label>this.add.uiElement(UIElementType.LABEL, FizzRun_Layers.UI, {position: new Vec2(70, 30), text: ""});
 		this.healthBarBg.size = new Vec2(300, 25);
 		this.healthBarBg.borderColor = Color.BLACK;
 
         // Fizz Label
-		this.fizzLabel = <Label>this.add.uiElement(UIElementType.LABEL, HW3Layers.UI, {position: new Vec2(20, 40), text: "Fizz "});
+		this.fizzLabel = <Label>this.add.uiElement(UIElementType.LABEL, FizzRun_Layers.UI, {position: new Vec2(20, 40), text: "Fizz "});
 		this.fizzLabel.size.set(300, 30);
 		this.fizzLabel.fontSize = 24;
 		this.fizzLabel.font = "Arial";
 
         // Fizz Bar
-		this.fizzBar = <Label>this.add.uiElement(UIElementType.LABEL, HW3Layers.UI, {position: new Vec2(70, 40), text: ""});
+		this.fizzBar = <Label>this.add.uiElement(UIElementType.LABEL, FizzRun_Layers.UI, {position: new Vec2(70, 40), text: ""});
 		this.fizzBar.size = new Vec2(300, 25);
 		this.fizzBar.backgroundColor = new Color(153, 217, 234, 1);
 
         // Fizz Bar Border
-		this.fizzBarBg = <Label>this.add.uiElement(UIElementType.LABEL, HW3Layers.UI, {position: new Vec2(70, 40), text: ""});
+		this.fizzBarBg = <Label>this.add.uiElement(UIElementType.LABEL, FizzRun_Layers.UI, {position: new Vec2(70, 40), text: ""});
 		this.fizzBarBg.size = new Vec2(300, 25);
 		this.fizzBarBg.borderColor = Color.BLACK; 
 
         // Active Soda Label
-        this.activeSodaLabel = <Label>this.add.uiElement(UIElementType.LABEL, HW3Layers.UI, {position: new Vec2(20, 20), text: "Active Soda: "});
+        this.activeSodaLabel = <Label>this.add.uiElement(UIElementType.LABEL, FizzRun_Layers.UI, {position: new Vec2(20, 20), text: "Active Soda: "});
         this.activeSodaLabel.size.set(300, 20);
         this.activeSodaLabel.fontSize = 24;
         this.activeSodaLabel.font = "Arial";
 
         // Active Soda Icon
-        this.activeSodaIcon = this.add.sprite(FizzRunResourceKeys.SPRITE_LOGO, HW3Layers.UI);
+        this.activeSodaIcon = this.add.sprite(FizzRunResourceKeys.SPRITE_LOGO, FizzRun_Layers.UI);
         this.activeSodaIcon.position.set(45, 20);
         this.activeSodaIcon.scale.set(0.75, 0.75);
 
         // Active Skill Square
-        this.activeSkillSquare = this.add.graphic(GraphicType.RECT, HW3Layers.UI, {position: new Vec2(70, 20), size: new Vec2(10, 10)});
+        this.activeSkillSquare = this.add.graphic(GraphicType.RECT, FizzRun_Layers.UI, {position: new Vec2(70, 20), size: new Vec2(10, 10)});
         this.activeSkillSquare.color = new Color(217, 217, 217, 1);
 
         // Active Skill Label
-        this.activeSkillLabel = <Label>this.add.uiElement(UIElementType.LABEL, HW3Layers.UI, {position: new Vec2(70, 20), text: "E"});
+        this.activeSkillLabel = <Label>this.add.uiElement(UIElementType.LABEL, FizzRun_Layers.UI, {position: new Vec2(70, 20), text: "E"});
         this.activeSkillLabel.size.set(300, 30);
         this.activeSkillLabel.fontSize = 24;
         this.activeSkillLabel.font = "Arial";
 
         // Active Skill Icon
-        this.activeSkillIcon = this.add.sprite(FizzRunResourceKeys.SPRITE_ABILITY, HW3Layers.UI);
+        this.activeSkillIcon = this.add.sprite(FizzRunResourceKeys.SPRITE_ABILITY, FizzRun_Layers.UI);
         this.activeSkillIcon.position.set(85, 19);
         this.activeSkillIcon.scale.set(0.45, 0.45);
         
