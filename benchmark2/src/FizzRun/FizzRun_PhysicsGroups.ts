@@ -1,7 +1,7 @@
 /**
- * An enum with all of the physics groups for HW4
+ * An enum with all of the physics groups 
  */
-export const HW3PhysicsGroups = {
+export const FizzRun_PhysicsGroups = {
     // Physics groups for the player and the player's weapon
     PLAYER: "PLAYER",
     PLAYER_WEAPON: "WEAPON",

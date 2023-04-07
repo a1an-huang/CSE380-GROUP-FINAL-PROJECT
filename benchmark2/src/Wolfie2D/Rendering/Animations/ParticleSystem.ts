@@ -9,8 +9,9 @@ import { EaseFunctionType } from "../../Utils/EaseFunctions";
 import MathUtils from "../../Utils/MathUtils";
 import RandUtils from "../../Utils/RandUtils";
 import ParticleSystemManager from "./ParticleSystemManager";
+import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
 
-export default class ParticleSystem implements Updateable {
+export default class xParticleSystem implements Updateable {
     /** Pool for all particles */
     protected particlePool: Array<Particle>;
 
@@ -64,9 +65,10 @@ export default class ParticleSystem implements Updateable {
         for (let i = 0; i < this.particlePool.length; i++) {
             this.particlePool[i] = <Particle>scene.add.graphic(GraphicType.PARTICLE, layer,
                 { position: this.sourcePoint.clone(), size: this.particleSize.clone(), mass: this.particleMass });
-            this.particlePool[i].addPhysics();
+            this.particlePool[i].addPhysics(new AABB(this.particlePool[i].position.clone(), this.particlePool[i].boundary.getHalfSize().clone()));
             this.particlePool[i].isCollidable = false;
             this.particlePool[i].visible = false;
+            this.particlePool[i].setGroup("WEAPON");
         }
     }
 
@@ -145,7 +147,7 @@ export default class ParticleSystem implements Updateable {
                         particle.setParticleInactive();
                     }
 
-                    particle.move(particle.vel.scaled(deltaT));
+                    particle.move(particle.vel.scaled(deltaT)); 
                 }
                 else {
                     // Set the particle to active

@@ -1,6 +1,6 @@
 import CanvasNodeFactory from "../../Wolfie2D/Scene/Factories/CanvasNodeFactory";
-import HW3AnimatedSprite from "../Nodes/HW3AnimatedSprite";
-import HW3Level from "../Scenes/HW3Level";
+import FizzRun_AnimatedSprite from "../Nodes/FizzRun_AnimatedSprite";
+import FizzRun_Level from "../Scenes/FizzRun_Level";
 
 /**
  * An extension of Wolfie2ds CanvasNodeFactory. The purpose of the class is to add functionality for adding custom
@@ -9,16 +9,16 @@ import HW3Level from "../Scenes/HW3Level";
 export default class HW3CanvasNodeFactory extends CanvasNodeFactory {
 
     // Reference to the HW4Level
-    protected scene: HW3Level;
+    protected scene: FizzRun_Level;
     
     // Overriden to only accept HW4Levels
-    public init(scene: HW3Level): void { super.init(scene); }
+    public init(scene: FizzRun_Level): void { super.init(scene); }
 
     // Overriden to return HW3AnimatedSprites instead of regular AnimatedSprites
-    public addAnimatedSprite = (key: string, layerName: string): HW3AnimatedSprite => {
+    public addAnimatedSprite = (key: string, layerName: string): FizzRun_AnimatedSprite => {
         let layer = this.scene.getLayer(layerName);
 		let spritesheet = this.resourceManager.getSpritesheet(key);
-		let instance = new HW3AnimatedSprite(spritesheet);
+		let instance = new FizzRun_AnimatedSprite(spritesheet);
 
 		// Add instance fo scene
 		instance.setScene(this.scene);

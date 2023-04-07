@@ -7,18 +7,12 @@ import PlayerState from "./PlayerState";
 export default class Jump extends PlayerState {
 
 	public onEnter(options: Record<string, any>): void {
-        let scene = this.owner.getScene()
-        
+        // Get the jump audio key for the player
+        let jumpAudio = this.owner.getScene().getJumpAudioKey();
         // Give the player a burst of upward momentum
         this.parent.velocity.y = -200;
-
-        // If the player is moving to the left or right, make them do a flip
-        if(this.parent.velocity.x !== 0){
-            this.owner.tweens.play(PlayerTweens.FLIP);
-        }
-
         // Play the jump sound for the player
-		this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: scene.getJumpAudioKey(), loop: false, holdReference: false});
+		this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: jumpAudio, loop: false, holdReference: false});
 	}
 
 	public update(deltaT: number): void {
