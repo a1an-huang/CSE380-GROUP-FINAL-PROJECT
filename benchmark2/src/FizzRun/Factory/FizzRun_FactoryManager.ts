@@ -3,9 +3,9 @@ import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Tilemap from "../../Wolfie2D/Nodes/Tilemap";
 import UIElement from "../../Wolfie2D/Nodes/UIElement";
 import FactoryManager from "../../Wolfie2D/Scene/Factories/FactoryManager";
-import HW3AnimatedSprite from "../Nodes/HW3AnimatedSprite";
-import HW3Level, { HW3Layer } from "../Scenes/HW3Level";
-import HW4CanvasNodeFactory from "./HW3CanvasNodeFactory";
+import FizzRun_AnimatedSprite from "../Nodes/FizzRun_AnimatedSprite";
+import FizzRun_Level, { FizzRun_Layers } from "../Scenes/FizzRun_Level";
+import FizzRun_CanvasNodeFactory from "./FizzRun_CanvasNodeFactory";
 
 /**
  * An extension of Wolfie2ds FactoryManager. I'm creating a more specific factory for my custom HW3Level. If you want to get custom
@@ -13,27 +13,27 @@ import HW4CanvasNodeFactory from "./HW3CanvasNodeFactory";
  */
 export default class HW3FactoryManager extends FactoryManager {
 
-    private hw3CanvasNodeFactory: HW4CanvasNodeFactory;
+    private hw3CanvasNodeFactory: FizzRun_CanvasNodeFactory;
 
-    public constructor(scene: HW3Level, tilemaps: Tilemap[]) {
+    public constructor(scene: FizzRun_Level, tilemaps: Tilemap[]) {
         super(scene, tilemaps)
-        this.hw3CanvasNodeFactory = new HW4CanvasNodeFactory();
+        this.hw3CanvasNodeFactory = new FizzRun_CanvasNodeFactory();
         this.hw3CanvasNodeFactory.init(scene);
     }
 
-    public animatedSprite(key: string, layerName: HW3Layer): HW3AnimatedSprite {
+    public animatedSprite(key: string, layerName: FizzRun_Layers): FizzRun_AnimatedSprite {
         return this.hw3CanvasNodeFactory.addAnimatedSprite(key, layerName);
     }
 
-    public uiElement(type: string, layerName: HW3Layer, options?: Record<string, any>): UIElement {
+    public uiElement(type: string, layerName: FizzRun_Layers, options?: Record<string, any>): UIElement {
         return super.uiElement(type, layerName, options);
     }
 
-    public graphic(type: string, layerName: HW3Layer, options?: Record<string, any>): Graphic {
+    public graphic(type: string, layerName: FizzRun_Layers, options?: Record<string, any>): Graphic {
         return super.graphic(type, layerName, options);
     }
 
-    public sprite(key: string, layerName: HW3Layer): Sprite {
+    public sprite(key: string, layerName: FizzRun_Layers): Sprite {
         return super.sprite(key, layerName);
     }
 }

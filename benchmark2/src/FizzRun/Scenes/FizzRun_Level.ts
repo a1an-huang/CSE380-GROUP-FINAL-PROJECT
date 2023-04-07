@@ -20,9 +20,9 @@ import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import PlayerController, { PlayerTweens } from "../Player/PlayerController";
 import PlayerWeapon from "../Player/PlayerWeapon";
 
-import { HW3Events } from "../HW3Events";
-import { HW3PhysicsGroups } from "../HW3PhysicsGroups";
-import HW3FactoryManager from "../Factory/HW3FactoryManager";
+import { FizzRun_Events } from "../FizzRun_Events";
+import { FizzRun_PhysicsGroups } from "../FizzRun_PhysicsGroups";
+import FizzRun_FactoryManager from "../Factory/FizzRun_FactoryManager";
 import MainMenu from "./MainMenu";
 import Particle from "../../Wolfie2D/Nodes/Graphics/Particle";
 
@@ -32,7 +32,7 @@ import Graphic from "../../Wolfie2D/Nodes/Graphic";
 /**
  * A const object for the layer names
  */
-export const HW3Layers = {
+export const FizzRun_Layers = {
     // The primary layer
     PRIMARY: "PRIMARY",
     // The UI layer
@@ -48,15 +48,15 @@ export const FizzRunResourceKeys = {
 } as const;
 
 // The layers as a type
-export type HW3Layer = typeof HW3Layers[keyof typeof HW3Layers]
+export type FizzRun_Layers = typeof FizzRun_Layers[keyof typeof FizzRun_Layers]
 
 /**
  * An abstract HW4 scene class.
  */
-export default abstract class HW3Level extends Scene {
+export default abstract class FizzRun_Level extends Scene {
 
     /** Overrride the factory manager */
-    public add: HW3FactoryManager;
+    public add: FizzRun_FactoryManager;
 
 
     /** The particle system used for the player's weapon */
@@ -111,25 +111,16 @@ export default abstract class HW3Level extends Scene {
     /** Sound and music */
     protected levelMusicKey: string;
     protected jumpAudioKey: string;
+    protected deadAudioKey: string;
     protected tileDestroyedAudioKey: string;
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, {...options, physics: {
-            groupNames: [
-                HW3PhysicsGroups.GROUND, 
-                HW3PhysicsGroups.PLAYER, 
-                HW3PhysicsGroups.PLAYER_WEAPON, 
-                HW3PhysicsGroups.DESTRUCTABLE
-            ],
-            collisions:
-            [
-                [0, 1, 1, 0],
-                [1, 0, 0, 1],
-                [1, 0, 0, 1],
-                [0, 1, 1, 0],
-            ]
-        }});
-        this.add = new HW3FactoryManager(this, this.tilemaps);
+            // TODO configure the collision groups and collision map
+            groupNames: ["GROUND", "PLAYER", "WEAPON", "DESTRUCTABLE"],
+            collisions: [[0, 1, 1, 0], [1, 0, 0, 1], [1, 0, 0, 1], [0, 1, 1, 0]]
+         }});
+        this.add = new FizzRun_FactoryManager(this, this.tilemaps);
     }
 
     public startScene(): void {
@@ -142,13 +133,14 @@ export default abstract class HW3Level extends Scene {
         // Initialize the sprite and particle system for the players weapon 
         this.initializeWeaponSystem();
 
+        this.initializeUI();
+
         // Initialize the player 
         this.initializePlayer(this.playerSpriteKey);
 
         // Initialize the viewport - this must come after the player has been initialized
         this.initializeViewport();
         this.subscribeToEvents();
-        this.initializeUI();
         
 
         // Initialize the ends of the levels - must be initialized after the primary layer has been added
@@ -185,32 +177,30 @@ export default abstract class HW3Level extends Scene {
      */
     protected handleEvent(event: GameEvent): void {
         switch (event.type) {
-            case HW3Events.PLAYER_ENTERED_LEVEL_END: {
+            case FizzRun_Events.PLAYER_ENTERED_LEVEL_END: {
                 this.handleEnteredLevelEnd();
                 break;
             }
             // When the level starts, reenable user input
-            case HW3Events.LEVEL_START: {
+            case FizzRun_Events.LEVEL_START: {
                 Input.enableInput();
                 break;
             }
             // When the level ends, change the scene to the next level
-            case HW3Events.LEVEL_END: {
-                this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: this.levelMusicKey});
+            case FizzRun_Events.LEVEL_END: {
                 this.sceneManager.changeToScene(this.nextLevel);
                 break;
             }
-            case HW3Events.PARTICLE_HIT_DESTRUCTIBLE: {
-                this.handleParticleHit(event.data.get("node"));
-                break;
-            }
-            case HW3Events.HEALTH_CHANGE: {
+            case FizzRun_Events.HEALTH_CHANGE: {
                 this.handleHealthChange(event.data.get("curhp"), event.data.get("maxhp"));
                 break;
             }
-            case HW3Events.PLAYER_DEAD: {
-                this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: this.levelMusicKey});
+            case FizzRun_Events.PLAYER_DEAD: {
                 this.sceneManager.changeToScene(MainMenu);
+                break;
+            }
+            case FizzRun_Events.PARTICLE_HIT_DESTRUCT: {
+                this.handleParticleHit(event.data.get("node"));
                 break;
             }
             // Default: Throw an error! No unhandled events allowed.
@@ -246,24 +236,29 @@ export default abstract class HW3Level extends Scene {
                 for(let row = minIndex.y; row <= maxIndex.y; row++){
                     // If the tile is collideable -> check if this particle is colliding with the tile
                     if(tilemap.isTileCollidable(col, row) && this.particleHitTile(tilemap, particle, col, row)){
-                        // We had a collision - delete the tile in the tilemap
-                        tilemap.setTileAtRowCol(new Vec2(col, row), 0);
-                        // Play a sound when we destroy the tile
                         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: this.tileDestroyedAudioKey, loop: false, holdReference: false });
+                        // TODO Destroy the tile
+                        tilemap.setTileAtRowCol(new Vec2(col, row), 0);
                     }
                 }
             }
         }
     }
 
+    /**
+     * Checks if a particle hit the tile at the (col, row) coordinates in the tilemap.
+     * 
+     * @param tilemap the tilemap
+     * @param particle the particle
+     * @param col the column the 
+     * @param row the row 
+     * @returns true of the particle hit the tile; false otherwise
+     */
     protected particleHitTile(tilemap: OrthogonalTilemap, particle: Particle, col: number, row: number): boolean {
-        let tileSize = tilemap.getTileSize();
-        // Get the position of this tile
-        let tilePos = new Vec2(col * tileSize.x + tileSize.x/2, row * tileSize.y + tileSize.y/2);
-        // Create a new collider for this tile
-        let collider = new AABB(tilePos, tileSize.scaled(1/2));
-        // Calculate collision area between the node and the tile
-        return particle.sweptRect.overlapArea(collider) > 0;
+        // TODO detect whether a particle hit a tile
+        //if(tilemap.getTileAtRowCol(new Vec2(row, col)) === 1)
+            
+        return true;
     }
 
     /**
@@ -299,9 +294,9 @@ export default abstract class HW3Level extends Scene {
      */
     protected initLayers(): void {
         // Add a layer for UI
-        this.addUILayer(HW3Layers.UI);
+        this.addUILayer(FizzRun_Layers.UI);
         // Add a layer for players and enemies
-        this.addLayer(HW3Layers.PRIMARY);
+        this.addLayer(FizzRun_Layers.PRIMARY);
     }
     /**
      * Initializes the tilemaps
@@ -323,21 +318,22 @@ export default abstract class HW3Level extends Scene {
         this.walls = this.getTilemap(this.wallsLayerKey) as OrthogonalTilemap;
         this.destructable = this.getTilemap(this.destructibleLayerKey) as OrthogonalTilemap;
 
+        // Add physicss to the wall layer
+        this.walls.addPhysics();
         // Add physics to the destructible layer of the tilemap
         this.destructable.addPhysics();
-        this.destructable.setGroup(HW3PhysicsGroups.DESTRUCTABLE);
-        this.destructable.setTrigger(HW3PhysicsGroups.PLAYER_WEAPON, HW3Events.PARTICLE_HIT_DESTRUCTIBLE, null);
+        this.destructable.setTrigger("WEAPON", FizzRun_Events.PARTICLE_HIT_DESTRUCT, null);
     }
     /**
      * Handles all subscriptions to events
      */
     protected subscribeToEvents(): void {
-        this.receiver.subscribe(HW3Events.PLAYER_ENTERED_LEVEL_END);
-        this.receiver.subscribe(HW3Events.LEVEL_START);
-        this.receiver.subscribe(HW3Events.LEVEL_END);
-        this.receiver.subscribe(HW3Events.PARTICLE_HIT_DESTRUCTIBLE);
-        this.receiver.subscribe(HW3Events.HEALTH_CHANGE);
-        this.receiver.subscribe(HW3Events.PLAYER_DEAD);
+        this.receiver.subscribe(FizzRun_Events.PLAYER_ENTERED_LEVEL_END);
+        this.receiver.subscribe(FizzRun_Events.LEVEL_START);
+        this.receiver.subscribe(FizzRun_Events.LEVEL_END);
+        this.receiver.subscribe(FizzRun_Events.HEALTH_CHANGE);
+        this.receiver.subscribe(FizzRun_Events.PLAYER_DEAD);
+        this.receiver.subscribe(FizzRun_Events.PARTICLE_HIT_DESTRUCT);
     }
     /**
      * Adds in any necessary UI to the game
@@ -403,7 +399,7 @@ export default abstract class HW3Level extends Scene {
         this.activeSkillIcon.scale.set(0.45, 0.45);
         
         // End of level label (start off screen)
-        this.levelEndLabel = <Label>this.add.uiElement(UIElementType.LABEL, HW3Layers.UI, { position: new Vec2(-300, 100), text: "Level Complete" });
+        this.levelEndLabel = <Label>this.add.uiElement(UIElementType.LABEL, FizzRun_Layers.UI, { position: new Vec2(-300, 100), text: "Level Complete" });
         this.levelEndLabel.size.set(1200, 60);
         this.levelEndLabel.borderRadius = 0;
         this.levelEndLabel.backgroundColor = new Color(34, 32, 52);
@@ -425,7 +421,7 @@ export default abstract class HW3Level extends Scene {
             ]
         });
 
-        this.levelTransitionScreen = <Rect>this.add.graphic(GraphicType.RECT, HW3Layers.UI, { position: new Vec2(300, 200), size: new Vec2(600, 400) });
+        this.levelTransitionScreen = <Rect>this.add.graphic(GraphicType.RECT, FizzRun_Layers.UI, { position: new Vec2(300, 200), size: new Vec2(600, 400) });
         this.levelTransitionScreen.color = new Color(34, 32, 52);
         this.levelTransitionScreen.alpha = 1;
 
@@ -440,7 +436,7 @@ export default abstract class HW3Level extends Scene {
                     ease: EaseFunctionType.IN_OUT_QUAD
                 }
             ],
-            onEnd: HW3Events.LEVEL_END
+            onEnd: FizzRun_Events.LEVEL_END
         });
 
         /*
@@ -458,7 +454,7 @@ export default abstract class HW3Level extends Scene {
                     ease: EaseFunctionType.IN_OUT_QUAD
                 }
             ],
-            onEnd: HW3Events.LEVEL_START
+            onEnd: FizzRun_Events.LEVEL_START
         });
     }
     /**
@@ -466,7 +462,7 @@ export default abstract class HW3Level extends Scene {
      */
     protected initializeWeaponSystem(): void {
         this.playerWeaponSystem = new PlayerWeapon(50, Vec2.ZERO, 1000, 3, 0, 50);
-        this.playerWeaponSystem.initializePool(this, HW3Layers.PRIMARY);
+        this.playerWeaponSystem.initializePool(this, FizzRun_Layers.PRIMARY);
     }
     /**
      * Initializes the player, setting the player's initial position to the given position.
@@ -481,15 +477,16 @@ export default abstract class HW3Level extends Scene {
         }
 
         // Add the player to the scene
-        this.player = this.add.animatedSprite(key, HW3Layers.PRIMARY);
-        this.player.scale.set(1, 1);
-        this.player.position.copy(this.playerSpawn);
+        this.player = this.add.animatedSprite(key, FizzRun_Layers.PRIMARY);
+        this.player.scale.set(0.25, 0.25); // fixing scaling of 128 x 128
+        this.player.position.copy(this.playerSpawn); // fix spawn location
         
-        // Give the player physics and setup collision groups and triggers for the player
+        // Give the player physics
         this.player.addPhysics(new AABB(this.player.position.clone(), this.player.boundary.getHalfSize().clone()));
-        this.player.setGroup(HW3PhysicsGroups.PLAYER);
+        this.player.setGroup("PLAYER");
 
-        // Give the player a flip animation
+        // TODO - give the player their flip tween
+
         this.player.tweens.add(PlayerTweens.FLIP, {
             startDelay: 0,
             duration: 500,
@@ -497,11 +494,12 @@ export default abstract class HW3Level extends Scene {
                 {
                     property: "rotation",
                     start: 0,
-                    end: 2*Math.PI,
+                    end: 2 * Math.PI,
                     ease: EaseFunctionType.IN_OUT_QUAD
                 }
             ]
         });
+
         // Give the player a death animation
         this.player.tweens.add(PlayerTweens.DEATH, {
             startDelay: 0,
@@ -520,7 +518,7 @@ export default abstract class HW3Level extends Scene {
                     ease: EaseFunctionType.IN_OUT_QUAD
                 }
             ],
-            onEnd: HW3Events.PLAYER_DEAD
+            onEnd: FizzRun_Events.PLAYER_DEAD
         });
 
         // Give the player it's AI
@@ -544,13 +542,13 @@ export default abstract class HW3Level extends Scene {
      * Initializes the level end area
      */
     protected initializeLevelEnds(): void {
-        if (!this.layers.has(HW3Layers.PRIMARY)) {
+        if (!this.layers.has(FizzRun_Layers.PRIMARY)) {
             throw new Error("Can't initialize the level ends until the primary layer has been added to the scene!");
         }
         
-        this.levelEndArea = <Rect>this.add.graphic(GraphicType.RECT, HW3Layers.PRIMARY, { position: this.levelEndPosition, size: this.levelEndHalfSize });
-        this.levelEndArea.addPhysics(undefined, undefined, false, true);
-        this.levelEndArea.setTrigger(HW3PhysicsGroups.PLAYER, HW3Events.PLAYER_ENTERED_LEVEL_END, null);
+        this.levelEndArea = <Rect>this.add.graphic(GraphicType.RECT, FizzRun_Layers.PRIMARY, { position: this.levelEndPosition, size: this.levelEndHalfSize });
+        this.levelEndArea.addPhysics(undefined, undefined, false, true); // FIX
+        this.levelEndArea.setTrigger(FizzRun_PhysicsGroups.PLAYER, FizzRun_Events.PLAYER_ENTERED_LEVEL_END, null);
         this.levelEndArea.color = new Color(255, 0, 255, .20);
         
     }
@@ -560,5 +558,8 @@ export default abstract class HW3Level extends Scene {
     // Get the key of the player's jump audio file
     public getJumpAudioKey(): string {
         return this.jumpAudioKey
+    }
+    public getdeadAudioKey(): string {
+        return this.deadAudioKey
     }
 }

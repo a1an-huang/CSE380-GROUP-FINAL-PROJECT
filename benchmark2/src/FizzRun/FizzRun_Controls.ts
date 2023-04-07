@@ -1,7 +1,7 @@
 /**
- * A set of controls for the HW4 keybinding
+ * A set of controls
  */
-export const HW3Controls = {
+export const FizzRun_Controls = {
     MOVE_LEFT: "MOVE_LEFT",
     MOVE_RIGHT: "MOVE_RIGHT",
     JUMP: "JUMP",

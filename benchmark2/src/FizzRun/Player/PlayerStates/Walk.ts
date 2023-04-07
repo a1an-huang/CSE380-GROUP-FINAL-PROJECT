@@ -1,13 +1,13 @@
-import { PlayerStates, PlayerAnimations } from "../PlayerController";
+import { PlayerStates, PlayerAnimations, PlayerTweens } from "../PlayerController";
 import Input from "../../../Wolfie2D/Input/Input";
-import { HW3Controls } from "../../HW3Controls";
+import { FizzRun_Controls } from "../../FizzRun_Controls";
 import PlayerState from "./PlayerState";
 
 export default class Walk extends PlayerState {
 
 	onEnter(options: Record<string, any>): void {
-		this.parent.speed = this.parent.MIN_SPEED;
-        this.owner.animation.playIfNotAlready(PlayerAnimations.WALK);
+        this.parent.speed = this.parent.MIN_SPEED;
+        this.owner.animation.playIfNotAlready(PlayerAnimations.RUNNING_RIGHT);
 	}
 
 	update(deltaT: number): void {
@@ -22,7 +22,8 @@ export default class Walk extends PlayerState {
 			this.finished(PlayerStates.IDLE);
 		} 
         // If the player hits the jump key - transition to the Jump state
-        else if (Input.isJustPressed(HW3Controls.JUMP)) {
+        else if (Input.isJustPressed(FizzRun_Controls.JUMP)) {
+            this.owner.tweens.play(PlayerTweens.FLIP);
             this.finished(PlayerStates.JUMP);
         } 
         // If the player is not on the ground, transition to the fall state

@@ -1,7 +1,7 @@
 import State from "../../../Wolfie2D/DataTypes/State/State";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
-import HW3AnimatedSprite from "../../Nodes/HW3AnimatedSprite";
+import FizzRun_AnimatedSprite from "../../Nodes/FizzRun_AnimatedSprite";
 import PlayerController from "../PlayerController";
 
 /**
@@ -10,10 +10,10 @@ import PlayerController from "../PlayerController";
 export default abstract class PlayerState extends State {
 
     protected parent: PlayerController;
-	protected owner: HW3AnimatedSprite;
+	protected owner: FizzRun_AnimatedSprite;
 	protected gravity: number;
 
-	public constructor(parent: PlayerController, owner: HW3AnimatedSprite){
+	public constructor(parent: PlayerController, owner: FizzRun_AnimatedSprite){
 		super(parent);
 		this.owner = owner;
         this.gravity = 500;
@@ -35,7 +35,11 @@ export default abstract class PlayerState extends State {
 	}
 
 	public update(deltaT: number): void {
-
+        // This updates the direction the player sprite is facing (left or right)
+        let direction = this.parent.inputDir;
+		if(direction.x !== 0){
+			this.owner.invertX = MathUtils.sign(direction.x) < 0;
+		}
     }
 
     public abstract onExit(): Record<string, any>;

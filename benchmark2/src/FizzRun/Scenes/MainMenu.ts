@@ -9,7 +9,7 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
-import Level1 from "./HW3Level1";
+import Level1 from "./FizzRun_Level1";
 
 // Layers for the main menu scene
 export const MenuLayers = {
@@ -30,7 +30,7 @@ const MainMenuEvent = {
 
 export default class MainMenu extends Scene {
     public static readonly MUSIC_KEY = "MAIN_MENU_MUSIC";
-    public static readonly MUSIC_PATH = "hw4_assets/music/menu.mp3";
+    public static readonly MUSIC_PATH = "FizzRun_assets/music/menu.mp3";
 
     private splashScreen: Layer;
     private mainMenuScreen: Layer;
