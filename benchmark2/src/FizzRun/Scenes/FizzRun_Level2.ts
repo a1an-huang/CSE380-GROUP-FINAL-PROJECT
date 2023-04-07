@@ -15,25 +15,25 @@ export default class Level2 extends FizzRun_Level {
 
     public static readonly PLAYER_SPAWN = new Vec2(32, 32);
     public static readonly PLAYER_SPRITE_KEY = "PLAYER_SPRITE_KEY";
-    public static readonly PLAYER_SPRITE_PATH = "FizzRun_assets/spritesheets/Hero.json";
+    public static readonly PLAYER_SPRITE_PATH = "fizzrun_assets/spritesheets/Hero.json";
 
     public static readonly TILEMAP_KEY = "LEVEL2";
-    public static readonly TILEMAP_PATH = "FizzRun_assets/tilemaps/HW4Level2.json";
+    public static readonly TILEMAP_PATH = "fizzrun_assets/tilemaps/HW4Level2.json";
     public static readonly TILEMAP_SCALE = new Vec2(2, 2);
     public static readonly DESTRUCTIBLE_LAYER_KEY = "Destructable";
     public static readonly WALLS_LAYER_KEY = "Main";
 
     public static readonly LEVEL_MUSIC_KEY = "LEVEL_MUSIC";
-    public static readonly LEVEL_MUSIC_PATH = "FizzRun_assets/music/ThemeSong.wav";
+    public static readonly LEVEL_MUSIC_PATH = "fizzrun_assets/music/ThemeSong.wav";
 
     public static readonly JUMP_AUDIO_KEY = "PLAYER_JUMP";
-    public static readonly JUMP_AUDIO_PATH = "FizzRun_assets/sounds/jump.wav";
+    public static readonly JUMP_AUDIO_PATH = "fizzrun_assets/sounds/jump.wav";
 
     public static readonly DEAD_AUDIO_KEY = "PLAYER_DEAD";
-    public static readonly DEAD_AUDIO_PATH = "FizzRun_assets/sounds/dead.wav";
+    public static readonly DEAD_AUDIO_PATH = "fizzrun_assets/sounds/dead.wav";
 
     public static readonly TILE_DESTROYED_KEY = "TILE_DESTROYED";
-    public static readonly TILE_DESTROYED_PATH = "FizzRun_assets/sounds/switch.wav";
+    public static readonly TILE_DESTROYED_PATH = "fizzrun_assets/sounds/switch.wav";
 
     public static readonly LEVEL_END = new AABB(new Vec2(224, 232), new Vec2(24, 16));
 

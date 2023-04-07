@@ -58,7 +58,6 @@ export default abstract class FizzRun_Level extends Scene {
     /** Overrride the factory manager */
     public add: FizzRun_FactoryManager;
 
-
     /** The particle system used for the player's weapon */
     protected playerWeaponSystem: PlayerWeapon
     /** The key for the player's animated sprite */
