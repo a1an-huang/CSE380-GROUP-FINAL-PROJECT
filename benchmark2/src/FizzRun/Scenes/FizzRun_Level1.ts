@@ -14,9 +14,11 @@ import { FizzRunResourceKeys } from "./FizzRun_Level";
  */
 export default class Level1 extends FizzRun_Level {
 
-    public static readonly PLAYER_SPAWN = new Vec2(50, 280);
-    public static readonly PLAYER_SPRITE_KEY = "PLAYER_SPRITE_KEY";
-    public static readonly PLAYER_SPRITE_PATH = "fizzrun_assets/spritesheets/Hero.json";
+    public static readonly PLAYER_SPAWN = new Vec2(150, 160);
+    public static readonly PLAYER_SPRITE_KEY = "COKE";
+    public static readonly PLAYER_SPRITE_PATH_COKE = "fizzrun_assets/spritesheets/coke.json";
+    public static readonly PLAYER_SPRITE_PATH_FANTA = "fizzrun_assets/spritesheets/fanta.json";
+    // public static readonly PLAYER_SPRITE_PATH_SPRITE = "fizzrun_assets/spritesheets/sprite.json";
 
     public static readonly TILEMAP_KEY = "LEVEL1";
     public static readonly TILEMAP_PATH = "fizzrun_assets/tilemaps/FizzRunTest.json";
@@ -25,7 +27,7 @@ export default class Level1 extends FizzRun_Level {
     public static readonly WALLS_LAYER_KEY = "Main";
 
     public static readonly LEVEL_MUSIC_KEY = "LEVEL_MUSIC";
-    public static readonly LEVEL_MUSIC_PATH = "fizzrun_assets/music/hw5_level_music.wav";
+    public static readonly LEVEL_MUSIC_PATH = "fizzrun_assets/music/ThemeSong.wav";
 
     public static readonly JUMP_AUDIO_KEY = "PLAYER_JUMP";
     public static readonly JUMP_AUDIO_PATH = "fizzrun_assets/sounds/jump.wav";
@@ -34,7 +36,10 @@ export default class Level1 extends FizzRun_Level {
     public static readonly DEAD_AUDIO_PATH = "fizzrun_assets/sounds/dead.wav";
 
     public static readonly TILE_DESTROYED_KEY = "TILE_DESTROYED";
-    public static readonly TILE_DESTROYED_PATH = "fizzrun_assets/sounds/switch.wav";
+    public static readonly TILE_DESTROYED_PATH = "fizzrun_assets/sounds/break.wav";
+
+    public static readonly FIZZ_BOOM_KEY = "FIZZ_BOOM";
+    public static readonly FIZZ_BOOM_PATH = "fizzrun_assets/sounds/fizzboom.wav";
 
     public static readonly LEVEL_END = new AABB(new Vec2(224, 232), new Vec2(24, 16));
 
@@ -70,7 +75,9 @@ export default class Level1 extends FizzRun_Level {
         // Load in the tilemap
         this.load.tilemap(this.tilemapKey, Level1.TILEMAP_PATH);
         // Load in the player's sprite
-        this.load.spritesheet(this.playerSpriteKey, Level1.PLAYER_SPRITE_PATH);
+        this.load.spritesheet("COKE", Level1.PLAYER_SPRITE_PATH_COKE);
+        this.load.spritesheet("FANTA", Level1.PLAYER_SPRITE_PATH_FANTA);
+        // this.load.spritesheet("SPRITE", Level1.PLAYER_SPRITE_PATH_SPRITE);
         // Audio and music
         this.load.audio(this.levelMusicKey, Level1.LEVEL_MUSIC_PATH);
         this.load.audio(this.jumpAudioKey, Level1.JUMP_AUDIO_PATH);
@@ -111,7 +118,7 @@ export default class Level1 extends FizzRun_Level {
      */
     protected initializeViewport(): void {
         super.initializeViewport();
-        this.viewport.setBounds(16, 16, 496, 512);
+        //this.viewport.setBounds(16, 16, 496, 512);
     }
 
 }

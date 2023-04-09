@@ -202,6 +202,10 @@ export default abstract class FizzRun_Level extends Scene {
                 this.handleParticleHit(event.data.get("node"));
                 break;
             }
+            case FizzRun_Events.PLAYER_SWITCH: {
+                this.handleCharSwitch(event.data.get("currsprite"))
+                break;
+            }
             // Default: Throw an error! No unhandled events allowed.
             default: {
                 throw new Error(`Unhandled event caught in scene with type ${event.type}`)
@@ -285,6 +289,14 @@ export default abstract class FizzRun_Level extends Scene {
 
 		this.healthBar.backgroundColor = currentHealth < maxHealth * 1/4 ? Color.RED: currentHealth < maxHealth * 3/4 ? Color.YELLOW : Color.GREEN;
 	}
+
+    protected handleCharSwitch(spriteId: string): void {
+        console.log(spriteId) 
+        if(spriteId === "COKE") {
+            console.log("test");
+        }
+    }
+
 
     /* Initialization methods for everything in the scene */
 
@@ -474,7 +486,6 @@ export default abstract class FizzRun_Level extends Scene {
         if (this.playerSpawn === undefined) {
             throw new Error("Player spawn must be set before initializing the player!");
         }
-
         // Add the player to the scene
         this.player = this.add.animatedSprite(key, FizzRun_Layers.PRIMARY);
         this.player.scale.set(0.25, 0.25); // fixing scaling of 128 x 128
@@ -535,7 +546,7 @@ export default abstract class FizzRun_Level extends Scene {
         }
         this.viewport.follow(this.player);
         this.viewport.setZoomLevel(4);
-        this.viewport.setBounds(0, 0, 512, 512);
+        this.viewport.setBounds(0, 0, 1024, 1024);
     }
     /**
      * Initializes the level end area

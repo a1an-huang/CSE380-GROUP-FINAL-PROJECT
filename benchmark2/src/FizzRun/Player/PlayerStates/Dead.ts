@@ -14,7 +14,7 @@ export default class Dead extends PlayerState {
         let deadAudio = this.owner.getScene().getdeadAudioKey();
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: deadAudio, loop: false, holdReference: false});
         //this.owner.animation.play(PlayerAnimations.DEAD_RIGHT, false, HW3Events.PLAYER_DEAD);
-        this.owner.animation.play(PlayerAnimations.DEAD_RIGHT);
+        this.owner.animation.play(PlayerAnimations.DEAD);
         this.owner.tweens.play(PlayerTweens.DEATH);
     }
 
