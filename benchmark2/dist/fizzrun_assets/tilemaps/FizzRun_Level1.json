@@ -129,11 +129,11 @@
     {
         "columns": 4,
         "firstgid": 1,
-        "image": "HW4Tileset.png",
+        "image": "FizzRun_Tileset.png",
         "imageheight": 24,
         "imagewidth": 32,
         "margin": 0,
-        "name": "HW4Tileset",
+        "name": "FizzRun_Tileset",
         "spacing": 0,
         "tilecount": 12,
         "tileheight": 8,
