@@ -203,7 +203,7 @@ export default abstract class FizzRun_Level extends Scene {
                 break;
             }
             case FizzRun_Events.PLAYER_SWITCH: {
-                this.handleCharSwitch(event.data.get("currsprite"))
+                this.handleCharSwitch()
                 break;
             }
             // Default: Throw an error! No unhandled events allowed.
@@ -290,11 +290,8 @@ export default abstract class FizzRun_Level extends Scene {
 		this.healthBar.backgroundColor = currentHealth < maxHealth * 1/4 ? Color.RED: currentHealth < maxHealth * 3/4 ? Color.YELLOW : Color.GREEN;
 	}
 
-    protected handleCharSwitch(spriteId: string): void {
-        console.log(spriteId) 
-        if(spriteId === "COKE") {
-            console.log("test");
-        }
+    protected handleCharSwitch(): void {
+        console.log(this.playerSpriteKey);
     }
 
 
@@ -345,6 +342,7 @@ export default abstract class FizzRun_Level extends Scene {
         this.receiver.subscribe(FizzRun_Events.HEALTH_CHANGE);
         this.receiver.subscribe(FizzRun_Events.PLAYER_DEAD);
         this.receiver.subscribe(FizzRun_Events.PARTICLE_HIT_DESTRUCT);
+        this.receiver.subscribe(FizzRun_Events.PLAYER_SWITCH);
     }
     /**
      * Adds in any necessary UI to the game
@@ -490,7 +488,7 @@ export default abstract class FizzRun_Level extends Scene {
         this.player = this.add.animatedSprite(key, FizzRun_Layers.PRIMARY);
         this.player.scale.set(0.25, 0.25); // fixing scaling of 128 x 128
         this.player.position.copy(this.playerSpawn); // fix spawn location
-        
+
         // Give the player physics
         this.player.addPhysics(new AABB(this.player.position.clone(), this.player.boundary.getHalfSize().clone()));
         this.player.setGroup("PLAYER");

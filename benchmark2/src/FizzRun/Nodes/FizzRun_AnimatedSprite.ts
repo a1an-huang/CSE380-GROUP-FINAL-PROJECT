@@ -15,9 +15,10 @@ import FizzRun_Level from "../Scenes/FizzRun_Level";
  * - Peter
  */
 export default class FizzRun_AnimatedSprite extends AnimatedSprite {
-
+    public currentSprite: string;
     protected scene: FizzRun_Level;
     
     public setScene(scene: FizzRun_Level): void { this.scene = scene; }
     public getScene(): FizzRun_Level { return this.scene; }
+
 }

@@ -49,7 +49,7 @@ export const PlayerStates = {
     FALL: "FALL",
     DEAD: "DEAD",
 } as const
-// Enum for sprite numbers
+// Enum for sprite 
 export const PlayerSprite = {
 	COKE: "COKE",
     FANTA: "FANTA",
@@ -77,9 +77,6 @@ export default class PlayerController extends StateMachineAI {
     // protected cannon: Sprite;
     protected weapon: PlayerWeapon;
 
-    protected currentSprite: string
-
-    
     public initializeAI(owner: FizzRun_AnimatedSprite, options: Record<string, any>){
         this.owner = owner;
 
@@ -91,7 +88,6 @@ export default class PlayerController extends StateMachineAI {
 
         this.health = 5
         this.maxHealth = 5;
-        this.currentSprite = "COKE";
 
         // Add the different states the player can be in to the PlayerController 
 		this.addState(PlayerStates.IDLE, new Idle(this, this.owner));
@@ -129,7 +125,7 @@ export default class PlayerController extends StateMachineAI {
         }
         // Switch character
         if (Input.isPressed(FizzRun_Controls.SWITCH)) {
-            this.emitter.fireEvent(FizzRun_Events.PLAYER_SWITCH, {currsprite: this.currentSprite});
+            this.emitter.fireEvent(FizzRun_Events.PLAYER_SWITCH);
         }
 
         if(this.health === 0) {
