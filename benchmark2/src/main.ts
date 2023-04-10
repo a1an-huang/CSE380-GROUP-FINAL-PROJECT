@@ -13,7 +13,8 @@ import { FizzRun_Controls } from "./FizzRun/FizzRun_Controls";
             {name: FizzRun_Controls.MOVE_LEFT, keys: ["a"]},
             {name: FizzRun_Controls.MOVE_RIGHT, keys: ["d"]},
             {name: FizzRun_Controls.JUMP, keys: ["w", "space"]},
-            {name: FizzRun_Controls.ATTACK, keys: ["x"]}
+            {name: FizzRun_Controls.ATTACK, keys: ["x"]},
+            {name: FizzRun_Controls.PAUSE_GAME, keys: ["escape"]}
         ],
         useWebGL: false,                        // Tell the game we want to use webgl
         showDebug: false                       // Whether to show debug messages. You can change this to true if you want

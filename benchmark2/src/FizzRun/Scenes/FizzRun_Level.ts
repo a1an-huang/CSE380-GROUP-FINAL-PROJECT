@@ -29,6 +29,11 @@ import Particle from "../../Wolfie2D/Nodes/Graphics/Particle";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Graphic from "../../Wolfie2D/Nodes/Graphic";
 
+import { FizzRun_Controls } from "../FizzRun_Controls";
+
+import Layer from "../../Wolfie2D/Scene/Layer";
+import Button from "../../Wolfie2D/Nodes/UIElements/Button";
+
 /**
  * A const object for the layer names
  */
@@ -36,7 +41,9 @@ export const FizzRun_Layers = {
     // The primary layer
     PRIMARY: "PRIMARY",
     // The UI layer
-    UI: "UI"
+    UI: "UI",
+    // The pause layer
+    PAUSE: "PAUSE"
 } as const;
 
 /**
@@ -134,6 +141,7 @@ export default abstract class FizzRun_Level extends Scene {
         this.initializeWeaponSystem();
 
         this.initializeUI();
+        this.initializePauseMenu(); //NEW Add pause menu layer
 
         // Initialize the player 
         this.initializePlayer(this.playerSpriteKey);
@@ -165,6 +173,13 @@ export default abstract class FizzRun_Level extends Scene {
     /* Update method for the scene */
 
     public updateScene(deltaT: number) {
+        if (Input.isJustPressed(FizzRun_Controls.PAUSE_GAME)) {
+            console.log("PAUSE GAME");
+            //this.layers.get(FizzRun_Layers.PRIMARY).setPaused(true);
+            const pauseLayer: Layer = this.uiLayers.get(FizzRun_Layers.PAUSE);
+            const pauseMenuIsHidden: boolean = pauseLayer.isHidden();
+            pauseLayer.setHidden(!pauseMenuIsHidden);
+        }
         // Handle all game events
         while (this.receiver.hasNextEvent()) {
             this.handleEvent(this.receiver.getNextEvent());
@@ -297,6 +312,9 @@ export default abstract class FizzRun_Level extends Scene {
         this.addUILayer(FizzRun_Layers.UI);
         // Add a layer for players and enemies
         this.addLayer(FizzRun_Layers.PRIMARY);
+        // Add pause UI layer
+        const pauseLayer: Layer = this.addUILayer(FizzRun_Layers.PAUSE);
+        pauseLayer.setHidden(true);
     }
     /**
      * Initializes the tilemaps
@@ -457,6 +475,59 @@ export default abstract class FizzRun_Level extends Scene {
             onEnd: FizzRun_Events.LEVEL_START
         });
     }
+
+    protected initializePauseMenu(): void {
+        //Add main pause menu
+        let pauseBox: Graphic = this.add.graphic(GraphicType.RECT, FizzRun_Layers.PAUSE, {position: new Vec2(150, 100), size: new Vec2(150, 150)});
+        pauseBox.color = new Color(16, 17, 27, 0.75);
+
+        let pauseLabel: Label = <Label>this.add.uiElement(UIElementType.LABEL, FizzRun_Layers.PAUSE, {position: new Vec2(150, 40), text: "Game Paused"});
+        pauseLabel.setTextColor(Color.WHITE);
+
+        let restartBtn: Button = <Button>this.add.uiElement(
+            UIElementType.BUTTON,
+            FizzRun_Layers.PAUSE,
+            {
+                position: new Vec2(150, 60),
+                text: "Restart Game",
+            }
+        );
+
+        let displayControlsBtn: Button = <Button>this.add.uiElement(
+            UIElementType.BUTTON,
+            FizzRun_Layers.PAUSE,
+            {
+                position: new Vec2(150, 80),
+                text: "Display Controls",
+            }
+        );
+
+        let helpBtn: Button = <Button>this.add.uiElement(
+            UIElementType.BUTTON,
+            FizzRun_Layers.PAUSE,
+            {
+                position: new Vec2(150, 100),
+                text: "Help",
+            }
+        );
+
+        let returnMenuBtn: Button = <Button>this.add.uiElement(
+            UIElementType.BUTTON,
+            FizzRun_Layers.PAUSE,
+            {
+                position: new Vec2(150, 120),
+                text: "Main Menu",
+            }
+        );
+        
+        const pauseBtns: Button[] = [restartBtn, displayControlsBtn, helpBtn, returnMenuBtn];
+        for (let i = 0; i < pauseBtns.length; i++) {
+            pauseBtns[i].backgroundColor = new Color(255, 0, 64, 1);
+            pauseBtns[i].borderRadius = 0;
+            pauseBtns[i].setPadding(new Vec2(50, 10));
+        }
+    }
+
     /**
      * Initializes the particles system used by the player's weapon.
      */
