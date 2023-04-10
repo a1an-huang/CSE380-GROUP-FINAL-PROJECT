@@ -51,6 +51,7 @@ export default class MainMenu extends Scene {
             "LEVELSELECT_BG",
             "fizzrun_assets/images/levelselect_bg.png"
         );
+        this.load.image("ICON_LOCKEDLEVEL", "fizzrun_assets/images/menu_lockedlevel_icon.png");
     }
 
     public startScene(): void {
@@ -306,19 +307,6 @@ export default class MainMenu extends Scene {
         backBtn.setPadding(new Vec2(50, 10));
         backBtn.onClickEventId = MainMenuEvent.MENU;
 
-        // TODO TEMP PLAY BUTTON JUST TO GET INTO A GAME, CHANGE LATER
-        let playBtn = <Button>this.add.uiElement(
-            UIElementType.BUTTON,
-            MenuLayers.LEVELSELECT,
-            {
-                position: new Vec2(size.x, size.y + 200),
-                text: "Test Play",
-            }
-        );
-        playBtn.onClick = () => {
-            this.sceneManager.changeToScene(Level1);
-        };
-
         // Level Select Buttons
         let levelOneBtn = <Button>this.add.uiElement(
             UIElementType.BUTTON,
@@ -329,6 +317,11 @@ export default class MainMenu extends Scene {
             }
         );
         levelOneBtn.setPadding(new Vec2(50, 40));
+        // TODO Added functionality only to first level for now, do rest later
+        levelOneBtn.onClick = () => {
+            this.sceneManager.changeToScene(Level1);
+        };
+
         let levelTwoBtn = <Button>this.add.uiElement(
             UIElementType.BUTTON,
             MenuLayers.LEVELSELECT,
@@ -338,6 +331,10 @@ export default class MainMenu extends Scene {
             }
         );
         levelTwoBtn.setPadding(new Vec2(50, 40));
+        let lockedIconLvTwo = this.add.sprite("ICON_LOCKEDLEVEL", MenuLayers.LEVELSELECT);
+        lockedIconLvTwo.position.set(size.x, size.y-200);
+        lockedIconLvTwo.scale.set(1, 1);
+
         let levelThreeBtn = <Button>this.add.uiElement(
             UIElementType.BUTTON,
             MenuLayers.LEVELSELECT,
@@ -347,6 +344,10 @@ export default class MainMenu extends Scene {
             }
         );
         levelThreeBtn.setPadding(new Vec2(50, 40));
+        let lockedIconLvThree = this.add.sprite("ICON_LOCKEDLEVEL", MenuLayers.LEVELSELECT);
+        lockedIconLvThree.position.set(size.x+250, size.y-200);
+        lockedIconLvThree.scale.set(1, 1);
+
         let levelFourBtn = <Button>this.add.uiElement(
             UIElementType.BUTTON,
             MenuLayers.LEVELSELECT,
@@ -356,6 +357,10 @@ export default class MainMenu extends Scene {
             }
         );
         levelFourBtn.setPadding(new Vec2(50, 40));
+        let lockedIconLvFour = this.add.sprite("ICON_LOCKEDLEVEL", MenuLayers.LEVELSELECT);
+        lockedIconLvFour.position.set(size.x-250, size.y);
+        lockedIconLvFour.scale.set(1, 1);
+
         let levelFiveBtn = <Button>this.add.uiElement(
             UIElementType.BUTTON,
             MenuLayers.LEVELSELECT,
@@ -365,6 +370,10 @@ export default class MainMenu extends Scene {
             }
         );
         levelFiveBtn.setPadding(new Vec2(50, 40));
+        let lockedIconLvFive = this.add.sprite("ICON_LOCKEDLEVEL", MenuLayers.LEVELSELECT);
+        lockedIconLvFive.position.set(size.x, size.y);
+        lockedIconLvFive.scale.set(1, 1);
+
         let levelSixBtn = <Button>this.add.uiElement(
             UIElementType.BUTTON,
             MenuLayers.LEVELSELECT,
@@ -374,6 +383,9 @@ export default class MainMenu extends Scene {
             }
         );
         levelSixBtn.setPadding(new Vec2(50, 40));
+        let lockedIconLvSix = this.add.sprite("ICON_LOCKEDLEVEL", MenuLayers.LEVELSELECT);
+        lockedIconLvSix.position.set(size.x+250, size.y);
+        lockedIconLvSix.scale.set(1, 1);
     }
 
     protected createHelpScreen(): void {

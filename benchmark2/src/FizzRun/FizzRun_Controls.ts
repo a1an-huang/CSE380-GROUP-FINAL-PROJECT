@@ -7,5 +7,6 @@ export const FizzRun_Controls = {
     JUMP: "JUMP",
     ATTACK: "ATTACK",
     SWITCH: "SWITCH",
-    FIZZ: "FIZZ"
+    FIZZ: "FIZZ",
+    PAUSE_GAME: "PAUSE_GAME"
 } as const;
