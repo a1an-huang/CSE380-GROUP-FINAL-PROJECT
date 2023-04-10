@@ -30,7 +30,7 @@ const MainMenuEvent = {
 
 export default class MainMenu extends Scene {
     public static readonly MUSIC_KEY = "MAIN_MENU_MUSIC";
-    public static readonly MUSIC_PATH = "FizzRun_assets/music/menu.mp3";
+    public static readonly MUSIC_PATH = "fizzrun_assets/music/menu.mp3";
 
     private splashScreen: Layer;
     private mainMenuScreen: Layer;

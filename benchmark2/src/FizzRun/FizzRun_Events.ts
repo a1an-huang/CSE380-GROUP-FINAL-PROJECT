@@ -20,6 +20,8 @@ export const FizzRun_Events = {
     HEALTH_CHANGE: "HEALTH_CHANGE",
 
     // The event sent when the player dies. Gets sent after the player's death animation
-    PLAYER_DEAD: "PLAYER_DEAD"
+    PLAYER_DEAD: "PLAYER_DEAD",
+    // Switch event for switching current character
+    PLAYER_SWITCH: "PLAYER_SWITCH"
     
 } as const;

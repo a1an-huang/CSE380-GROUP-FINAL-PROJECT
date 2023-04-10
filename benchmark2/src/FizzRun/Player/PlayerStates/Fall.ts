@@ -18,7 +18,7 @@ export default class Fall extends PlayerState {
             this.parent.health -= damage;
             this.finished(PlayerStates.IDLE);   
             if(damage > 0)
-                this.owner.animation.playIfNotAlready(PlayerAnimations.TAKING_DAMAGE_RIGHT, false, PlayerStates.IDLE);
+                this.owner.animation.playIfNotAlready(PlayerAnimations.TAKING_DAMAGE, false, PlayerStates.IDLE);
         } 
         // Otherwise, keep moving
         else {

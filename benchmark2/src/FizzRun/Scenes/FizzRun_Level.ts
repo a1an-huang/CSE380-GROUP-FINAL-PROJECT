@@ -65,7 +65,6 @@ export default abstract class FizzRun_Level extends Scene {
     /** Overrride the factory manager */
     public add: FizzRun_FactoryManager;
 
-
     /** The particle system used for the player's weapon */
     protected playerWeaponSystem: PlayerWeapon
     /** The key for the player's animated sprite */
@@ -218,6 +217,10 @@ export default abstract class FizzRun_Level extends Scene {
                 this.handleParticleHit(event.data.get("node"));
                 break;
             }
+            case FizzRun_Events.PLAYER_SWITCH: {
+                this.handleCharSwitch()
+                break;
+            }
             // Default: Throw an error! No unhandled events allowed.
             default: {
                 throw new Error(`Unhandled event caught in scene with type ${event.type}`)
@@ -302,6 +305,11 @@ export default abstract class FizzRun_Level extends Scene {
 		this.healthBar.backgroundColor = currentHealth < maxHealth * 1/4 ? Color.RED: currentHealth < maxHealth * 3/4 ? Color.YELLOW : Color.GREEN;
 	}
 
+    protected handleCharSwitch(): void {
+        console.log(this.playerSpriteKey);
+    }
+
+
     /* Initialization methods for everything in the scene */
 
     /**
@@ -352,6 +360,7 @@ export default abstract class FizzRun_Level extends Scene {
         this.receiver.subscribe(FizzRun_Events.HEALTH_CHANGE);
         this.receiver.subscribe(FizzRun_Events.PLAYER_DEAD);
         this.receiver.subscribe(FizzRun_Events.PARTICLE_HIT_DESTRUCT);
+        this.receiver.subscribe(FizzRun_Events.PLAYER_SWITCH);
     }
     /**
      * Adds in any necessary UI to the game
@@ -546,12 +555,11 @@ export default abstract class FizzRun_Level extends Scene {
         if (this.playerSpawn === undefined) {
             throw new Error("Player spawn must be set before initializing the player!");
         }
-
         // Add the player to the scene
         this.player = this.add.animatedSprite(key, FizzRun_Layers.PRIMARY);
         this.player.scale.set(0.25, 0.25); // fixing scaling of 128 x 128
         this.player.position.copy(this.playerSpawn); // fix spawn location
-        
+
         // Give the player physics
         this.player.addPhysics(new AABB(this.player.position.clone(), this.player.boundary.getHalfSize().clone()));
         this.player.setGroup("PLAYER");
@@ -607,7 +615,7 @@ export default abstract class FizzRun_Level extends Scene {
         }
         this.viewport.follow(this.player);
         this.viewport.setZoomLevel(4);
-        this.viewport.setBounds(0, 0, 512, 512);
+        this.viewport.setBounds(0, 0, 1024, 1024);
     }
     /**
      * Initializes the level end area

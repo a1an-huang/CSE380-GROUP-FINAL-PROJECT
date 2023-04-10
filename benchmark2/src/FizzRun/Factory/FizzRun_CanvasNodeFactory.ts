@@ -6,7 +6,7 @@ import FizzRun_Level from "../Scenes/FizzRun_Level";
  * An extension of Wolfie2ds CanvasNodeFactory. The purpose of the class is to add functionality for adding custom
  * game nodes to HW3Levels. 
  */
-export default class HW3CanvasNodeFactory extends CanvasNodeFactory {
+export default class FizzRun_CanvasNodeFactory extends CanvasNodeFactory {
 
     // Reference to the HW4Level
     protected scene: FizzRun_Level;

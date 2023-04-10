@@ -23,14 +23,11 @@ export const PlayerAnimations = {
     IDLE: "IDLE",
     RUNNING_RIGHT: "RUNNING_RIGHT",
     RUNNING_LEFT: "RUNNING_LEFT",
-    TAKING_DAMAGE_RIGHT: "TAKING_DAMAGE_RIGHT",
-    TAKING_DAMAGE_LEFT: "TAKING_DAMAGE_LEFT",
+    TAKING_DAMAGE: "TAKING_DAMAGE",
     ATTACKING_RIGHT: "ATTACKING_RIGHT",
     ATTACKING_LEFT: "ATTACKING_LEFT",
-    DYING_RIGHT: "DYING_RIGHT",
-    DYING_LEFT: "DYING_LEFT",
-    DEAD_RIGHT: "DEAD_RIGHT",
-    DEAD_LEFT: "DEAD_LEFT",
+    DYING: "DYING",
+    DEAD: "DEAD",
     JUMP: "JUMP",
 } as const
 
@@ -51,6 +48,12 @@ export const PlayerStates = {
 	JUMP: "JUMP",
     FALL: "FALL",
     DEAD: "DEAD",
+} as const
+// Enum for sprite 
+export const PlayerSprite = {
+	COKE: "COKE",
+    FANTA: "FANTA",
+    SPRITE: "SPRITE",
 } as const
 
 /**
@@ -74,7 +77,6 @@ export default class PlayerController extends StateMachineAI {
     // protected cannon: Sprite;
     protected weapon: PlayerWeapon;
 
-    
     public initializeAI(owner: FizzRun_AnimatedSprite, options: Record<string, any>){
         this.owner = owner;
 
@@ -121,8 +123,13 @@ export default class PlayerController extends StateMachineAI {
             this.weapon.startSystem(500, 0, this.owner.position);
             this.owner.animation.play(PlayerAnimations.ATTACKING_RIGHT, false, PlayerAnimations.IDLE);
         }
+        // Switch character
+        if (Input.isPressed(FizzRun_Controls.SWITCH)) {
+            this.emitter.fireEvent(FizzRun_Events.PLAYER_SWITCH);
+        }
+
         if(this.health === 0) {
-            this.owner.animation.play(PlayerAnimations.DYING_RIGHT, false, PlayerStates.DEAD);
+            this.owner.animation.play(PlayerAnimations.DYING, false, PlayerStates.DEAD);
         }
 
 	}
