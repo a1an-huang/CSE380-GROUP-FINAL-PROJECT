@@ -86,8 +86,8 @@ export default class PlayerController extends StateMachineAI {
         this.speed = 400;
         this.velocity = Vec2.ZERO;
 
-        this.health = 5
-        this.maxHealth = 5;
+        this.health = options.currHealth;
+        this.maxHealth = options.maxHealth;
 
         // Add the different states the player can be in to the PlayerController 
 		this.addState(PlayerStates.IDLE, new Idle(this, this.owner));
@@ -125,7 +125,7 @@ export default class PlayerController extends StateMachineAI {
         }
         // Switch character
         if (Input.isPressed(FizzRun_Controls.SWITCH)) {
-            this.emitter.fireEvent(FizzRun_Events.PLAYER_SWITCH);
+            this.emitter.fireEvent(FizzRun_Events.PLAYER_SWITCH, {curhp: this.health, maxhp: this.maxHealth});
         }
 
         if(this.health === 0) {
