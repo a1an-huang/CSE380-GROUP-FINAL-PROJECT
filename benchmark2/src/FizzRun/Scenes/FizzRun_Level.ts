@@ -664,8 +664,8 @@ export default abstract class FizzRun_Level extends Scene {
             weaponSystem: this.playerWeaponSystem, 
             tilemap: "Destructable",
             sodatype: this.playerSpriteKey,
-            currHealth: 5,
-            maxHealth: 5
+            currHealth: 15,
+            maxHealth: 15
         });
     }
     /**
@@ -690,7 +690,7 @@ export default abstract class FizzRun_Level extends Scene {
         this.levelEndArea = <Rect>this.add.graphic(GraphicType.RECT, FizzRun_Layers.PRIMARY, { position: this.levelEndPosition, size: this.levelEndHalfSize });
         this.levelEndArea.addPhysics(undefined, undefined, false, true); // FIX
         this.levelEndArea.setTrigger(FizzRun_PhysicsGroups.PLAYER, FizzRun_Events.PLAYER_ENTERED_LEVEL_END, null);
-        this.levelEndArea.color = new Color(255, 0, 255, .20);
+        this.levelEndArea.color = new Color(255, 0, 0, .20);
         
     }
 
