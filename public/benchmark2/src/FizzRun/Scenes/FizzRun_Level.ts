@@ -33,6 +33,7 @@ import { FizzRun_Controls } from "../FizzRun_Controls";
 
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
+import Level1 from "./FizzRun_Level1";
 
 /**
  * A const object for the layer names
@@ -172,12 +173,19 @@ export default abstract class FizzRun_Level extends Scene {
     /* Update method for the scene */
 
     public updateScene(deltaT: number) {
+        const pauseLayer: Layer = this.uiLayers.get(FizzRun_Layers.PAUSE);
         if (Input.isJustPressed(FizzRun_Controls.PAUSE_GAME)) {
             console.log("PAUSE GAME");
-            //this.layers.get(FizzRun_Layers.PRIMARY).setPaused(true);
-            const pauseLayer: Layer = this.uiLayers.get(FizzRun_Layers.PAUSE);
             const pauseMenuIsHidden: boolean = pauseLayer.isHidden();
             pauseLayer.setHidden(!pauseMenuIsHidden);
+        }
+        if (!pauseLayer.isHidden()) {
+            if (Input.isJustPressed(FizzRun_Controls.RESTART_GAME)) {
+                this.emitter.fireEvent(FizzRun_Events.RESTART_GAME);
+            }
+            else if (Input.isJustPressed(FizzRun_Controls.MAIN_MENU)) {
+                this.emitter.fireEvent(FizzRun_Events.MAIN_MENU);
+            }
         }
         // Handle all game events
         while (this.receiver.hasNextEvent()) {
@@ -221,6 +229,16 @@ export default abstract class FizzRun_Level extends Scene {
                 this.handleCharSwitch(event.data.get("curhp"), event.data.get("maxhp"));
                 break;
             }
+            case FizzRun_Events.RESTART_GAME: {
+                console.log("Restarting Level");
+                this.sceneManager.changeToScene(Level1);
+                break;
+            }     
+            case FizzRun_Events.MAIN_MENU: {
+                console.log("Returning to menu");
+                this.sceneManager.changeToScene(MainMenu);
+                break;
+            }   
             // Default: Throw an error! No unhandled events allowed.
             default: {
                 throw new Error(`Unhandled event caught in scene with type ${event.type}`)
@@ -420,6 +438,9 @@ export default abstract class FizzRun_Level extends Scene {
         this.receiver.subscribe(FizzRun_Events.PLAYER_DEAD);
         this.receiver.subscribe(FizzRun_Events.PARTICLE_HIT_DESTRUCT);
         this.receiver.subscribe(FizzRun_Events.PLAYER_SWITCH);
+
+        this.receiver.subscribe(FizzRun_Events.RESTART_GAME);
+        this.receiver.subscribe(FizzRun_Events.MAIN_MENU);
     }
     /**
      * Adds in any necessary UI to the game
@@ -557,38 +578,43 @@ export default abstract class FizzRun_Level extends Scene {
             FizzRun_Layers.PAUSE,
             {
                 position: new Vec2(150, 60),
-                text: "Restart Game",
+                text: "Restart Game (Press 6)",
             }
         );
+        // TODO Add functionality to buttons
+        // restartBtn.onClick = () => {
+        //     console.log("hi");
+        // };
 
-        let displayControlsBtn: Button = <Button>this.add.uiElement(
-            UIElementType.BUTTON,
-            FizzRun_Layers.PAUSE,
-            {
-                position: new Vec2(150, 80),
-                text: "Display Controls",
-            }
-        );
+        // let displayControlsBtn: Button = <Button>this.add.uiElement(
+        //     UIElementType.BUTTON,
+        //     FizzRun_Layers.PAUSE,
+        //     {
+        //         position: new Vec2(150, 80),
+        //         text: "Display Controls (Press 7)",
+        //     }
+        // );
 
-        let helpBtn: Button = <Button>this.add.uiElement(
-            UIElementType.BUTTON,
-            FizzRun_Layers.PAUSE,
-            {
-                position: new Vec2(150, 100),
-                text: "Help",
-            }
-        );
+        // let helpBtn: Button = <Button>this.add.uiElement(
+        //     UIElementType.BUTTON,
+        //     FizzRun_Layers.PAUSE,
+        //     {
+        //         position: new Vec2(150, 100),
+        //         text: "Help (Press 8)",
+        //     }
+        // );
 
         let returnMenuBtn: Button = <Button>this.add.uiElement(
             UIElementType.BUTTON,
             FizzRun_Layers.PAUSE,
             {
                 position: new Vec2(150, 120),
-                text: "Main Menu",
+                text: "Main Menu (Press 9)",
             }
         );
         
-        const pauseBtns: Button[] = [restartBtn, displayControlsBtn, helpBtn, returnMenuBtn];
+        // const pauseBtns: Button[] = [restartBtn, displayControlsBtn, helpBtn, returnMenuBtn];
+        const pauseBtns: Button[] = [restartBtn, returnMenuBtn];
         for (let i = 0; i < pauseBtns.length; i++) {
             pauseBtns[i].backgroundColor = new Color(255, 0, 64, 1);
             pauseBtns[i].borderRadius = 0;
