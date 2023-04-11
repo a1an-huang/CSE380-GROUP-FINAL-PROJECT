@@ -1,6 +1,6 @@
 {
-  "name": "sporbottle",
-  "spriteSheetImage": "sporbottle.png",
+  "name": "sprite",
+  "spriteSheetImage": "sprite.png",
   "spriteWidth": 128,
   "spriteHeight": 128,
   "leftBuffer": 0,

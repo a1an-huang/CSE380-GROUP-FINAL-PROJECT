@@ -21,6 +21,8 @@ export default class Level1 extends FizzRun_Level {
     public static readonly PLAYER_SPRITE_PATH_FANTA = "fizzrun_assets/spritesheets/fanta.json";
     public static readonly PLAYER_SPRITE_PATH_SPRITE = "fizzrun_assets/spritesheets/sprite.json";
 
+    public static readonly SPRITE_PATH_MENTOS = "fizzrun_assets/spritesheets/mentos.json";
+
     public static readonly TILEMAP_KEY = "LEVEL1";
     public static readonly TILEMAP_PATH = "fizzrun_assets/tilemaps/FizzRunTest.json";
     public static readonly TILEMAP_SCALE = new Vec2(2, 2);
@@ -58,6 +60,9 @@ export default class Level1 extends FizzRun_Level {
         // Set the player's spawn
         this.playerSpawn = Level1.PLAYER_SPAWN;
 
+        //Set powerup spawn
+        this.mentosSpawn = [new Vec2(200, 180)];
+
         // Music and sound
         this.levelMusicKey = Level1.LEVEL_MUSIC_KEY
         this.jumpAudioKey = Level1.JUMP_AUDIO_KEY;
@@ -78,7 +83,9 @@ export default class Level1 extends FizzRun_Level {
         // Load in the player's sprite
         this.load.spritesheet("COKE", Level1.PLAYER_SPRITE_PATH_COKE);
         this.load.spritesheet("FANTA", Level1.PLAYER_SPRITE_PATH_FANTA);
-        // this.load.spritesheet("SPRITE", Level1.PLAYER_SPRITE_PATH_SPRITE);
+        this.load.spritesheet("SPRITE", Level1.PLAYER_SPRITE_PATH_SPRITE);
+
+        this.load.spritesheet("MENTOS", Level1.SPRITE_PATH_MENTOS);
         // Audio and music
         this.load.audio(this.levelMusicKey, Level1.LEVEL_MUSIC_PATH);
         this.load.audio(this.jumpAudioKey, Level1.JUMP_AUDIO_PATH);
@@ -95,6 +102,7 @@ export default class Level1 extends FizzRun_Level {
      */
     public unloadScene(): void {
         this.load.keepSpritesheet(this.playerSpriteKey);
+        this.load.keepSpritesheet(FizzRunResourceKeys.MENTOS)
         this.load.keepAudio(this.levelMusicKey);
         this.load.keepAudio(this.jumpAudioKey);
         this.load.keepAudio(this.tileDestroyedAudioKey);
