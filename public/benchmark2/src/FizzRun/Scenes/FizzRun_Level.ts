@@ -34,6 +34,8 @@ import { FizzRun_Controls } from "../FizzRun_Controls";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import Level1 from "./FizzRun_Level1";
+import SugarBehavior from "../Items/SugarBehavior";
+import MentosBehavior from "../Items/MentosBehavior";
 
 /**
  * A const object for the layer names
@@ -53,6 +55,7 @@ export const FizzRun_Layers = {
 export const FizzRunResourceKeys = {
     SPRITE_LOGO: "SPRITE_LOGO",
     SPRITE_ABILITY: "SPRITE_ABILITY",
+    MENTOS: "MENTOS",
 } as const;
 
 // The layers as a type
@@ -74,6 +77,9 @@ export default abstract class FizzRun_Level extends Scene {
     protected player: AnimatedSprite;
     /** The player's spawn position */
     protected playerSpawn: Vec2;
+
+    /** Powerup spawn positions */
+    protected mentosSpawn: Vec2[];
 
     protected sugarrSpriteKey: string;
     protected sugarPOW: Array<AnimatedSprite>;
@@ -123,6 +129,9 @@ export default abstract class FizzRun_Level extends Scene {
     protected jumpAudioKey: string;
     protected deadAudioKey: string;
     protected tileDestroyedAudioKey: string;
+
+    /** The powerup pool */
+    protected mentosPool: Array<AnimatedSprite>;
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, {...options, physics: {
@@ -252,9 +261,9 @@ export default abstract class FizzRun_Level extends Scene {
     }
 	public handlePlayerPowerUpCollision(): void {
 		let collisions = 0;
-		for (let sugar of this.sugarPOW) {
-			if (sugar.visible && this.player.collisionShape.overlaps(sugar.collisionShape)) {
-				this.emitter.fireEvent(HW2Events.PLAYER_MINE_COLLISION, { mineId: mine.id, owner: this.player.id });
+		for (let mentos of this.mentosPool) {
+			if (mentos.visible && this.player.collisionShape.overlaps(mentos.collisionShape)) {
+				this.emitter.fireEvent(FizzRun_Events.PLAYER_MENTOS_COLLISION, { mentosId: mentos.id, owner: this.player.id });
 				collisions += 1;
 			}
 		}	
@@ -442,21 +451,22 @@ export default abstract class FizzRun_Level extends Scene {
     }
 
     protected initPowerUpPool(): void {
-        this.mines = new Array(2);
-		for (let i = 0; i < this.mines.length; i++){
-			this.mines[i] = this.add.animatedSprite(HW2Scene.MINE_KEY, HW2Layers.PRIMARY);
+        this.mentosPool = new Array(1);
+		for (let i = 0; i < this.mentosPool.length; i++){
+			this.mentosPool[i] = this.add.animatedSprite(FizzRunResourceKeys.MENTOS, FizzRun_Layers.PRIMARY);
 
-			// Make our mine inactive by default
-			this.mines[i].visible = false;
+			// Mentos visible from the start
+			this.mentosPool[i].visible = true;
+            this.mentosPool[i].position.copy(this.mentosSpawn[i]);
 
-			// Assign them mine ai
-			this.mines[i].addAI(MineBehavior);
+			// Assign them mentos ai
+			this.mentosPool[i].addAI(MentosBehavior);
 
-			this.mines[i].scale.set(0.3, 0.3);
+			this.mentosPool[i].scale.set(0.3, 0.3);
 
 			// Give them a collision shape
-			let collider = new AABB(Vec2.ZERO, this.mines[i].sizeWithZoom);
-			this.mines[i].setCollisionShape(collider);
+			let collider = new AABB(Vec2.ZERO, this.mentosPool[i].sizeWithZoom);
+			this.mentosPool[i].setCollisionShape(collider);
 		}
     }
     /**
@@ -723,7 +733,9 @@ export default abstract class FizzRun_Level extends Scene {
             tilemap: "Destructable",
             sodatype: this.playerSpriteKey,
             currHealth: 15,
-            maxHealth: 15
+            maxHealth: 15,
+            currFizz: 1,
+            maxFizz: 10,
         });
     }
     /**

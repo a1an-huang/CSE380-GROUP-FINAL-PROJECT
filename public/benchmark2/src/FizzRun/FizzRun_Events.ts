@@ -28,5 +28,13 @@ export const FizzRun_Events = {
 
     RESTART_GAME: "RESTART_GAME",
     MAIN_MENU: "MAIN_MENU",
+
+    PLAYER_MENTOS_COLLISION: "PLAYER_MENTOS_COLLISION",
+    /**
+     * The event that gets emitted when the player's fizz changes
+     * 
+     * Has data: { curfizz: number, maxfizz: number }
+     */
+    FIZZ_CHANGE: "FIZZ_CHANGE",
     
 } as const;

@@ -67,6 +67,10 @@ export default class PlayerController extends StateMachineAI {
     protected _health: number;
     protected _maxHealth: number;
 
+    /** Fizz Meters */
+    protected _fizz: number;
+    protected _maxFizz: number;
+
     /** The players game node */
     protected owner: FizzRun_AnimatedSprite;
 
@@ -88,6 +92,9 @@ export default class PlayerController extends StateMachineAI {
 
         this.health = options.currHealth;
         this.maxHealth = options.maxHealth;
+
+        this.fizz = options.currFizz;
+        this.maxFizz = options.maxFizz;
 
         // Add the different states the player can be in to the PlayerController 
 		this.addState(PlayerStates.IDLE, new Idle(this, this.owner));
@@ -155,5 +162,19 @@ export default class PlayerController extends StateMachineAI {
 
         // If the health hit 0, change the state of the player
         if (this.health === 0) { this.changeState(PlayerStates.DEAD); }
+    }
+
+    public get maxFizz(): number { return this._maxFizz; }
+    public set maxFizz(maxFizz: number) { 
+        this._maxFizz = maxFizz; 
+        // When the health changes, fire an event up to the scene.
+        this.emitter.fireEvent(FizzRun_Events.FIZZ_CHANGE, {curfizz: this.fizz, maxfizz: this.maxFizz});
+    }
+
+    public get fizz(): number { return this._fizz; }
+    public set fizz(fizz: number) { 
+        this.fizz = MathUtils.clamp(fizz, 0, this.maxHealth);
+        // When the health changes, fire an event up to the scene.
+        this.emitter.fireEvent(FizzRun_Events.HEALTH_CHANGE, {curfizz: this.fizz, maxfizz: this.maxFizz});
     }
 }
