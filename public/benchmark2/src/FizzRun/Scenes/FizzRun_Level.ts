@@ -20,6 +20,8 @@ import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import PlayerController, { PlayerTweens } from "../Player/PlayerController";
 import PlayerWeapon from "../Player/PlayerWeapon";
 
+import SugarBehavior from "../Items/SugarBehavior";
+
 import { FizzRun_Events } from "../FizzRun_Events";
 import { FizzRun_PhysicsGroups } from "../FizzRun_PhysicsGroups";
 import FizzRun_FactoryManager from "../Factory/FizzRun_FactoryManager";
@@ -75,8 +77,9 @@ export default abstract class FizzRun_Level extends Scene {
     /** The player's spawn position */
     protected playerSpawn: Vec2;
 
-    protected sugarrSpriteKey: string;
+    protected sugarSpriteKey: string;
     protected sugarPOW: Array<AnimatedSprite>;
+    protected sugarpos: Array<Vec2>;
 
     private healthLabel: Label;
 	private healthBar: Label;
@@ -251,11 +254,9 @@ export default abstract class FizzRun_Level extends Scene {
         }
     }
 	public handlePlayerPowerUpCollision(): void {
-		let collisions = 0;
 		for (let sugar of this.sugarPOW) {
-			if (sugar.visible && this.player.collisionShape.overlaps(sugar.collisionShape)) {
-				this.emitter.fireEvent(HW2Events.PLAYER_MINE_COLLISION, { mineId: mine.id, owner: this.player.id });
-				collisions += 1;
+			if(this.player.collisionShape.overlaps(sugar.collisionShape)) {
+				this.emitter.fireEvent(FizzRun_Events.PLAYER_POWERUP, { type: 'sugar', powerId: sugar.id, owner: this.player.id });
 			}
 		}	
 	}
@@ -440,23 +441,17 @@ export default abstract class FizzRun_Level extends Scene {
         this.destructable.addPhysics();
         this.destructable.setTrigger("WEAPON", FizzRun_Events.PARTICLE_HIT_DESTRUCT, null);
     }
-
+    // Spawn powerups 
     protected initPowerUpPool(): void {
-        this.mines = new Array(2);
-		for (let i = 0; i < this.mines.length; i++){
-			this.mines[i] = this.add.animatedSprite(HW2Scene.MINE_KEY, HW2Layers.PRIMARY);
+		for (let i = 0; i < this.sugarPOW.length; i++){
+			this.sugarPOW[i] = this.add.animatedSprite(this.sugarSpriteKey, FizzRun_Layers.PRIMARY);
+			this.sugarPOW[i].addAI(SugarBehavior);
+			this.sugarPOW[i].scale.set(0.2, 0.2);
 
-			// Make our mine inactive by default
-			this.mines[i].visible = false;
+			let collider = new AABB(Vec2.ZERO, this.sugarPOW[i].sizeWithZoom);
+			this.sugarPOW[i].setCollisionShape(collider);
 
-			// Assign them mine ai
-			this.mines[i].addAI(MineBehavior);
-
-			this.mines[i].scale.set(0.3, 0.3);
-
-			// Give them a collision shape
-			let collider = new AABB(Vec2.ZERO, this.mines[i].sizeWithZoom);
-			this.mines[i].setCollisionShape(collider);
+            this.sugarPOW[i].position = this.sugarpos[i];
 		}
     }
     /**
