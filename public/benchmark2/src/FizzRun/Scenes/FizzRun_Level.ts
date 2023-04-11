@@ -226,7 +226,7 @@ export default abstract class FizzRun_Level extends Scene {
                 break;
             }
             case FizzRun_Events.PLAYER_SWITCH: {
-                this.handleCharSwitch()
+                this.handleCharSwitch(event.data.get("curhp"), event.data.get("maxhp"));
                 break;
             }
             case FizzRun_Events.RESTART_GAME: {
@@ -315,6 +315,7 @@ export default abstract class FizzRun_Level extends Scene {
      * @param maxHealth the maximum health of the player
      */
     protected handleHealthChange(currentHealth: number, maxHealth: number): void {
+        console.log(currentHealth);
 		let unit = this.healthBarBg.size.x / maxHealth;
         
 		this.healthBar.size.set(this.healthBarBg.size.x - unit * (maxHealth - currentHealth), this.healthBarBg.size.y);
@@ -323,8 +324,66 @@ export default abstract class FizzRun_Level extends Scene {
 		this.healthBar.backgroundColor = currentHealth < maxHealth * 1/4 ? Color.RED: currentHealth < maxHealth * 3/4 ? Color.YELLOW : Color.GREEN;
 	}
 
-    protected handleCharSwitch(): void {
+    protected handleCharSwitch(currentHealth: number, maxHealth: number): void {
         console.log(this.playerSpriteKey);
+        let oldPos = this.player.position;
+        this.player.destroy();
+
+        // Switch keys
+        if(this.playerSpriteKey === 'COKE')
+            this.playerSpriteKey = 'FANTA';
+        else
+            this.playerSpriteKey = 'COKE';
+
+        this.player = this.add.animatedSprite(this.playerSpriteKey, FizzRun_Layers.PRIMARY);
+        this.player.scale.set(0.25, 0.25); 
+        this.player.position.copy(oldPos); 
+
+        // Give the player physics
+        this.player.addPhysics(new AABB(this.player.position.clone(), this.player.boundary.getHalfSize().clone()));
+        this.player.setGroup("PLAYER");
+
+        this.player.tweens.add(PlayerTweens.FLIP, {
+            startDelay: 0,
+            duration: 500,
+            effects: [
+                {
+                    property: "rotation",
+                    start: 0,
+                    end: 2 * Math.PI,
+                    ease: EaseFunctionType.IN_OUT_QUAD
+                }
+            ]
+        });
+        this.player.tweens.add(PlayerTweens.DEATH, {
+            startDelay: 0,
+            duration: 500,
+            effects: [
+                {
+                    property: "rotation",
+                    start: 0,
+                    end: Math.PI,
+                    ease: EaseFunctionType.IN_OUT_QUAD
+                },
+                {
+                    property: "alpha",
+                    start: 1,
+                    end: 0,
+                    ease: EaseFunctionType.IN_OUT_QUAD
+                }
+            ],
+            onEnd: FizzRun_Events.PLAYER_DEAD
+        });
+
+        // Give the player it's AI
+        this.player.addAI(PlayerController, { 
+            weaponSystem: this.playerWeaponSystem, 
+            tilemap: "Destructable",
+            sodatype: this.playerSpriteKey,
+            currHealth: currentHealth,
+            maxHealth: maxHealth
+        });
+        this.viewport.follow(this.player);
     }
 
 
@@ -629,7 +688,10 @@ export default abstract class FizzRun_Level extends Scene {
         // Give the player it's AI
         this.player.addAI(PlayerController, { 
             weaponSystem: this.playerWeaponSystem, 
-            tilemap: "Destructable" 
+            tilemap: "Destructable",
+            sodatype: this.playerSpriteKey,
+            currHealth: 15,
+            maxHealth: 15
         });
     }
     /**
@@ -654,7 +716,7 @@ export default abstract class FizzRun_Level extends Scene {
         this.levelEndArea = <Rect>this.add.graphic(GraphicType.RECT, FizzRun_Layers.PRIMARY, { position: this.levelEndPosition, size: this.levelEndHalfSize });
         this.levelEndArea.addPhysics(undefined, undefined, false, true); // FIX
         this.levelEndArea.setTrigger(FizzRun_PhysicsGroups.PLAYER, FizzRun_Events.PLAYER_ENTERED_LEVEL_END, null);
-        this.levelEndArea.color = new Color(255, 0, 255, .20);
+        this.levelEndArea.color = new Color(255, 0, 0, .20);
         
     }
 

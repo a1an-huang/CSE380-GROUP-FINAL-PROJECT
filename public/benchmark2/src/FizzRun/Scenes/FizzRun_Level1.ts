@@ -5,6 +5,7 @@ import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import FizzRun_Level2 from "./FizzRun_Level2";
+import MainMenu from "./MainMenu";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 import { FizzRunResourceKeys } from "./FizzRun_Level";
@@ -41,7 +42,7 @@ export default class Level1 extends FizzRun_Level {
     public static readonly FIZZ_BOOM_KEY = "FIZZ_BOOM";
     public static readonly FIZZ_BOOM_PATH = "fizzrun_assets/sounds/fizzboom.wav";
 
-    public static readonly LEVEL_END = new AABB(new Vec2(224, 232), new Vec2(24, 16));
+    public static readonly LEVEL_END = new AABB(new Vec2(478, 496), new Vec2(12, 16));
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, options);
@@ -64,8 +65,8 @@ export default class Level1 extends FizzRun_Level {
         this.tileDestroyedAudioKey = Level1.TILE_DESTROYED_KEY;
 
         // Level end size and position
-        this.levelEndPosition = new Vec2(128, 232).mult(this.tilemapScale);
-        this.levelEndHalfSize = new Vec2(32, 32).mult(this.tilemapScale);
+        this.levelEndPosition = new Vec2(478, 496).mult(this.tilemapScale);
+        this.levelEndHalfSize = new Vec2(32, 16).mult(this.tilemapScale);
     }
 
     /**
@@ -107,7 +108,7 @@ export default class Level1 extends FizzRun_Level {
     public startScene(): void {
         super.startScene();
         // Set the next level to be Level2
-        this.nextLevel = FizzRun_Level2;
+        this.nextLevel = MainMenu;
     }
 
     /**
