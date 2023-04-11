@@ -24,6 +24,8 @@ export const FizzRun_Events = {
     // Switch event for switching current character
     PLAYER_SWITCH: "PLAYER_SWITCH",
 
+    PLAYER_POWERUP: "PLAYER_POWERUP",
+
     RESTART_GAME: "RESTART_GAME",
     MAIN_MENU: "MAIN_MENU",
     
