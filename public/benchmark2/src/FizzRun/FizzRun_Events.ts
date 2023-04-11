@@ -22,6 +22,9 @@ export const FizzRun_Events = {
     // The event sent when the player dies. Gets sent after the player's death animation
     PLAYER_DEAD: "PLAYER_DEAD",
     // Switch event for switching current character
-    PLAYER_SWITCH: "PLAYER_SWITCH"
+    PLAYER_SWITCH: "PLAYER_SWITCH",
+
+    RESTART_GAME: "RESTART_GAME",
+    MAIN_MENU: "MAIN_MENU",
     
 } as const;
