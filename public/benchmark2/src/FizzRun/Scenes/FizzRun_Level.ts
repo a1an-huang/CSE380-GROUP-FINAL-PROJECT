@@ -75,6 +75,9 @@ export default abstract class FizzRun_Level extends Scene {
     /** The player's spawn position */
     protected playerSpawn: Vec2;
 
+    protected sugarrSpriteKey: string;
+    protected sugarPOW: Array<AnimatedSprite>;
+
     private healthLabel: Label;
 	private healthBar: Label;
 	private healthBarBg: Label;
@@ -145,6 +148,7 @@ export default abstract class FizzRun_Level extends Scene {
 
         // Initialize the player 
         this.initializePlayer(this.playerSpriteKey);
+        this.initPowerUpPool();
 
         // Initialize the viewport - this must come after the player has been initialized
         this.initializeViewport();
@@ -187,6 +191,7 @@ export default abstract class FizzRun_Level extends Scene {
                 this.emitter.fireEvent(FizzRun_Events.MAIN_MENU);
             }
         }
+        this.handlePlayerPowerUpCollision();
         // Handle all game events
         while (this.receiver.hasNextEvent()) {
             this.handleEvent(this.receiver.getNextEvent());
@@ -245,7 +250,15 @@ export default abstract class FizzRun_Level extends Scene {
             }
         }
     }
-
+	public handlePlayerPowerUpCollision(): void {
+		let collisions = 0;
+		for (let sugar of this.sugarPOW) {
+			if (sugar.visible && this.player.collisionShape.overlaps(sugar.collisionShape)) {
+				this.emitter.fireEvent(HW2Events.PLAYER_MINE_COLLISION, { mineId: mine.id, owner: this.player.id });
+				collisions += 1;
+			}
+		}	
+	}
     /* Handlers for the different events the scene is subscribed to */
 
     /**
@@ -426,6 +439,25 @@ export default abstract class FizzRun_Level extends Scene {
         // Add physics to the destructible layer of the tilemap
         this.destructable.addPhysics();
         this.destructable.setTrigger("WEAPON", FizzRun_Events.PARTICLE_HIT_DESTRUCT, null);
+    }
+
+    protected initPowerUpPool(): void {
+        this.mines = new Array(2);
+		for (let i = 0; i < this.mines.length; i++){
+			this.mines[i] = this.add.animatedSprite(HW2Scene.MINE_KEY, HW2Layers.PRIMARY);
+
+			// Make our mine inactive by default
+			this.mines[i].visible = false;
+
+			// Assign them mine ai
+			this.mines[i].addAI(MineBehavior);
+
+			this.mines[i].scale.set(0.3, 0.3);
+
+			// Give them a collision shape
+			let collider = new AABB(Vec2.ZERO, this.mines[i].sizeWithZoom);
+			this.mines[i].setCollisionShape(collider);
+		}
     }
     /**
      * Handles all subscriptions to events
