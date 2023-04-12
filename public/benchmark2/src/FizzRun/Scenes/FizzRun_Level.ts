@@ -66,6 +66,10 @@ export type FizzRun_Layers = typeof FizzRun_Layers[keyof typeof FizzRun_Layers]
  */
 export default abstract class FizzRun_Level extends Scene {
 
+    //SECTION TEMP ACCESS VARIABLES
+    protected currentFizz: number;
+    protected maxFizz: number;
+
     /** Overrride the factory manager */
     public add: FizzRun_FactoryManager;
 
@@ -135,7 +139,6 @@ export default abstract class FizzRun_Level extends Scene {
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, {...options, physics: {
-            // TODO configure the collision groups and collision map
             groupNames: ["GROUND", "PLAYER", "WEAPON", "DESTRUCTABLE"],
             collisions: [[0, 1, 1, 0], [1, 0, 0, 1], [1, 0, 0, 1], [0, 1, 1, 0]]
          }});
@@ -253,6 +256,10 @@ export default abstract class FizzRun_Level extends Scene {
                 this.sceneManager.changeToScene(MainMenu);
                 break;
             }   
+            case FizzRun_Events.FIZZ_CHANGE: {
+                this.handleFizzChange(event.data.get("curfizz"), event.data.get("maxfizz"));
+                break;
+            }
             // Default: Throw an error! No unhandled events allowed.
             default: {
                 throw new Error(`Unhandled event caught in scene with type ${event.type}`)
@@ -260,11 +267,11 @@ export default abstract class FizzRun_Level extends Scene {
         }
     }
 	public handlePlayerPowerUpCollision(): void {
-		let collisions = 0;
 		for (let mentos of this.mentosPool) {
+            // TODO Mentos collision sometimes super big
 			if (mentos.visible && this.player.collisionShape.overlaps(mentos.collisionShape)) {
 				this.emitter.fireEvent(FizzRun_Events.PLAYER_MENTOS_COLLISION, { mentosId: mentos.id, owner: this.player.id });
-				collisions += 1;
+				this.emitter.fireEvent(FizzRun_Events.FIZZ_CHANGE, {curfizz: this.currentFizz+1, maxfizz: this.maxFizz});
 			}
 		}	
 	}
@@ -295,7 +302,6 @@ export default abstract class FizzRun_Level extends Scene {
                     // If the tile is collideable -> check if this particle is colliding with the tile
                     if(tilemap.isTileCollidable(col, row) && this.particleHitTile(tilemap, particle, col, row)){
                         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: this.tileDestroyedAudioKey, loop: false, holdReference: false });
-                        // TODO Destroy the tile
                         tilemap.setTileAtRowCol(new Vec2(col, row), 0);
                     }
                 }
@@ -313,9 +319,6 @@ export default abstract class FizzRun_Level extends Scene {
      * @returns true of the particle hit the tile; false otherwise
      */
     protected particleHitTile(tilemap: OrthogonalTilemap, particle: Particle, col: number, row: number): boolean {
-        // TODO detect whether a particle hit a tile
-        //if(tilemap.getTileAtRowCol(new Vec2(row, col)) === 1)
-            
         return true;
     }
 
@@ -337,7 +340,7 @@ export default abstract class FizzRun_Level extends Scene {
      * @param maxHealth the maximum health of the player
      */
     protected handleHealthChange(currentHealth: number, maxHealth: number): void {
-        console.log(currentHealth);
+        console.log("current health: " + currentHealth);
 		let unit = this.healthBarBg.size.x / maxHealth;
         
 		this.healthBar.size.set(this.healthBarBg.size.x - unit * (maxHealth - currentHealth), this.healthBarBg.size.y);
@@ -345,6 +348,21 @@ export default abstract class FizzRun_Level extends Scene {
 
 		this.healthBar.backgroundColor = currentHealth < maxHealth * 1/4 ? Color.RED: currentHealth < maxHealth * 3/4 ? Color.YELLOW : Color.GREEN;
 	}
+
+    protected handleFizzChange(currentFizz: number, maxFizz: number): void {
+        console.log("current fizz: " + currentFizz);
+
+        //Temp variable setting
+        this.currentFizz = currentFizz;
+        this.maxFizz = maxFizz;
+
+        let unit = this.fizzBarBg.size.x / maxFizz;
+        
+		this.fizzBar.size.set(this.fizzBarBg.size.x - unit * (maxFizz - currentFizz), this.fizzBarBg.size.y);
+		this.fizzBar.position.set(this.fizzBarBg.position.x - (unit / 2 / this.getViewScale()) * (maxFizz - currentFizz), this.fizzBarBg.position.y);
+
+		this.fizzBar.backgroundColor = new Color(153, 217, 234, 1);
+    }
 
     protected handleCharSwitch(currentHealth: number, maxHealth: number): void {
         console.log(this.playerSpriteKey);
@@ -466,6 +484,7 @@ export default abstract class FizzRun_Level extends Scene {
 
 			// Give them a collision shape
 			let collider = new AABB(Vec2.ZERO, this.mentosPool[i].sizeWithZoom);
+            console.log(collider);
 			this.mentosPool[i].setCollisionShape(collider);
 		}
     }
@@ -483,6 +502,7 @@ export default abstract class FizzRun_Level extends Scene {
 
         this.receiver.subscribe(FizzRun_Events.RESTART_GAME);
         this.receiver.subscribe(FizzRun_Events.MAIN_MENU);
+        this.receiver.subscribe(FizzRun_Events.FIZZ_CHANGE);
     }
     /**
      * Adds in any necessary UI to the game
@@ -690,8 +710,6 @@ export default abstract class FizzRun_Level extends Scene {
         // Give the player physics
         this.player.addPhysics(new AABB(this.player.position.clone(), this.player.boundary.getHalfSize().clone()));
         this.player.setGroup("PLAYER");
-
-        // TODO - give the player their flip tween
 
         this.player.tweens.add(PlayerTweens.FLIP, {
             startDelay: 0,
