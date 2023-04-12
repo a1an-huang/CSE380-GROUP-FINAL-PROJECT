@@ -203,17 +203,19 @@ export default abstract class FizzRun_Level extends Scene {
         const pauseLayer: Layer = this.uiLayers.get(FizzRun_Layers.PAUSE);
         if (Input.isJustPressed(FizzRun_Controls.PAUSE_GAME)) {
             console.log("PAUSE GAME");
+            //TODO Freeze the nodes and disable user inputs here!
             const pauseMenuIsHidden: boolean = pauseLayer.isHidden();
             pauseLayer.setHidden(!pauseMenuIsHidden);
         }
-        if (!pauseLayer.isHidden()) {
-            if (Input.isJustPressed(FizzRun_Controls.RESTART_GAME)) {
-                this.emitter.fireEvent(FizzRun_Events.RESTART_GAME);
-            }
-            else if (Input.isJustPressed(FizzRun_Controls.MAIN_MENU)) {
-                this.emitter.fireEvent(FizzRun_Events.MAIN_MENU);
-            }
-        }
+        // NOTE Old key inputs used for pause menu
+        // if (!pauseLayer.isHidden()) {
+        //     if (Input.isJustPressed(FizzRun_Controls.RESTART_GAME)) {
+        //         this.emitter.fireEvent(FizzRun_Events.RESTART_GAME);
+        //     }
+        //     else if (Input.isJustPressed(FizzRun_Controls.MAIN_MENU)) {
+        //         this.emitter.fireEvent(FizzRun_Events.MAIN_MENU);
+        //     }
+        // }
         this.handlePlayerPowerUpCollision();
         // Handle all game events
         while (this.receiver.hasNextEvent()) {
@@ -478,6 +480,7 @@ export default abstract class FizzRun_Level extends Scene {
         // Add pause UI layer
         const pauseLayer: Layer = this.addUILayer(FizzRun_Layers.PAUSE);
         pauseLayer.setHidden(true);
+        //pauseLayer.setDepth(100);
     }
     /**
      * Initializes the tilemaps
@@ -685,6 +688,7 @@ export default abstract class FizzRun_Level extends Scene {
         // restartBtn.onClick = () => {
         //     console.log("hi");
         // };
+        restartBtn.onClickEventId = FizzRun_Events.RESTART_GAME;
 
         // let displayControlsBtn: Button = <Button>this.add.uiElement(
         //     UIElementType.BUTTON,
@@ -712,6 +716,7 @@ export default abstract class FizzRun_Level extends Scene {
                 text: "Main Menu (Press 9)",
             }
         );
+        returnMenuBtn.onClickEventId = FizzRun_Events.MAIN_MENU;
         
         // const pauseBtns: Button[] = [restartBtn, displayControlsBtn, helpBtn, returnMenuBtn];
         const pauseBtns: Button[] = [restartBtn, returnMenuBtn];
@@ -719,6 +724,7 @@ export default abstract class FizzRun_Level extends Scene {
             pauseBtns[i].backgroundColor = new Color(255, 0, 64, 1);
             pauseBtns[i].borderRadius = 0;
             pauseBtns[i].setPadding(new Vec2(50, 10));
+            pauseBtns[i].scale.set(0.25, 0.25);
         }
     }
 
