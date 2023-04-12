@@ -61,7 +61,7 @@ export default class Level1 extends FizzRun_Level {
         this.playerSpawn = Level1.PLAYER_SPAWN;
 
         //Set powerup spawn
-        this.mentosSpawn = [new Vec2(200, 180)];
+        this.mentosSpawn = [new Vec2(300, 180)];
 
         // Music and sound
         this.levelMusicKey = Level1.LEVEL_MUSIC_KEY
