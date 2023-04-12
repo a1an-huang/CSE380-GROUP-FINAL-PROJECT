@@ -30,7 +30,7 @@ export default class PlayerWeapon extends ParticleSystem {
         // Give the particle a random velocity.
         let mousedir = this.sourcePoint.vecTo(Input.getGlobalMousePosition());
         particle.vel = RandUtils.randVec(mousedir.x - 10, mousedir.x + 10, mousedir.y - 10, mousedir.y + 10);
-        particle.color = Color.RED;
+        particle.color = Color.YELLOW;
 
         // Give the particle tweens
         particle.tweens.add("active", {

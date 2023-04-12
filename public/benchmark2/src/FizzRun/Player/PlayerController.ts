@@ -16,6 +16,8 @@ import FizzRun_AnimatedSprite from "../Nodes/FizzRun_AnimatedSprite";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 import { FizzRun_Events } from "../FizzRun_Events";
 
+import { SHARED_currentSodaType } from "../Scenes/FizzRun_Level";
+
 /**
  * Animation keys for the player spritesheet
  */
@@ -126,9 +128,19 @@ export default class PlayerController extends StateMachineAI {
 
         // If the player hits the attack button and the weapon system isn't running, restart the system and fire!
         if (Input.isPressed(FizzRun_Controls.ATTACK) && !this.weapon.isSystemRunning()) {
-            // Start the particle system at the player's current position
-            this.weapon.startSystem(500, 0, this.owner.position);
-            this.owner.animation.play(PlayerAnimations.ATTACKING_RIGHT, false, PlayerAnimations.IDLE);
+            if (SHARED_currentSodaType === PlayerSprite.SPRITE) {
+                // Start the particle system at the player's current position
+                this.weapon.startSystem(500, 0, this.owner.position);
+                this.owner.animation.play(PlayerAnimations.ATTACKING_RIGHT, false, PlayerAnimations.IDLE);
+
+                console.log(SHARED_currentSodaType);
+            }
+            else if (SHARED_currentSodaType === PlayerSprite.FANTA) {
+                console.log("Fanta attacks");
+            }
+            else if (SHARED_currentSodaType === PlayerSprite.COKE) {
+                console.log("Coke attacks");
+            }
         }
         // Switch character
         if (Input.isJustPressed(FizzRun_Controls.SWITCH)) {
