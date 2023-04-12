@@ -39,6 +39,12 @@ import MentosBehavior from "../Items/MentosBehavior";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 
 /**
+ * Shared variables for the FizzRun game
+ */
+let SHARED_currentSodaType: String;
+export { SHARED_currentSodaType };
+
+/**
  * A const object for the layer names
  */
 export const FizzRun_Layers = {
@@ -454,6 +460,7 @@ export default abstract class FizzRun_Level extends Scene {
             currFizz: currentFizz,
             maxFizz: maxHealth,
         });
+        SHARED_currentSodaType = this.playerSpriteKey;
         this.viewport.follow(this.player);
     }
 
@@ -786,6 +793,7 @@ export default abstract class FizzRun_Level extends Scene {
             currFizz: 1,
             maxFizz: 10,
         });
+        SHARED_currentSodaType = this.playerSpriteKey;
     }
     /**
      * Initializes the viewport
