@@ -131,7 +131,7 @@ export default class PlayerController extends StateMachineAI {
             this.owner.animation.play(PlayerAnimations.ATTACKING_RIGHT, false, PlayerAnimations.IDLE);
         }
         // Switch character
-        if (Input.isPressed(FizzRun_Controls.SWITCH)) {
+        if (Input.isJustPressed(FizzRun_Controls.SWITCH)) {
             this.emitter.fireEvent(FizzRun_Events.PLAYER_SWITCH, {curhp: this.health, maxhp: this.maxHealth});
         }
 

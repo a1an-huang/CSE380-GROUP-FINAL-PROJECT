@@ -36,6 +36,7 @@ import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import Level1 from "./FizzRun_Level1";
 import SugarBehavior from "../Items/SugarBehavior";
 import MentosBehavior from "../Items/MentosBehavior";
+import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 
 /**
  * A const object for the layer names
@@ -55,6 +56,10 @@ export const FizzRun_Layers = {
 export const FizzRunResourceKeys = {
     SPRITE_LOGO: "SPRITE_LOGO",
     SPRITE_ABILITY: "SPRITE_ABILITY",
+    COKE_LOGO: "COKE_LOGO",
+    COKE_ABILITY: "COKE_ABILITY",
+    FANTA_LOGO: "FANTA_LOGO",
+    FANTA_ABILITY: "FANTA_ABILITY",
     MENTOS: "MENTOS",
 } as const;
 
@@ -243,7 +248,7 @@ export default abstract class FizzRun_Level extends Scene {
                 break;
             }
             case FizzRun_Events.PLAYER_SWITCH: {
-                this.handleCharSwitch(event.data.get("curhp"), event.data.get("maxhp"));
+                this.handleCharSwitch(event.data.get("curhp"), event.data.get("maxhp"), this.currentFizz, this.maxFizz);
                 break;
             }
             case FizzRun_Events.RESTART_GAME: {
@@ -271,7 +276,7 @@ export default abstract class FizzRun_Level extends Scene {
             // TODO Mentos collision sometimes super big
 			if (mentos.visible && this.player.collisionShape.overlaps(mentos.collisionShape)) {
 				this.emitter.fireEvent(FizzRun_Events.PLAYER_MENTOS_COLLISION, { mentosId: mentos.id, owner: this.player.id });
-				this.emitter.fireEvent(FizzRun_Events.FIZZ_CHANGE, {curfizz: this.currentFizz+1, maxfizz: this.maxFizz});
+				this.emitter.fireEvent(FizzRun_Events.FIZZ_CHANGE, {curfizz: MathUtils.clamp(this.currentFizz+1, 0, this.maxFizz), maxfizz: this.maxFizz});
 			}
 		}	
 	}
@@ -364,16 +369,40 @@ export default abstract class FizzRun_Level extends Scene {
 		this.fizzBar.backgroundColor = new Color(153, 217, 234, 1);
     }
 
-    protected handleCharSwitch(currentHealth: number, maxHealth: number): void {
+    protected handleCharSwitch(currentHealth: number, maxHealth: number, currentFizz: number, maxFizz: number): void {
         console.log(this.playerSpriteKey);
         let oldPos = this.player.position;
         this.player.destroy();
 
+        let newSodaLogoKey: string = "";
+        let newSodaAbilityKey: string = "";
         // Switch keys
-        if(this.playerSpriteKey === 'COKE')
+        if (this.playerSpriteKey === 'COKE') {
             this.playerSpriteKey = 'FANTA';
-        else
+            newSodaLogoKey = FizzRunResourceKeys.FANTA_LOGO;
+            newSodaAbilityKey = FizzRunResourceKeys.FANTA_ABILITY;
+        }           
+        else if (this.playerSpriteKey === 'FANTA') {
+            this.playerSpriteKey = 'SPRITE';
+            newSodaLogoKey = FizzRunResourceKeys.SPRITE_LOGO;
+            newSodaAbilityKey = FizzRunResourceKeys.SPRITE_ABILITY;
+        }
+        else {
             this.playerSpriteKey = 'COKE';
+            newSodaLogoKey = FizzRunResourceKeys.COKE_LOGO;  
+            newSodaAbilityKey = FizzRunResourceKeys.COKE_ABILITY; 
+        }
+        //Change logo and ability
+        this.activeSodaIcon.destroy();   
+        this.activeSodaIcon = this.add.sprite(newSodaLogoKey, FizzRun_Layers.UI);
+        this.activeSodaIcon.position.set(45, 20);
+        this.activeSodaIcon.scale.set(0.75, 0.75);     
+        
+        this.activeSkillIcon.destroy();
+        this.activeSkillIcon = this.add.sprite(newSodaAbilityKey, FizzRun_Layers.UI);
+        this.activeSkillIcon.position.set(85, 19);
+        this.activeSkillIcon.scale.set(0.45, 0.45);    
+
 
         this.player = this.add.animatedSprite(this.playerSpriteKey, FizzRun_Layers.PRIMARY);
         this.player.scale.set(0.25, 0.25); 
@@ -421,7 +450,9 @@ export default abstract class FizzRun_Level extends Scene {
             tilemap: "Destructable",
             sodatype: this.playerSpriteKey,
             currHealth: currentHealth,
-            maxHealth: maxHealth
+            maxHealth: maxHealth,
+            currFizz: currentFizz,
+            maxFizz: maxHealth,
         });
         this.viewport.follow(this.player);
     }
@@ -469,7 +500,7 @@ export default abstract class FizzRun_Level extends Scene {
     }
 
     protected initPowerUpPool(): void {
-        this.mentosPool = new Array(1);
+        this.mentosPool = new Array(this.mentosSpawn.length);
 		for (let i = 0; i < this.mentosPool.length; i++){
 			this.mentosPool[i] = this.add.animatedSprite(FizzRunResourceKeys.MENTOS, FizzRun_Layers.PRIMARY);
 
@@ -548,7 +579,7 @@ export default abstract class FizzRun_Level extends Scene {
         this.activeSodaLabel.font = "Arial";
 
         // Active Soda Icon
-        this.activeSodaIcon = this.add.sprite(FizzRunResourceKeys.SPRITE_LOGO, FizzRun_Layers.UI);
+        this.activeSodaIcon = this.add.sprite(FizzRunResourceKeys.COKE_LOGO, FizzRun_Layers.UI);
         this.activeSodaIcon.position.set(45, 20);
         this.activeSodaIcon.scale.set(0.75, 0.75);
 
@@ -563,7 +594,7 @@ export default abstract class FizzRun_Level extends Scene {
         this.activeSkillLabel.font = "Arial";
 
         // Active Skill Icon
-        this.activeSkillIcon = this.add.sprite(FizzRunResourceKeys.SPRITE_ABILITY, FizzRun_Layers.UI);
+        this.activeSkillIcon = this.add.sprite(FizzRunResourceKeys.COKE_ABILITY, FizzRun_Layers.UI);
         this.activeSkillIcon.position.set(85, 19);
         this.activeSkillIcon.scale.set(0.45, 0.45);
         
