@@ -10,6 +10,21 @@ import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 import { FizzRunResourceKeys } from "./FizzRun_Level";
 
+export const Mentos_Spawn_Vecs: Vec2[] = [
+    new Vec2(300, 180), 
+    new Vec2(320, 180), 
+    new Vec2(340, 180), 
+    new Vec2(360, 180),
+    new Vec2(380, 180), 
+    new Vec2(400, 180), 
+    new Vec2(420, 180), 
+    new Vec2(440, 180), 
+    new Vec2(460, 180), 
+    new Vec2(480, 180), 
+    new Vec2(500, 180), 
+  ];
+
+
 /**
  * The first level for HW4 - should be the one with the grass and the clouds.
  */
@@ -61,7 +76,7 @@ export default class Level1 extends FizzRun_Level {
         this.playerSpawn = Level1.PLAYER_SPAWN;
 
         //Set powerup spawn
-        this.mentosSpawn = [new Vec2(300, 180)];
+        this.mentosSpawn = Mentos_Spawn_Vecs;
 
         // Music and sound
         this.levelMusicKey = Level1.LEVEL_MUSIC_KEY
@@ -95,6 +110,10 @@ export default class Level1 extends FizzRun_Level {
         // LOAD IN REQUIRED ASSETS FOR IN GAME UI (done here because load scene not called in Hw3Level)
         this.load.image(FizzRunResourceKeys.SPRITE_LOGO, "fizzrun_assets/images/sprite_logo.png");
         this.load.image(FizzRunResourceKeys.SPRITE_ABILITY, "fizzrun_assets/images/sprite_ability.png");
+        this.load.image(FizzRunResourceKeys.COKE_LOGO, "fizzrun_assets/images/coke_logo.png");
+        this.load.image(FizzRunResourceKeys.COKE_ABILITY, "fizzrun_assets/images/coke_ability.png");
+        this.load.image(FizzRunResourceKeys.FANTA_LOGO, "fizzrun_assets/images/fanta_logo.png");
+        this.load.image(FizzRunResourceKeys.FANTA_ABILITY, "fizzrun_assets/images/fanta_ability.png");
     }
 
     /**
@@ -111,6 +130,10 @@ export default class Level1 extends FizzRun_Level {
         // Keep UI assets
         this.load.keepImage(FizzRunResourceKeys.SPRITE_LOGO);
         this.load.keepImage(FizzRunResourceKeys.SPRITE_ABILITY);
+        this.load.keepImage(FizzRunResourceKeys.COKE_LOGO);
+        this.load.keepImage(FizzRunResourceKeys.COKE_ABILITY);
+        this.load.keepImage(FizzRunResourceKeys.FANTA_LOGO);
+        this.load.keepImage(FizzRunResourceKeys.FANTA_ABILITY);
     }
 
     public startScene(): void {
