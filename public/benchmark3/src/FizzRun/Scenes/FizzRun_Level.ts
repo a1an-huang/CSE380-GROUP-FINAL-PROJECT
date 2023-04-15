@@ -38,6 +38,8 @@ import SugarBehavior from "../Items/SugarBehavior";
 import MentosBehavior from "../Items/MentosBehavior";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 
+import RobotBehavior from "../Enemies/RobotBehavior";
+
 /**
  * Shared variables for the FizzRun game
  */
@@ -67,6 +69,7 @@ export const FizzRunResourceKeys = {
     FANTA_LOGO: "FANTA_LOGO",
     FANTA_ABILITY: "FANTA_ABILITY",
     MENTOS: "MENTOS",
+    ROBOT: "ROBOT",
 } as const;
 
 // The layers as a type
@@ -93,8 +96,13 @@ export default abstract class FizzRun_Level extends Scene {
     /** The player's spawn position */
     protected playerSpawn: Vec2;
 
+    /** NOTE All spawn positions are located in respective level # files */
+
     /** Powerup spawn positions */
     protected mentosSpawn: Vec2[];
+
+    /** Enemy spawn positions */
+    protected robotSpawn: Vec2[];
 
     protected sugarrSpriteKey: string;
     protected sugarPOW: Array<AnimatedSprite>;
@@ -148,6 +156,9 @@ export default abstract class FizzRun_Level extends Scene {
     /** The powerup pool */
     protected mentosPool: Array<AnimatedSprite>;
 
+    /** The enemy pool */
+    protected robotPool: Array<AnimatedSprite>;
+
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, {...options, physics: {
             groupNames: ["GROUND", "PLAYER", "WEAPON", "DESTRUCTABLE"],
@@ -171,7 +182,10 @@ export default abstract class FizzRun_Level extends Scene {
 
         // Initialize the player 
         this.initializePlayer(this.playerSpriteKey);
+
+        // Initialize the powerup and enemy pools
         this.initPowerUpPool();
+        this.initEnemyPool();
 
         // Initialize the viewport - this must come after the player has been initialized
         this.initializeViewport();
@@ -217,6 +231,7 @@ export default abstract class FizzRun_Level extends Scene {
         //     }
         // }
         this.handlePlayerPowerUpCollision();
+        this.handleEnemyCollision();
         // Handle all game events
         while (this.receiver.hasNextEvent()) {
             this.handleEvent(this.receiver.getNextEvent());
@@ -288,6 +303,15 @@ export default abstract class FizzRun_Level extends Scene {
 			}
 		}	
 	}
+
+    public handleEnemyCollision(): void {
+        for (let robot of this.robotPool) {
+            if (robot.visible && this.player.collisionShape.overlaps(robot.collisionShape)) {
+                this.emitter.fireEvent(FizzRun_Events.PLAYER_ROBOT_COLLISION, { robotId: robot.id, owner: this.player.id });
+            }
+        }
+    }
+
     /* Handlers for the different events the scene is subscribed to */
 
     /**
@@ -523,12 +547,27 @@ export default abstract class FizzRun_Level extends Scene {
 
 			this.mentosPool[i].scale.set(0.3, 0.3);
 
-			// Give them a collision shape
-			let collider = new AABB(Vec2.ZERO, this.mentosPool[i].sizeWithZoom);
+			//Use boundary instead of zoom to not have big hitbox
+			let collider = this.mentosPool[i].boundary; 
             console.log(collider);
 			this.mentosPool[i].setCollisionShape(collider);
 		}
     }
+
+    //TODO Init enemy pool
+    protected initEnemyPool(): void {
+        this.robotPool = new Array(this.robotSpawn.length);
+        for (let i = 0; i < this.robotPool.length; i++){
+            this.robotPool[i] = this.add.animatedSprite(FizzRunResourceKeys.ROBOT, FizzRun_Layers.PRIMARY);
+            this.robotPool[i].visible = true;
+            this.robotPool[i].position.copy(this.robotSpawn[i]);
+            this.robotPool[i].addAI(RobotBehavior);
+            this.robotPool[i].scale.set(0.3, 0.3);
+            let collider = this.robotPool[i].boundary;
+            this.robotPool[i].setCollisionShape(collider);
+        }
+    }
+
     /**
      * Handles all subscriptions to events
      */

@@ -24,6 +24,10 @@ export const Mentos_Spawn_Vecs: Vec2[] = [
     new Vec2(500, 180), 
   ];
 
+export const Robot_Spawn_Vecs: Vec2[] = [
+    new Vec2(300, 180), 
+]
+
 
 /**
  * The first level for HW4 - should be the one with the grass and the clouds.
@@ -37,6 +41,7 @@ export default class Level1 extends FizzRun_Level {
     public static readonly PLAYER_SPRITE_PATH_SPRITE = "fizzrun_assets/spritesheets/sprite.json";
 
     public static readonly SPRITE_PATH_MENTOS = "fizzrun_assets/spritesheets/mentos.json";
+    public static readonly SPRITE_PATH_ROBOT = "fizzrun_assets/spritesheets/blue_box.json";
 
     public static readonly TILEMAP_KEY = "LEVEL1";
     public static readonly TILEMAP_PATH = "fizzrun_assets/tilemaps/FizzRunTest.json";
@@ -78,6 +83,9 @@ export default class Level1 extends FizzRun_Level {
         //Set powerup spawn
         this.mentosSpawn = Mentos_Spawn_Vecs;
 
+        //Set enemy spawn
+        this.robotSpawn = Robot_Spawn_Vecs;
+
         // Music and sound
         this.levelMusicKey = Level1.LEVEL_MUSIC_KEY
         this.jumpAudioKey = Level1.JUMP_AUDIO_KEY;
@@ -101,6 +109,7 @@ export default class Level1 extends FizzRun_Level {
         this.load.spritesheet("SPRITE", Level1.PLAYER_SPRITE_PATH_SPRITE);
 
         this.load.spritesheet("MENTOS", Level1.SPRITE_PATH_MENTOS);
+        this.load.spritesheet("ROBOT", Level1.SPRITE_PATH_ROBOT);
         // Audio and music
         this.load.audio(this.levelMusicKey, Level1.LEVEL_MUSIC_PATH);
         this.load.audio(this.jumpAudioKey, Level1.JUMP_AUDIO_PATH);
@@ -121,7 +130,8 @@ export default class Level1 extends FizzRun_Level {
      */
     public unloadScene(): void {
         this.load.keepSpritesheet(this.playerSpriteKey);
-        this.load.keepSpritesheet(FizzRunResourceKeys.MENTOS)
+        this.load.keepSpritesheet(FizzRunResourceKeys.MENTOS);
+        this.load.keepSpritesheet(FizzRunResourceKeys.ROBOT);
         this.load.keepAudio(this.levelMusicKey);
         this.load.keepAudio(this.jumpAudioKey);
         this.load.keepAudio(this.tileDestroyedAudioKey);
