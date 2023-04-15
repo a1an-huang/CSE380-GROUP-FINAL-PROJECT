@@ -4,12 +4,15 @@ import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
 import FizzRun_AnimatedSprite from "../../Nodes/FizzRun_AnimatedSprite";
 import PlayerController from "../PlayerController";
 
+let SHARED_playerController: PlayerController;
+export { SHARED_playerController };
+
 /**
  * An abstract state for the PlayerController 
  */
 export default abstract class PlayerState extends State {
 
-    protected parent: PlayerController;
+    public parent: PlayerController;
 	protected owner: FizzRun_AnimatedSprite;
 	protected gravity: number;
 
@@ -17,6 +20,8 @@ export default abstract class PlayerState extends State {
 		super(parent);
 		this.owner = owner;
         this.gravity = 500;
+
+        SHARED_playerController = parent;
 	}
 
     public abstract onEnter(options: Record<string, any>): void;

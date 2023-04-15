@@ -5,7 +5,9 @@ import Receiver from "../../Wolfie2D/Events/Receiver";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import { FizzRun_Events } from "../FizzRun_Events";
 
-export default class MentosBehavior implements AI {
+import { SHARED_playerController } from "../Player/PlayerStates/PlayerState";
+
+export default class RobotBehavior implements AI {
     private owner: AnimatedSprite;
     private receiver: Receiver;
 
@@ -16,8 +18,7 @@ export default class MentosBehavior implements AI {
         this.owner = owner;
 
         this.receiver = new Receiver();
-        //this.receiver.subscribe(FizzRun_Events.PLAYER_POWERUP);
-        this.receiver.subscribe(FizzRun_Events.PLAYER_MENTOS_COLLISION);
+        this.receiver.subscribe(FizzRun_Events.PLAYER_ROBOT_COLLISION);
 
         this.activate(options);
     }
@@ -33,17 +34,14 @@ export default class MentosBehavior implements AI {
      */
     handleEvent(event: GameEvent): void { 
         switch(event.type) {
-            // case FizzRun_Events.PLAYER_POWERUP: {
-            //     this.handlePlayerPowerUp(event);
-            //     break;
-            // }
-            case FizzRun_Events.PLAYER_MENTOS_COLLISION: {
-              console.log("mentos collided");
-              this.handlePlayerPowerUp(event);
-              break;              
+
+            case FizzRun_Events.PLAYER_ROBOT_COLLISION: {
+              console.log("robot collided");
+              this.handleRobotCollision(event);
+              break;
             }
             default: {
-                throw new Error("Unhandled event in MentosBehavior! Event type: " + event.type);
+                throw new Error("Unhandled event in RobotBehavior! Event type: " + event.type);
             }
         }
     }
@@ -64,13 +62,12 @@ export default class MentosBehavior implements AI {
         this.receiver.destroy();
     }  
 
-    protected handlePlayerPowerUp(event: GameEvent): void {
-        let id = event.data.get("mentosId");
-        if (id === this.owner.id) {
-            this.owner.position.copy(Vec2.ZERO);
-            this.owner.visible = false;
-        }
+    protected handleRobotCollision(event: GameEvent): void {
+      console.log("robot collided");
+      SHARED_playerController.health = 0;
+      this.owner.destroy();
     }
+
 }
 
 

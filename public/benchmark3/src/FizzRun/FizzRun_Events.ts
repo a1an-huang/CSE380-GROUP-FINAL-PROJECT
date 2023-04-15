@@ -30,6 +30,8 @@ export const FizzRun_Events = {
     MAIN_MENU: "MAIN_MENU",
 
     PLAYER_MENTOS_COLLISION: "PLAYER_MENTOS_COLLISION",
+    PLAYER_ROBOT_COLLISION: "PLAYER_ROBOT_COLLISION",
+    
     /**
      * The event that gets emitted when the player's fizz changes
      * 
