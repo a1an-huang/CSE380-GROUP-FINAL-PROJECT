@@ -1,41 +1,26 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
-import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import { FizzRunResourceKeys } from "../Scenes/FizzRun_Level";
+import InkSackBehavior from "../Items/InkSackBehavior";
+import Emitter from "../../Wolfie2D/Events/Emitter";
+import { FizzRun_Events } from "../FizzRun_Events";
 
 export default class CokeWeapon {
 
-  protected theInkSack: AnimatedSprite;
+  protected theInkSack: Sprite;
+  protected emitter: Emitter;
 
   constructor() {
-    // for (let i = 0; i < this.mentosPool.length; i++){
-		// 	theInkSack = this.add.animatedSprite(FizzRunResourceKeys.MENTOS, FizzRun_Layers.PRIMARY);
-
-		// 	// Mentos visible from the start
-		// 	this.mentosPool[i].visible = true;
-    //         this.mentosPool[i].position.copy(this.mentosSpawn[i]);
-
-		// 	// Assign them mentos ai
-		// 	this.mentosPool[i].addAI(MentosBehavior);
-
-		// 	this.mentosPool[i].scale.set(0.3, 0.3);
-
-		// 	//Use boundary instead of zoom to not have big hitbox
-		// 	let collider = this.mentosPool[i].boundary; 
-    //         console.log(collider);
-		// 	this.mentosPool[i].setCollisionShape(collider);
-		// }
+    this.emitter = new Emitter();
   }
 
   initializeInkSack(scene: Scene, layer: string) {
-    // this.theInkSack = scene.add.animatedSprite(FizzRunResourceKeys.COKE_ABILITY, layer);
-    // this.theInkSack.visible = false;
-    // //this.bubbles[i].addAI(BubbleAI);
-    // let collider = this.theInkSack.boundary;
-    // this.theInkSack.setCollisionShape(collider);
+    this.theInkSack = scene.add.sprite(FizzRunResourceKeys.COKE_ABILITY, layer);
+    this.theInkSack.addAI(InkSackBehavior);
   }
   
   startSystem(startPoint: Vec2) {
-    console.log("CokeWeapon startSystem");
+    this.emitter.fireEvent(FizzRun_Events.ACTIVATE_INKSACK, {position: startPoint});
   }
 }

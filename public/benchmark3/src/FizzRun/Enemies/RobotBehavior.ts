@@ -1,4 +1,6 @@
 import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
+import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
+import Shape from "../../Wolfie2D/DataTypes/Shapes/Shape";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import Receiver from "../../Wolfie2D/Events/Receiver";
@@ -6,6 +8,10 @@ import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import { FizzRun_Events } from "../FizzRun_Events";
 
 import { SHARED_playerController } from "../Player/PlayerStates/PlayerState";
+
+export let SHARED_robotCollisionInfo = { 
+    collisionShape: new AABB(),
+};
 
 export default class RobotBehavior implements AI {
     private owner: AnimatedSprite;
