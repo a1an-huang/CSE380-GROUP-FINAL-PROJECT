@@ -11,7 +11,7 @@ import Input from "../../Wolfie2D/Input/Input";
  * The particle system used for the player's attack. Particles in the particle system should
  * be spawned at the player's position and fired in the direction of the mouse's position.
  */
-export default class PlayerWeapon extends ParticleSystem {
+export default class SpriteWeapon extends ParticleSystem {
 
     public getPool(): Readonly<Array<Particle>> {
         return this.particlePool;
