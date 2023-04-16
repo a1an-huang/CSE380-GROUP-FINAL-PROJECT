@@ -17,6 +17,8 @@ import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 import { FizzRun_Events } from "../FizzRun_Events";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 
+import { SHARED_currentSodaType } from "../Scenes/FizzRun_Level";
+
 /**
  * Animation keys for the player spritesheet
  */
@@ -68,6 +70,10 @@ export default class PlayerController extends StateMachineAI {
     protected _health: number;
     protected _maxHealth: number;
 
+    /** Fizz Meters */
+    protected _fizz: number;
+    protected _maxFizz: number;
+
     /** The players game node */
     protected owner: FizzRun_AnimatedSprite;
 
@@ -89,6 +95,9 @@ export default class PlayerController extends StateMachineAI {
 
         this.health = options.currHealth;
         this.maxHealth = options.maxHealth;
+
+        this.fizz = options.currFizz;
+        this.maxFizz = options.maxFizz;
 
         // Add the different states the player can be in to the PlayerController 
 		this.addState(PlayerStates.IDLE, new Idle(this, this.owner));
@@ -138,12 +147,22 @@ export default class PlayerController extends StateMachineAI {
 
         // If the player hits the attack button and the weapon system isn't running, restart the system and fire!
         if (Input.isPressed(FizzRun_Controls.ATTACK) && !this.weapon.isSystemRunning()) {
-            // Start the particle system at the player's current position
-            this.weapon.startSystem(500, 0, this.owner.position);
-            this.owner.animation.play(PlayerAnimations.ATTACKING_RIGHT, false, PlayerAnimations.IDLE);
+            if (SHARED_currentSodaType === PlayerSprite.SPRITE) {
+                // Start the particle system at the player's current position
+                this.weapon.startSystem(500, 0, this.owner.position);
+                this.owner.animation.play(PlayerAnimations.ATTACKING_RIGHT, false, PlayerAnimations.IDLE);
+
+                console.log(SHARED_currentSodaType);
+            }
+            else if (SHARED_currentSodaType === PlayerSprite.FANTA) {
+                console.log("Fanta attacks");
+            }
+            else if (SHARED_currentSodaType === PlayerSprite.COKE) {
+                console.log("Coke attacks");
+            }
         }
         // Switch character
-        if (Input.isPressed(FizzRun_Controls.SWITCH)) {
+        if (Input.isJustPressed(FizzRun_Controls.SWITCH)) {
             this.emitter.fireEvent(FizzRun_Events.PLAYER_SWITCH, {curhp: this.health, maxhp: this.maxHealth});
         }
 
@@ -174,5 +193,19 @@ export default class PlayerController extends StateMachineAI {
 
         // If the health hit 0, change the state of the player
         if (this.health === 0) { this.changeState(PlayerStates.DEAD); }
+    }
+
+    public get maxFizz(): number { return this._maxFizz; }
+    public set maxFizz(maxFizz: number) { 
+        this._maxFizz = maxFizz; 
+        // When the fizz changes, fire an event up to the scene.
+        this.emitter.fireEvent(FizzRun_Events.FIZZ_CHANGE, {curfizz: this.fizz, maxfizz: this.maxFizz});
+    }
+
+    public get fizz(): number { return this._fizz; }
+    public set fizz(fizz: number) { 
+        this._fizz = MathUtils.clamp(fizz, 0, this.maxFizz);
+        // When the fizz changes, fire an event up to the scene.
+        this.emitter.fireEvent(FizzRun_Events.FIZZ_CHANGE, {curfizz: this.fizz, maxfizz: this.maxFizz});
     }
 }

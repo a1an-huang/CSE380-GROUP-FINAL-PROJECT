@@ -10,6 +10,21 @@ import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 import { FizzRunResourceKeys } from "./FizzRun_Level";
 
+export const Mentos_Spawn_Vecs: Vec2[] = [
+    new Vec2(300, 180), 
+    new Vec2(320, 180), 
+    new Vec2(340, 180), 
+    new Vec2(360, 180),
+    new Vec2(380, 180), 
+    new Vec2(400, 180), 
+    new Vec2(420, 180), 
+    new Vec2(440, 180), 
+    new Vec2(460, 180), 
+    new Vec2(480, 180), 
+    new Vec2(500, 180), 
+  ];
+
+
 /**
  * The first level for HW4 - should be the one with the grass and the clouds.
  */
@@ -23,6 +38,7 @@ export default class Level1 extends FizzRun_Level {
 
     public static readonly SUGAR_SPRITE_KEY = "SUGAR";
     public static readonly SUGAR_SPRITE_PATH= "fizzrun_assets/spritesheets/sugar.json";
+    public static readonly SPRITE_PATH_MENTOS = "fizzrun_assets/spritesheets/mentos.json";
 
     public static readonly TILEMAP_KEY = "LEVEL1";
     public static readonly TILEMAP_PATH = "fizzrun_assets/tilemaps/FizzRunTest.json";
@@ -66,6 +82,9 @@ export default class Level1 extends FizzRun_Level {
         this.sugarPOW = new Array(2);
         this.sugarpos = [new Vec2(170, 160), new Vec2(200, 160)];
 
+        //Set powerup spawn
+        this.mentosSpawn = Mentos_Spawn_Vecs;
+
         // Music and sound
         this.levelMusicKey = Level1.LEVEL_MUSIC_KEY
         this.jumpAudioKey = Level1.JUMP_AUDIO_KEY;
@@ -90,6 +109,9 @@ export default class Level1 extends FizzRun_Level {
 
 
         this.load.spritesheet(this.sugarSpriteKey, Level1.SUGAR_SPRITE_PATH);
+        this.load.spritesheet("SPRITE", Level1.PLAYER_SPRITE_PATH_SPRITE);
+
+        this.load.spritesheet("MENTOS", Level1.SPRITE_PATH_MENTOS);
         // Audio and music
         this.load.audio(this.levelMusicKey, Level1.LEVEL_MUSIC_PATH);
         this.load.audio(this.jumpAudioKey, Level1.JUMP_AUDIO_PATH);
@@ -99,6 +121,10 @@ export default class Level1 extends FizzRun_Level {
         // LOAD IN REQUIRED ASSETS FOR IN GAME UI (done here because load scene not called in Hw3Level)
         this.load.image(FizzRunResourceKeys.SPRITE_LOGO, "fizzrun_assets/images/sprite_logo.png");
         this.load.image(FizzRunResourceKeys.SPRITE_ABILITY, "fizzrun_assets/images/sprite_ability.png");
+        this.load.image(FizzRunResourceKeys.COKE_LOGO, "fizzrun_assets/images/coke_logo.png");
+        this.load.image(FizzRunResourceKeys.COKE_ABILITY, "fizzrun_assets/images/coke_ability.png");
+        this.load.image(FizzRunResourceKeys.FANTA_LOGO, "fizzrun_assets/images/fanta_logo.png");
+        this.load.image(FizzRunResourceKeys.FANTA_ABILITY, "fizzrun_assets/images/fanta_ability.png");
     }
 
     /**
@@ -106,6 +132,7 @@ export default class Level1 extends FizzRun_Level {
      */
     public unloadScene(): void {
         this.load.keepSpritesheet(this.playerSpriteKey);
+        this.load.keepSpritesheet(FizzRunResourceKeys.MENTOS)
         this.load.keepAudio(this.levelMusicKey);
         this.load.keepAudio(this.jumpAudioKey);
         this.load.keepAudio(this.tileDestroyedAudioKey);
@@ -114,6 +141,10 @@ export default class Level1 extends FizzRun_Level {
         // Keep UI assets
         this.load.keepImage(FizzRunResourceKeys.SPRITE_LOGO);
         this.load.keepImage(FizzRunResourceKeys.SPRITE_ABILITY);
+        this.load.keepImage(FizzRunResourceKeys.COKE_LOGO);
+        this.load.keepImage(FizzRunResourceKeys.COKE_ABILITY);
+        this.load.keepImage(FizzRunResourceKeys.FANTA_LOGO);
+        this.load.keepImage(FizzRunResourceKeys.FANTA_ABILITY);
     }
 
     public startScene(): void {
