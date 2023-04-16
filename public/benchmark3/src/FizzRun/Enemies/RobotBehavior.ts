@@ -65,7 +65,6 @@ export default class RobotBehavior implements AI {
     protected handleRobotCollision(event: GameEvent): void {
       console.log("robot collided");
       SHARED_playerController.health = 0;
-      this.owner.destroy();
     }
 
 }
