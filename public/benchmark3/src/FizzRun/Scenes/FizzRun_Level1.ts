@@ -40,6 +40,7 @@ export default class Level1 extends FizzRun_Level {
     public static readonly PLAYER_SPRITE_PATH_FANTA = "fizzrun_assets/spritesheets/fanta.json";
     public static readonly PLAYER_SPRITE_PATH_SPRITE = "fizzrun_assets/spritesheets/sprite.json";
 
+    public static readonly SPRITE_PATH_SUGAR = "fizzrun_assets/spritesheets/sugar.json";
     public static readonly SPRITE_PATH_MENTOS = "fizzrun_assets/spritesheets/mentos.json";
     public static readonly SPRITE_PATH_ROBOT = "fizzrun_assets/spritesheets/blue_box.json";
 
@@ -79,6 +80,11 @@ export default class Level1 extends FizzRun_Level {
         this.playerSpriteKey = Level1.PLAYER_SPRITE_KEY;
         // Set the player's spawn
         this.playerSpawn = Level1.PLAYER_SPAWN;
+
+        // Can specify how many powerups and their positions
+        this.sugarSpriteKey = Level1.SPRITE_PATH_SUGAR;
+        this.sugarPOW = new Array(2);
+        this.sugarpos = [new Vec2(170, 160), new Vec2(200, 160)];
 
         //Set powerup spawn
         this.mentosSpawn = Mentos_Spawn_Vecs;

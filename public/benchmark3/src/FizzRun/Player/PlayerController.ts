@@ -15,6 +15,7 @@ import { FizzRun_Controls } from "../FizzRun_Controls";
 import FizzRun_AnimatedSprite from "../Nodes/FizzRun_AnimatedSprite";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 import { FizzRun_Events } from "../FizzRun_Events";
+import GameEvent from "../../Wolfie2D/Events/GameEvent";
 
 import { SHARED_currentSodaType } from "../Scenes/FizzRun_Level";
 
@@ -152,6 +153,14 @@ export default class PlayerController extends StateMachineAI {
         }
 
 	}
+
+    protected handlePlayerPowerUpCollision(event: GameEvent): void {
+        let id = event.data.get("owner");
+        let type = event.data.get("type");
+        if (id === this.owner.id && type === 'sugar') {
+            console.log('working');
+        }
+    }
 
     public get velocity(): Vec2 { return this._velocity; }
     public set velocity(velocity: Vec2) { this._velocity = velocity; }
