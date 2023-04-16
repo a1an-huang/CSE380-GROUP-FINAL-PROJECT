@@ -8,7 +8,6 @@ import Jump from "./PlayerStates/Jump";
 import Walk from "./PlayerStates/Walk";
 import Dead from "./PlayerStates/Dead";
 
-import PlayerWeapon from "./PlayerWeapon";
 import Input from "../../Wolfie2D/Input/Input";
 
 import { FizzRun_Controls } from "../FizzRun_Controls";
@@ -82,7 +81,7 @@ export default class PlayerController extends StateMachineAI {
 
     protected tilemap: OrthogonalTilemap;
     // protected cannon: Sprite;
-    protected weapon: PlayerWeapon;
+    protected weapon: any;
 
     public initializeAI(owner: FizzRun_AnimatedSprite, options: Record<string, any>){
         this.owner = owner;
@@ -128,19 +127,17 @@ export default class PlayerController extends StateMachineAI {
 		super.update(deltaT);
 
         // If the player hits the attack button and the weapon system isn't running, restart the system and fire!
-        if (Input.isPressed(FizzRun_Controls.ATTACK) && !this.weapon.isSystemRunning()) {
-            if (SHARED_currentSodaType === PlayerSprite.SPRITE) {
+        if (Input.isPressed(FizzRun_Controls.ATTACK)) {
+            if (SHARED_currentSodaType === PlayerSprite.SPRITE && !this.weapon.isSystemRunning()) {
                 // Start the particle system at the player's current position
                 this.weapon.startSystem(500, 0, this.owner.position);
                 this.owner.animation.play(PlayerAnimations.ATTACKING_RIGHT, false, PlayerAnimations.IDLE);
-
-                console.log(SHARED_currentSodaType);
             }
             else if (SHARED_currentSodaType === PlayerSprite.FANTA) {
-                console.log("Fanta attacks");
+                this.weapon.startSystem();
             }
             else if (SHARED_currentSodaType === PlayerSprite.COKE) {
-                console.log("Coke attacks");
+                this.weapon.startSystem(this.owner.position);
             }
         }
         // Switch character

@@ -18,7 +18,9 @@ import Timer from "../../Wolfie2D/Timing/Timer";
 import Color from "../../Wolfie2D/Utils/Color";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import PlayerController, { PlayerTweens } from "../Player/PlayerController";
-import PlayerWeapon from "../Player/PlayerWeapon";
+import SpriteWeapon from "../Player/SpriteWeapon";
+import CokeWeapon from "../Player/CokeWeapon";
+import FantaWeapon from "../Player/FantaWeapon";
 
 import { FizzRun_Events } from "../FizzRun_Events";
 import { FizzRun_PhysicsGroups } from "../FizzRun_PhysicsGroups";
@@ -39,6 +41,7 @@ import MentosBehavior from "../Items/MentosBehavior";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 
 import RobotBehavior from "../Enemies/RobotBehavior";
+import { SHARED_playerController } from "../Player/PlayerStates/PlayerState";
 
 /**
  * Shared variables for the FizzRun game
@@ -87,8 +90,12 @@ export default abstract class FizzRun_Level extends Scene {
     /** Overrride the factory manager */
     public add: FizzRun_FactoryManager;
 
-    /** The particle system used for the player's weapon */
-    protected playerWeaponSystem: PlayerWeapon
+    /** [NEW] The weapon system can be any of the 3 sodas */
+    protected playerWeaponSystem: any
+    protected INITIALIZED_SPRITE_WEAPON: SpriteWeapon;
+    protected INITIALIZED_COKE_WEAPON: CokeWeapon;
+    protected INITIALIZED_FANTA_WEAPON: FantaWeapon;
+
     /** The key for the player's animated sprite */
     protected playerSpriteKey: string;
     /** The animated sprite that is the player */
@@ -217,20 +224,14 @@ export default abstract class FizzRun_Level extends Scene {
     public updateScene(deltaT: number) {
         const pauseLayer: Layer = this.uiLayers.get(FizzRun_Layers.PAUSE);
         if (Input.isJustPressed(FizzRun_Controls.PAUSE_GAME)) {
-            console.log("PAUSE GAME");
             //TODO Freeze the nodes and disable user inputs here!
             const pauseMenuIsHidden: boolean = pauseLayer.isHidden();
-            pauseLayer.setHidden(!pauseMenuIsHidden);
+            if (pauseMenuIsHidden) {
+                Input.disableKeys();
+                pauseLayer.setHidden(false);
+                console.log("Game Paused");
+            }
         }
-        // NOTE Old key inputs used for pause menu
-        // if (!pauseLayer.isHidden()) {
-        //     if (Input.isJustPressed(FizzRun_Controls.RESTART_GAME)) {
-        //         this.emitter.fireEvent(FizzRun_Events.RESTART_GAME);
-        //     }
-        //     else if (Input.isJustPressed(FizzRun_Controls.MAIN_MENU)) {
-        //         this.emitter.fireEvent(FizzRun_Events.MAIN_MENU);
-        //     }
-        // }
         this.handlePlayerPowerUpCollision();
         this.handleEnemyCollision();
         // Handle all game events
@@ -312,7 +313,7 @@ export default abstract class FizzRun_Level extends Scene {
 
     public handleEnemyCollision(): void {
         for (let robot of this.robotPool) {
-            if (robot.visible && this.player.collisionShape.overlaps(robot.collisionShape)) {
+            if (SHARED_playerController.health > 0 && robot.visible && this.player.collisionShape.overlaps(robot.collisionShape)) {
                 this.emitter.fireEvent(FizzRun_Events.PLAYER_ROBOT_COLLISION, { robotId: robot.id, owner: this.player.id });
             }
         }
@@ -327,7 +328,7 @@ export default abstract class FizzRun_Level extends Scene {
     protected handleParticleHit(particleId: number): void {
         let particles = this.playerWeaponSystem.getPool();
 
-        let particle = particles.find(particle => particle.id === particleId);
+        let particle = particles.find((particle: any) => particle.id === particleId);
         if (particle !== undefined) {
             // Get the destructable tilemap
             let tilemap = this.destructable;
@@ -414,21 +415,25 @@ export default abstract class FizzRun_Level extends Scene {
 
         let newSodaLogoKey: string = "";
         let newSodaAbilityKey: string = "";
+        let newSodaWeapon: any;
         // Switch keys
         if (this.playerSpriteKey === 'COKE') {
             this.playerSpriteKey = 'FANTA';
             newSodaLogoKey = FizzRunResourceKeys.FANTA_LOGO;
             newSodaAbilityKey = FizzRunResourceKeys.FANTA_ABILITY;
+            newSodaWeapon = this.INITIALIZED_FANTA_WEAPON
         }           
         else if (this.playerSpriteKey === 'FANTA') {
             this.playerSpriteKey = 'SPRITE';
             newSodaLogoKey = FizzRunResourceKeys.SPRITE_LOGO;
             newSodaAbilityKey = FizzRunResourceKeys.SPRITE_ABILITY;
+            newSodaWeapon = this.INITIALIZED_SPRITE_WEAPON;
         }
         else {
             this.playerSpriteKey = 'COKE';
             newSodaLogoKey = FizzRunResourceKeys.COKE_LOGO;  
             newSodaAbilityKey = FizzRunResourceKeys.COKE_ABILITY; 
+            newSodaWeapon = this.INITIALIZED_COKE_WEAPON;
         }
         //Change logo and ability
         this.activeSodaIcon.destroy();   
@@ -482,9 +487,9 @@ export default abstract class FizzRun_Level extends Scene {
             onEnd: FizzRun_Events.PLAYER_DEAD
         });
 
-        // Give the player it's AI
+        // GIVE NEW SWITCHED SODA ITS AI
         this.player.addAI(PlayerController, { 
-            weaponSystem: this.playerWeaponSystem, 
+            weaponSystem: newSodaWeapon, 
             tilemap: "Destructable",
             sodatype: this.playerSpriteKey,
             currHealth: currentHealth,
@@ -738,7 +743,7 @@ export default abstract class FizzRun_Level extends Scene {
             FizzRun_Layers.PAUSE,
             {
                 position: new Vec2(150, 60),
-                text: "Restart Game (Press 6)",
+                text: "Restart Game",
             }
         );
         // TODO Add functionality to buttons
@@ -770,13 +775,28 @@ export default abstract class FizzRun_Level extends Scene {
             FizzRun_Layers.PAUSE,
             {
                 position: new Vec2(150, 120),
-                text: "Main Menu (Press 9)",
+                text: "Main Menu",
             }
         );
-        returnMenuBtn.onClickEventId = FizzRun_Events.MAIN_MENU;
+        returnMenuBtn.onClick = () => FizzRun_Events.MAIN_MENU;
+
+        let unpauseBtn: Button = <Button>this.add.uiElement(
+            UIElementType.BUTTON,
+            FizzRun_Layers.PAUSE,
+            {
+                position: new Vec2(150, 150),
+                text: "[Unpause]",
+            }
+        );
+        unpauseBtn.onClick = () => {
+            Input.enableKeys();
+            this.uiLayers.get(FizzRun_Layers.PAUSE).setHidden(true);
+            console.log("Game Unpaused");
+        }
+
         
         // const pauseBtns: Button[] = [restartBtn, displayControlsBtn, helpBtn, returnMenuBtn];
-        const pauseBtns: Button[] = [restartBtn, returnMenuBtn];
+        const pauseBtns: Button[] = [restartBtn, returnMenuBtn, unpauseBtn];
         for (let i = 0; i < pauseBtns.length; i++) {
             pauseBtns[i].backgroundColor = new Color(255, 0, 64, 1);
             pauseBtns[i].borderRadius = 0;
@@ -789,8 +809,15 @@ export default abstract class FizzRun_Level extends Scene {
      * Initializes the particles system used by the player's weapon.
      */
     protected initializeWeaponSystem(): void {
-        this.playerWeaponSystem = new PlayerWeapon(50, Vec2.ZERO, 1000, 3, 0, 50);
-        this.playerWeaponSystem.initializePool(this, FizzRun_Layers.PRIMARY);
+        this.INITIALIZED_SPRITE_WEAPON = new SpriteWeapon(50, Vec2.ZERO, 1000, 3, 0, 50);
+        this.INITIALIZED_SPRITE_WEAPON.initializePool(this, FizzRun_Layers.PRIMARY);
+
+        this.INITIALIZED_COKE_WEAPON = new CokeWeapon();
+        this.INITIALIZED_COKE_WEAPON.initializeInkSack(this, FizzRun_Layers.PRIMARY);
+
+        this.INITIALIZED_FANTA_WEAPON = new FantaWeapon();
+
+        this.playerWeaponSystem = this.INITIALIZED_COKE_WEAPON;
     }
     /**
      * Initializes the player, setting the player's initial position to the given position.
