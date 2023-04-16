@@ -40,7 +40,7 @@ import SugarBehavior from "../Items/SugarBehavior";
 import MentosBehavior from "../Items/MentosBehavior";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 
-import RobotBehavior from "../Enemies/RobotBehavior";
+import RobotBehavior, { SHARED_robotCollisionInfo } from "../Enemies/RobotBehavior";
 import { SHARED_playerController } from "../Player/PlayerStates/PlayerState";
 
 /**
@@ -570,6 +570,8 @@ export default abstract class FizzRun_Level extends Scene {
             this.robotPool[i].scale.set(0.3, 0.3);
             let collider = this.robotPool[i].boundary;
             this.robotPool[i].setCollisionShape(collider);
+
+            SHARED_robotCollisionInfo.collisionShape = collider;
         }
     }
 
