@@ -238,6 +238,7 @@ export default abstract class FizzRun_Level extends Scene {
             if (pauseMenuIsHidden) {
                 Input.disableKeys();
                 pauseLayer.setHidden(false);
+                this.freezeOrUnFreezeAnimatedSprites(true);
                 console.log("Game Paused");
             }
         }
@@ -248,6 +249,23 @@ export default abstract class FizzRun_Level extends Scene {
             this.handleEvent(this.receiver.getNextEvent());
         }
     }
+
+    public freezeOrUnFreezeAnimatedSprites(ifFreeze: boolean): void {
+        
+        //ADD A SPRITE ARRAY TO THIS LIST THAT YOU WANT TO PAUSE
+        const allAnimSpritesArr: AnimatedSprite[] = [...this.mentosPool, ...this.robotPool];
+        
+        for (let animSprite of allAnimSpritesArr) {
+            if (ifFreeze == true) {
+                animSprite.freeze();
+                animSprite.animation.pause();
+            }
+            else {
+                animSprite.unfreeze();
+                animSprite.animation.unpause();
+            }
+        }
+    }   
 
     /**
      * Handle game events. 
@@ -779,7 +797,8 @@ export default abstract class FizzRun_Level extends Scene {
         unpauseBtn.onClick = () => {
             Input.enableKeys();
             this.uiLayers.get(FizzRun_Layers.PAUSE).setHidden(true);
-            console.log("Game Unpaused");
+            this.freezeOrUnFreezeAnimatedSprites(false);
+            console.log("Game Unpaused"); 
         }
 
         
