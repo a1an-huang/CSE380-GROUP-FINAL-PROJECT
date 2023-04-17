@@ -46,5 +46,10 @@ export const FizzRun_Events = {
      * Has data: { curfizz: number, maxfizz: number }
      */
     FIZZ_CHANGE: "FIZZ_CHANGE",
+
+    /**
+     * Has data: { debuffKey: String, debuffDurationSeconds: number, position: Vec2 }
+     */
+    PLACE_DEBUFF_ICON: "PLACE_DEBUFF_ICON",
     
 } as const;

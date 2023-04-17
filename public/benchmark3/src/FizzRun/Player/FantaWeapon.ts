@@ -1,6 +1,8 @@
 
 export default class FantaWeapon {
 
+  public name: string = "FantaWeapon";
+
   constructor() {
 
   }

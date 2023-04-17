@@ -13,6 +13,8 @@ import Input from "../../Wolfie2D/Input/Input";
  */
 export default class SpriteWeapon extends ParticleSystem {
 
+    public name: string = "SpriteWeapon";
+
     public getPool(): Readonly<Array<Particle>> {
         return this.particlePool;
     }

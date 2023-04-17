@@ -28,7 +28,6 @@ export const MENTOS_SPAWN_VECS: Vec2[] = [
 
 export const ROBOT_SPAWN_VECS: Vec2[] = [
     new Vec2(250, 180),
-    new Vec2(300, 180), 
 ]
 
 export const PLAYER_SPAWN_VEC = new Vec2(150, 160);
@@ -133,6 +132,8 @@ export default class Level1 extends FizzRun_Level {
         this.load.image(FizzRunResourceKeys.COKE_ABILITY, "fizzrun_assets/images/coke_ability.png");
         this.load.image(FizzRunResourceKeys.FANTA_LOGO, "fizzrun_assets/images/fanta_logo.png");
         this.load.image(FizzRunResourceKeys.FANTA_ABILITY, "fizzrun_assets/images/fanta_ability.png");
+
+        this.load.image(FizzRunResourceKeys.BLINDED_ICON, "fizzrun_assets/images/blinded_status.png");
     }
 
     /**
@@ -154,6 +155,8 @@ export default class Level1 extends FizzRun_Level {
         this.load.keepImage(FizzRunResourceKeys.COKE_ABILITY);
         this.load.keepImage(FizzRunResourceKeys.FANTA_LOGO);
         this.load.keepImage(FizzRunResourceKeys.FANTA_ABILITY);
+
+        this.load.keepImage(FizzRunResourceKeys.BLINDED_ICON);
     }
 
     public startScene(): void {

@@ -44,10 +44,10 @@ import RobotBehavior from "../Enemies/RobotBehavior";
 import { SHARED_playerController } from "../Player/PlayerStates/PlayerState";
 
 /**
- * Shared variables for the FizzRun game
+ * Shared variables for the FizzRun game:
+ * Can either be "COKE", "FANTA", or "SPRITE"
  */
-let SHARED_currentSodaType: String;
-export { SHARED_currentSodaType };
+export let SHARED_currentSodaType: String;
 
 export let SHARED_robotPool = { 
     poolArr: [] as AnimatedSprite[],
@@ -75,10 +75,15 @@ export const FizzRunResourceKeys = {
     COKE_ABILITY: "COKE_ABILITY",
     FANTA_LOGO: "FANTA_LOGO",
     FANTA_ABILITY: "FANTA_ABILITY",
+    //Powerup/Enemy resource keys
     MENTOS: "MENTOS",
     ROBOT: "ROBOT",
+    //Debuff resource keys
+    BLINDED_ICON: "BLINDED_ICON",
 } as const;
 
+/*SECTION DECLARE TYPES HERE */
+export type DebuffResourceKeys = "BLINDED_ICON";
 // The layers as a type
 export type FizzRun_Layers = typeof FizzRun_Layers[keyof typeof FizzRun_Layers]
 
@@ -294,6 +299,14 @@ export default abstract class FizzRun_Level extends Scene {
                 this.handleFizzChange(event.data.get("curfizz"), event.data.get("maxfizz"));
                 break;
             }
+            case FizzRun_Events.PLACE_DEBUFF_ICON: {
+                this.handleDebuffIcon(
+                    event.data.get("debuffKey"), 
+                    event.data.get("debuffDurationSeconds"),
+                    event.data.get("position"),
+                );
+                break;
+            }
             // Default: Throw an error! No unhandled events allowed.
             default: {
                 throw new Error(`Unhandled event caught in scene with type ${event.type}`)
@@ -343,26 +356,13 @@ export default abstract class FizzRun_Level extends Scene {
             for(let col = minIndex.x; col <= maxIndex.x; col++){
                 for(let row = minIndex.y; row <= maxIndex.y; row++){
                     // If the tile is collideable -> check if this particle is colliding with the tile
-                    if(tilemap.isTileCollidable(col, row) && this.particleHitTile(tilemap, particle, col, row)){
+                    if(tilemap.isTileCollidable(col, row)){
                         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: this.tileDestroyedAudioKey, loop: false, holdReference: false });
                         tilemap.setTileAtRowCol(new Vec2(col, row), 0);
                     }
                 }
             }
         }
-    }
-
-    /**
-     * Checks if a particle hit the tile at the (col, row) coordinates in the tilemap.
-     * 
-     * @param tilemap the tilemap
-     * @param particle the particle
-     * @param col the column the 
-     * @param row the row 
-     * @returns true of the particle hit the tile; false otherwise
-     */
-    protected particleHitTile(tilemap: OrthogonalTilemap, particle: Particle, col: number, row: number): boolean {
-        return true;
     }
 
     /**
@@ -408,7 +408,7 @@ export default abstract class FizzRun_Level extends Scene {
     }
 
     protected handleCharSwitch(currentHealth: number, maxHealth: number, currentFizz: number, maxFizz: number): void {
-        console.log(this.playerSpriteKey);
+        console.log("prev soda= " + this.playerSpriteKey);
         let oldPos = this.player.position;
         this.player.destroy();
 
@@ -497,6 +497,7 @@ export default abstract class FizzRun_Level extends Scene {
             maxFizz: maxHealth,
         });
         SHARED_currentSodaType = this.playerSpriteKey;
+        this.playerWeaponSystem = newSodaWeapon;
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: this.switchAudioKey, loop: false, holdReference: false});
         this.viewport.follow(this.player);
     }
@@ -596,6 +597,7 @@ export default abstract class FizzRun_Level extends Scene {
         this.receiver.subscribe(FizzRun_Events.RESTART_GAME);
         this.receiver.subscribe(FizzRun_Events.MAIN_MENU);
         this.receiver.subscribe(FizzRun_Events.FIZZ_CHANGE);
+        this.receiver.subscribe(FizzRun_Events.PLACE_DEBUFF_ICON);
     }
     /**
      * Adds in any necessary UI to the game
@@ -736,10 +738,6 @@ export default abstract class FizzRun_Level extends Scene {
                 text: "Restart Game",
             }
         );
-        // TODO Add functionality to buttons
-        // restartBtn.onClick = () => {
-        //     console.log("hi");
-        // };
         restartBtn.onClickEventId = FizzRun_Events.RESTART_GAME;
 
         // let displayControlsBtn: Button = <Button>this.add.uiElement(
@@ -899,6 +897,15 @@ export default abstract class FizzRun_Level extends Scene {
         this.levelEndArea.setTrigger(FizzRun_PhysicsGroups.PLAYER, FizzRun_Events.PLAYER_ENTERED_LEVEL_END, null);
         this.levelEndArea.color = new Color(255, 0, 0, .20);
         
+    }
+
+    protected handleDebuffIcon(debuffKey: DebuffResourceKeys, debuffDurationSeconds: number, position: Vec2): void {
+        let debuffIcon: Sprite = this.add.sprite(debuffKey, FizzRun_Layers.PRIMARY);
+        debuffIcon.scale.set(0.75, 0.75);
+        debuffIcon.position.copy(position);
+        setTimeout(() => {
+            debuffIcon.destroy();
+        }, debuffDurationSeconds * 1000);
     }
 
     /* Misc methods */

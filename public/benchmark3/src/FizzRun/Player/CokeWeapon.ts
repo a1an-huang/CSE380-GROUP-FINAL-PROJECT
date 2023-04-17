@@ -8,6 +8,8 @@ import { FizzRun_Events } from "../FizzRun_Events";
 
 export default class CokeWeapon {
 
+  public name: string = "CokeWeapon";
+
   protected theInkSack: Sprite;
   protected emitter: Emitter;
 
