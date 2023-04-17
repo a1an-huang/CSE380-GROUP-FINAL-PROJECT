@@ -40,7 +40,7 @@ import SugarBehavior from "../Items/SugarBehavior";
 import MentosBehavior from "../Items/MentosBehavior";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 
-import RobotBehavior, { SHARED_robotCollisionInfo } from "../Enemies/RobotBehavior";
+import RobotBehavior from "../Enemies/RobotBehavior";
 import { SHARED_playerController } from "../Player/PlayerStates/PlayerState";
 
 /**
@@ -48,6 +48,10 @@ import { SHARED_playerController } from "../Player/PlayerStates/PlayerState";
  */
 let SHARED_currentSodaType: String;
 export { SHARED_currentSodaType };
+
+export let SHARED_robotPool = { 
+    poolArr: [] as AnimatedSprite[],
+};
 
 /**
  * A const object for the layer names
@@ -158,13 +162,14 @@ export default abstract class FizzRun_Level extends Scene {
     protected levelMusicKey: string;
     protected jumpAudioKey: string;
     protected deadAudioKey: string;
+    protected switchAudioKey: string;
     protected tileDestroyedAudioKey: string;
 
     /** The powerup pool */
     protected mentosPool: Array<AnimatedSprite>;
 
     /** The enemy pool */
-    protected robotPool: Array<AnimatedSprite>;
+    public robotPool: Array<AnimatedSprite>;
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, {...options, physics: {
@@ -492,6 +497,7 @@ export default abstract class FizzRun_Level extends Scene {
             maxFizz: maxHealth,
         });
         SHARED_currentSodaType = this.playerSpriteKey;
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: this.switchAudioKey, loop: false, holdReference: false});
         this.viewport.follow(this.player);
     }
 
@@ -571,7 +577,7 @@ export default abstract class FizzRun_Level extends Scene {
             let collider = this.robotPool[i].boundary;
             this.robotPool[i].setCollisionShape(collider);
 
-            SHARED_robotCollisionInfo.collisionShape = collider;
+            SHARED_robotPool.poolArr.push(this.robotPool[i]);
         }
     }
 

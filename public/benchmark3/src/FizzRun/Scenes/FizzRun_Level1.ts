@@ -10,7 +10,9 @@ import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 import { FizzRunResourceKeys } from "./FizzRun_Level";
 
-export const Mentos_Spawn_Vecs: Vec2[] = [
+/* SECTION LIST POWERUP/NPC SPAWNPOINTS HERE, DO IT FOR EVERY LEVEL! */
+
+export const MENTOS_SPAWN_VECS: Vec2[] = [
     new Vec2(300, 180), 
     new Vec2(320, 180), 
     new Vec2(340, 180), 
@@ -24,9 +26,12 @@ export const Mentos_Spawn_Vecs: Vec2[] = [
     new Vec2(500, 180), 
   ];
 
-export const Robot_Spawn_Vecs: Vec2[] = [
+export const ROBOT_SPAWN_VECS: Vec2[] = [
+    new Vec2(250, 180),
     new Vec2(300, 180), 
 ]
+
+export const PLAYER_SPAWN_VEC = new Vec2(150, 160);
 
 
 /**
@@ -34,7 +39,7 @@ export const Robot_Spawn_Vecs: Vec2[] = [
  */
 export default class Level1 extends FizzRun_Level {
 
-    public static readonly PLAYER_SPAWN = new Vec2(150, 160);
+    public static readonly PLAYER_SPAWN = PLAYER_SPAWN_VEC;
     public static readonly PLAYER_SPRITE_KEY = "COKE";
     public static readonly PLAYER_SPRITE_PATH_COKE = "fizzrun_assets/spritesheets/coke.json";
     public static readonly PLAYER_SPRITE_PATH_FANTA = "fizzrun_assets/spritesheets/fanta.json";
@@ -64,6 +69,9 @@ export default class Level1 extends FizzRun_Level {
     public static readonly FIZZ_BOOM_KEY = "FIZZ_BOOM";
     public static readonly FIZZ_BOOM_PATH = "fizzrun_assets/sounds/fizzboom.wav";
 
+    public static readonly SWITCH_AUDIO_KEY = "PLAYER_SWITCH";
+    public static readonly SWITCH_AUDIO_PATH = "fizzrun_assets/sounds/switch.wav";
+
     public static readonly LEVEL_END = new AABB(new Vec2(478, 496), new Vec2(12, 16));
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
@@ -81,15 +89,16 @@ export default class Level1 extends FizzRun_Level {
         this.playerSpawn = Level1.PLAYER_SPAWN;
 
         //Set powerup spawn
-        this.mentosSpawn = Mentos_Spawn_Vecs;
+        this.mentosSpawn = MENTOS_SPAWN_VECS;
 
         //Set enemy spawn
-        this.robotSpawn = Robot_Spawn_Vecs;
+        this.robotSpawn = ROBOT_SPAWN_VECS;
 
         // Music and sound
         this.levelMusicKey = Level1.LEVEL_MUSIC_KEY
         this.jumpAudioKey = Level1.JUMP_AUDIO_KEY;
         this.deadAudioKey = Level1.DEAD_AUDIO_KEY;
+        this.switchAudioKey = Level1.SWITCH_AUDIO_KEY;
         this.tileDestroyedAudioKey = Level1.TILE_DESTROYED_KEY;
 
         // Level end size and position
@@ -114,6 +123,7 @@ export default class Level1 extends FizzRun_Level {
         this.load.audio(this.levelMusicKey, Level1.LEVEL_MUSIC_PATH);
         this.load.audio(this.jumpAudioKey, Level1.JUMP_AUDIO_PATH);
         this.load.audio(this.deadAudioKey, Level1.DEAD_AUDIO_PATH);
+        this.load.audio(this.switchAudioKey, Level1.SWITCH_AUDIO_PATH);
         this.load.audio(this.tileDestroyedAudioKey, Level1.TILE_DESTROYED_PATH);
 
         // LOAD IN REQUIRED ASSETS FOR IN GAME UI (done here because load scene not called in Hw3Level)

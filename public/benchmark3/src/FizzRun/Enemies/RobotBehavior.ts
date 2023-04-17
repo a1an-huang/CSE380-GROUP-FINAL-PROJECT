@@ -9,22 +9,21 @@ import { FizzRun_Events } from "../FizzRun_Events";
 
 import { SHARED_playerController } from "../Player/PlayerStates/PlayerState";
 
-export let SHARED_robotCollisionInfo = { 
-    collisionShape: new AABB(),
-};
-
 export default class RobotBehavior implements AI {
     private owner: AnimatedSprite;
     private receiver: Receiver;
+    private isBlinded: boolean;
 
     /**
      * @see {AI.initializeAI}
      */
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
+        this.isBlinded = false;
 
         this.receiver = new Receiver();
         this.receiver.subscribe(FizzRun_Events.PLAYER_ROBOT_COLLISION);
+        this.receiver.subscribe(FizzRun_Events.INKSACK_ROBOT_COLLISION);
 
         this.activate(options);
     }
@@ -40,11 +39,13 @@ export default class RobotBehavior implements AI {
      */
     handleEvent(event: GameEvent): void { 
         switch(event.type) {
-
             case FizzRun_Events.PLAYER_ROBOT_COLLISION: {
-              console.log("robot collided");
               this.handleRobotCollision(event);
               break;
+            }
+            case FizzRun_Events.INKSACK_ROBOT_COLLISION: {
+                this.handleRobotBlind(event);
+                break;
             }
             default: {
                 throw new Error("Unhandled event in RobotBehavior! Event type: " + event.type);
@@ -70,9 +71,26 @@ export default class RobotBehavior implements AI {
 
     protected handleRobotCollision(event: GameEvent): void {
       console.log("robot collided");
+      let robotId = event.data.get("robotId");
+      if (robotId != this.owner.id) { return; }
+      //Don't kill the player if the robot is blinded
+      if (this.isBlinded) {
+          return;
+      }
       SHARED_playerController.health = 0;
     }
 
+    protected handleRobotBlind(event: GameEvent): void {
+        let robotId = event.data.get("robotId");
+        if (robotId != this.owner.id) { return; }
+        //Blind for 5 seconds
+        console.log("robot blinded at: " + this.owner.position);
+        this.isBlinded = true;
+        setTimeout(() => {
+            this.isBlinded = false;
+            console.log("not blinded anymore");
+        }, 5000);
+    }
 }
 
 

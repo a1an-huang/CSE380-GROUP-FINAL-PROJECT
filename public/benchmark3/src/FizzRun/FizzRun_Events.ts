@@ -30,6 +30,9 @@ export const FizzRun_Events = {
 
     PLAYER_MENTOS_COLLISION: "PLAYER_MENTOS_COLLISION",
     PLAYER_ROBOT_COLLISION: "PLAYER_ROBOT_COLLISION",
+    /**
+     * Has data: { robotId: robot.id }
+     */
     INKSACK_ROBOT_COLLISION: "INKSACK_ROBOT_COLLISION",
 
     /** 
