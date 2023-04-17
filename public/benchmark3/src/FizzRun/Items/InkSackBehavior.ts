@@ -7,8 +7,8 @@ import { FizzRun_Events } from "../FizzRun_Events";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import Emitter from "../../Wolfie2D/Events/Emitter";
 
-import { SHARED_robotCollisionInfo } from "../Enemies/RobotBehavior";
 import { SHARED_playerController } from "../Player/PlayerStates/PlayerState";
+import { SHARED_robotPool } from "../Scenes/FizzRun_Level";
 
 export default class InkSackBehavior implements AI {
   public readonly FIXED_POS_SPEED: Vec2 = new Vec2(1.6, 0);
@@ -69,8 +69,10 @@ export default class InkSackBehavior implements AI {
       this.handleEvent(this.receiver.getNextEvent());
     }
     this.owner.move(this.currentSpeed);
-    if (this.owner.collisionShape.overlaps(SHARED_robotCollisionInfo.collisionShape)) {
-      this.emitter.fireEvent(FizzRun_Events.INKSACK_ROBOT_COLLISION);
+    for (let robot of SHARED_robotPool.poolArr) {
+      if (this.owner.collisionShape.overlaps(robot.collisionShape)) {
+        this.emitter.fireEvent(FizzRun_Events.INKSACK_ROBOT_COLLISION, { robotId: robot.id });
+      }
     }
   }
 
