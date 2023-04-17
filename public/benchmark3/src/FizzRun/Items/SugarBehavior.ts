@@ -6,6 +6,8 @@ import Graphic from "../../Wolfie2D/Nodes/Graphic";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import { FizzRun_Events } from "../FizzRun_Events";
 
+import { SHARED_playerController } from "../Player/PlayerStates/PlayerState";
+
 export default class SugarBehavior implements AI {
     private owner: AnimatedSprite;
     private receiver: Receiver;
@@ -65,6 +67,7 @@ export default class SugarBehavior implements AI {
         if (id === this.owner.id && type === 'sugar') {
             this.owner.position.copy(Vec2.ZERO);
             this.owner.visible = false;
+            SHARED_playerController.speedChange = true;
         }
     }
 }

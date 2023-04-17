@@ -3,6 +3,7 @@ import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
 import FizzRun_AnimatedSprite from "../../Nodes/FizzRun_AnimatedSprite";
 import PlayerController from "../PlayerController";
+import { FizzRun_Events } from "../../FizzRun_Events";
 
 let SHARED_playerController: PlayerController;
 export { SHARED_playerController };
@@ -38,6 +39,14 @@ export default abstract class PlayerState extends State {
             }
         }
 	}
+
+    // protected handlePlayerPowerUpCollision(event: GameEvent): void {
+    //     let id = event.data.get("owner");
+    //     let type = event.data.get("type");
+    //     if (id === this.owner.id && type === 'sugar') {
+    //         console.log('working');
+    //     }
+    // }
 
 	public update(deltaT: number): void {
         // This updates the direction the player sprite is facing (left or right)

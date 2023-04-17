@@ -49,6 +49,7 @@ export default class Level1 extends FizzRun_Level {
     public static readonly TILEMAP_SCALE = new Vec2(2, 2);
     public static readonly DESTRUCTIBLE_LAYER_KEY = "Destructable";
     public static readonly WALLS_LAYER_KEY = "Main";
+    public static readonly OBSTACLE_LAYER_KEY = "Obstacle";
 
     public static readonly LEVEL_MUSIC_KEY = "LEVEL_MUSIC";
     public static readonly LEVEL_MUSIC_PATH = "fizzrun_assets/music/ThemeSong.wav";
@@ -75,6 +76,7 @@ export default class Level1 extends FizzRun_Level {
         this.tilemapScale = Level1.TILEMAP_SCALE;
         this.destructibleLayerKey = Level1.DESTRUCTIBLE_LAYER_KEY;
         this.wallsLayerKey = Level1.WALLS_LAYER_KEY;
+        this.obsLayerKey = Level1.OBSTACLE_LAYER_KEY;
 
         // Set the key for the player's sprite
         this.playerSpriteKey = Level1.PLAYER_SPRITE_KEY;
@@ -82,7 +84,6 @@ export default class Level1 extends FizzRun_Level {
         this.playerSpawn = Level1.PLAYER_SPAWN;
 
         // Can specify how many powerups and their positions
-        this.sugarSpriteKey = Level1.SPRITE_PATH_SUGAR;
         this.sugarPOW = new Array(2);
         this.sugarpos = [new Vec2(170, 160), new Vec2(200, 160)];
 
@@ -114,6 +115,7 @@ export default class Level1 extends FizzRun_Level {
         this.load.spritesheet("FANTA", Level1.PLAYER_SPRITE_PATH_FANTA);
         this.load.spritesheet("SPRITE", Level1.PLAYER_SPRITE_PATH_SPRITE);
 
+        this.load.spritesheet("SUGAR", Level1.SPRITE_PATH_SUGAR);
         this.load.spritesheet("MENTOS", Level1.SPRITE_PATH_MENTOS);
         this.load.spritesheet("ROBOT", Level1.SPRITE_PATH_ROBOT);
         // Audio and music

@@ -15,8 +15,10 @@ import FizzRun_AnimatedSprite from "../Nodes/FizzRun_AnimatedSprite";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 import { FizzRun_Events } from "../FizzRun_Events";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
+import Timer from "../../Wolfie2D/Timing/Timer";
 
 import { SHARED_currentSodaType } from "../Scenes/FizzRun_Level";
+
 
 /**
  * Animation keys for the player spritesheet
@@ -50,6 +52,7 @@ export const PlayerStates = {
 	JUMP: "JUMP",
     FALL: "FALL",
     DEAD: "DEAD",
+    POWERUP: "POWERUP"
 } as const
 // Enum for sprite 
 export const PlayerSprite = {
@@ -62,8 +65,11 @@ export const PlayerSprite = {
  * The controller that controls the player.
  */
 export default class PlayerController extends StateMachineAI {
-    public readonly MAX_SPEED: number = 200;
+    public readonly MAX_SPEED: number = 400;
     public readonly MIN_SPEED: number = 100;
+
+    public speedChange: boolean;
+    private speedTimer: Timer
 
     /** Health and max health for the player */
     protected _health: number;
@@ -89,14 +95,17 @@ export default class PlayerController extends StateMachineAI {
         this.weapon = options.weaponSystem;
 
         this.tilemap = this.owner.getScene().getTilemap(options.tilemap) as OrthogonalTilemap;
-        this.speed = 400;
+        this.speed = 100;
         this.velocity = Vec2.ZERO;
 
         this.health = options.currHealth;
         this.maxHealth = options.maxHealth;
-
+        
         this.fizz = options.currFizz;
         this.maxFizz = options.maxFizz;
+
+        this.speedChange = false;
+        this.speedTimer = new Timer(2500, this.handleSpeedChange, false);
 
         // Add the different states the player can be in to the PlayerController 
 		this.addState(PlayerStates.IDLE, new Idle(this, this.owner));
@@ -125,7 +134,12 @@ export default class PlayerController extends StateMachineAI {
 
     public update(deltaT: number): void {
 		super.update(deltaT);
-
+        console.log(this.speed);
+        if(this.speedChange) {
+            this.speed = 400;
+            this.speedTimer.start();
+            this.speedChange = false;
+        }
         // If the player hits the attack button and the weapon system isn't running, restart the system and fire!
         if (Input.isPressed(FizzRun_Controls.ATTACK)) {
             if (SHARED_currentSodaType === PlayerSprite.SPRITE && !this.weapon.isSystemRunning()) {
@@ -151,13 +165,12 @@ export default class PlayerController extends StateMachineAI {
 
 	}
 
-    protected handlePlayerPowerUpCollision(event: GameEvent): void {
-        let id = event.data.get("owner");
-        let type = event.data.get("type");
-        if (id === this.owner.id && type === 'sugar') {
-            console.log('working');
+    protected handleSpeedChange = () => {
+		if (!this.speedChange) {
+            this.speed = 100; 
+			//this.speedTimer.reset();
         }
-    }
+	}
 
     public get velocity(): Vec2 { return this._velocity; }
     public set velocity(velocity: Vec2) { this._velocity = velocity; }

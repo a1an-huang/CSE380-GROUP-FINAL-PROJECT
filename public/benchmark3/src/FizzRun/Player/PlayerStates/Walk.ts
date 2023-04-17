@@ -6,7 +6,7 @@ import PlayerState from "./PlayerState";
 export default class Walk extends PlayerState {
 
 	onEnter(options: Record<string, any>): void {
-        this.parent.speed = this.parent.MIN_SPEED;
+        // this.parent.speed = this.parent.MIN_SPEED;
         this.owner.animation.playIfNotAlready(PlayerAnimations.RUNNING_RIGHT);
 	}
 
