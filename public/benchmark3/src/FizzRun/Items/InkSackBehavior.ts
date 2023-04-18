@@ -81,17 +81,17 @@ export default class InkSackBehavior implements AI {
     this.owner.visible = true;
     if (SHARED_playerController.inputDir.x >= 0) {
       this.owner.position.copy(new Vec2(startPoint.x+10, startPoint.y));
-      this.currentSpeed = this.FIXED_POS_SPEED;
+      this.currentSpeed.copy(this.FIXED_POS_SPEED);
     }
     //FIXME - Shooting left doesn't work
     else {
       this.owner.position.copy(new Vec2(startPoint.x-10, startPoint.y));
-      this.currentSpeed = this.FIXED_NEG_SPEED;
+      this.currentSpeed.copy(this.FIXED_NEG_SPEED);
     }
   }
 
   private handleRobotCollision(event: GameEvent): void {
-    console.log("ink sack collided");
+    console.log("ink sack collided with robot");
     this.owner.visible = false;
     this.owner.position.copy(Vec2.ZERO);
     this.currentSpeed = this.NO_SPEED;
