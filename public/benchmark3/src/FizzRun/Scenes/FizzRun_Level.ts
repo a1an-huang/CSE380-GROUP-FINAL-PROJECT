@@ -42,6 +42,7 @@ import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 
 import RobotBehavior from "../Enemies/RobotBehavior";
 import { SHARED_playerController } from "../Player/PlayerStates/PlayerState";
+import TextInput from "../../Wolfie2D/Nodes/UIElements/TextInput";
 
 /**
  * Shared variables for the FizzRun game:
@@ -62,7 +63,10 @@ export const FizzRun_Layers = {
     // The UI layer
     UI: "UI",
     // The pause layer
-    PAUSE: "PAUSE"
+    PAUSE: "PAUSE",
+    //Pause Sub Layers
+    PAUSE_CONTROLS: "PAUSE_CONTROLS",
+    PAUSE_HELP: "PAUSE_HELP",
 } as const;
 
 /**
@@ -196,6 +200,11 @@ export default abstract class FizzRun_Level extends Scene {
 
         this.initializeUI();
         this.initializePauseMenu(); //NEW Add pause menu layer
+        
+        //Add the pause menu sub layers now
+        this.initializeControlsMenu();
+        this.initializeHelpMenu();
+
 
         // Initialize the player 
         this.initializePlayer(this.playerSpriteKey);
@@ -535,6 +544,10 @@ export default abstract class FizzRun_Level extends Scene {
         const pauseLayer: Layer = this.addUILayer(FizzRun_Layers.PAUSE);
         pauseLayer.setHidden(true);
         //pauseLayer.setDepth(100);
+        const pauseControlsLayer: Layer = this.addUILayer(FizzRun_Layers.PAUSE_CONTROLS);
+        pauseControlsLayer.setHidden(true);
+        const pauseHelpLayer: Layer = this.addUILayer(FizzRun_Layers.PAUSE_HELP);
+        pauseHelpLayer.setHidden(true);
     }
     /**
      * Initializes the tilemaps
@@ -758,23 +771,31 @@ export default abstract class FizzRun_Level extends Scene {
         );
         restartBtn.onClickEventId = FizzRun_Events.RESTART_GAME;
 
-        // let displayControlsBtn: Button = <Button>this.add.uiElement(
-        //     UIElementType.BUTTON,
-        //     FizzRun_Layers.PAUSE,
-        //     {
-        //         position: new Vec2(150, 80),
-        //         text: "Display Controls (Press 7)",
-        //     }
-        // );
+        let displayControlsBtn: Button = <Button>this.add.uiElement(
+            UIElementType.BUTTON,
+            FizzRun_Layers.PAUSE,
+            {
+                position: new Vec2(150, 80),
+                text: "Display Controls",
+            }
+        );
+        displayControlsBtn.onClick = () => {
+            this.uiLayers.get(FizzRun_Layers.PAUSE).setHidden(true);
+            this.uiLayers.get(FizzRun_Layers.PAUSE_CONTROLS).setHidden(false);
+        }
 
-        // let helpBtn: Button = <Button>this.add.uiElement(
-        //     UIElementType.BUTTON,
-        //     FizzRun_Layers.PAUSE,
-        //     {
-        //         position: new Vec2(150, 100),
-        //         text: "Help (Press 8)",
-        //     }
-        // );
+        let helpBtn: Button = <Button>this.add.uiElement(
+            UIElementType.BUTTON,
+            FizzRun_Layers.PAUSE,
+            {
+                position: new Vec2(150, 100),
+                text: "Help",
+            }
+        );
+        helpBtn.onClick = () => {
+            this.uiLayers.get(FizzRun_Layers.PAUSE).setHidden(true);
+            this.uiLayers.get(FizzRun_Layers.PAUSE_HELP).setHidden(false);
+        }
 
         let returnMenuBtn: Button = <Button>this.add.uiElement(
             UIElementType.BUTTON,
@@ -784,7 +805,7 @@ export default abstract class FizzRun_Level extends Scene {
                 text: "Main Menu",
             }
         );
-        returnMenuBtn.onClick = () => FizzRun_Events.MAIN_MENU;
+        returnMenuBtn.onClickEventId = FizzRun_Events.MAIN_MENU;
 
         let unpauseBtn: Button = <Button>this.add.uiElement(
             UIElementType.BUTTON,
@@ -803,12 +824,142 @@ export default abstract class FizzRun_Level extends Scene {
 
         
         // const pauseBtns: Button[] = [restartBtn, displayControlsBtn, helpBtn, returnMenuBtn];
-        const pauseBtns: Button[] = [restartBtn, returnMenuBtn, unpauseBtn];
+        const pauseBtns: Button[] = [restartBtn, displayControlsBtn, helpBtn, returnMenuBtn, unpauseBtn];
         for (let i = 0; i < pauseBtns.length; i++) {
             pauseBtns[i].backgroundColor = new Color(255, 0, 64, 1);
             pauseBtns[i].borderRadius = 0;
             pauseBtns[i].setPadding(new Vec2(50, 10));
             pauseBtns[i].scale.set(0.25, 0.25);
+        }
+    }
+
+    protected initializeControlsMenu(): void {
+        let pauseBox: Graphic = this.add.graphic(GraphicType.RECT, FizzRun_Layers.PAUSE_CONTROLS, {position: new Vec2(150, 100), size: new Vec2(150, 150)});
+        pauseBox.color = new Color(191,191,191, 0.75);
+
+        let controlsList: Array<String> = [
+            "A - Move Left",
+            "D - Move Right",
+            "SPACE - Jump",
+            "F - Cycle Character",
+            "E - Use Special Ability",
+            "X - Use Fizz",
+            "ESC - Pauses the game",
+            "Aim with mouse input",
+        ];
+
+        for (let i = 0; i < controlsList.length; i++) {
+            this.add.uiElement(UIElementType.LABEL, FizzRun_Layers.PAUSE_CONTROLS, {
+                position: new Vec2(150, 35 + i * 10),
+                text: controlsList[i],
+            });
+        }
+
+        let backBtn = <Button>this.add.uiElement(
+            UIElementType.BUTTON,
+            FizzRun_Layers.PAUSE_CONTROLS,
+            {
+                position: new Vec2(150, 150),
+                text: "Back to pause menu",
+            }
+        );
+        backBtn.backgroundColor = new Color(107, 192, 72, 1);
+        backBtn.borderRadius = 0;
+        backBtn.font = "Arial";
+        backBtn.setPadding(new Vec2(50, 10));
+        backBtn.scale.set(0.25, 0.25);
+        backBtn.onClick = () => {
+            this.uiLayers.get(FizzRun_Layers.PAUSE_CONTROLS).setHidden(true);
+            this.uiLayers.get(FizzRun_Layers.PAUSE).setHidden(false);
+        }
+    }
+
+    protected initializeHelpMenu(): void {
+        let pauseBox: Graphic = this.add.graphic(GraphicType.RECT, FizzRun_Layers.PAUSE_HELP, {position: new Vec2(150, 100), size: new Vec2(275, 200)});
+        pauseBox.color = new Color(191,191,191, 0.75);
+
+        let titleOneText: String = "Backstory:";
+        this.add.uiElement(
+            UIElementType.LABEL,
+            FizzRun_Layers.PAUSE_HELP,
+            {
+                position: new Vec2(150, 10),
+                text: titleOneText,
+            }
+        );
+
+        let stringArr: String[] = [
+            `Coca-Cola, Fanta, and Sprite are having a fun time exploring Sodaopolis`,
+            `when Baron Vender, the leader of the Vending Machines invades the city`,
+            `and kidnaps Fanta and Sprite to keep as hostages. Coca-Cola’s task is to`,
+            `save his friends and together defeat Baron Vender by going through 6`,
+            `different platforming puzzles staged in the urban sprawl of Sodaopolis.`,
+            `He and his friends have to use their abilities to break and move around`,
+            `to get to the end of the stage while avoiding obstacles set by Baron Vender.`,
+        ];
+
+        for (let i = 0; i < stringArr.length; i++) {
+            this.add.uiElement(UIElementType.LABEL, FizzRun_Layers.PAUSE_HELP, {
+                position: new Vec2(150, 35 + i * 10),
+                text: stringArr[i],
+            });
+        }
+
+        let titleTwoText: String = "Cheat Codes:";
+        this.add.uiElement(
+            UIElementType.LABEL,
+            FizzRun_Layers.PAUSE_HELP,
+            {
+                position: new Vec2(50, 130),
+                text: titleTwoText,
+            }
+        );
+
+        let cheatCodesList: Array<String> = ["1 (Goto Lv1)", "2 (Goto Lv2)", "I (Invincible)"];
+        for (let i = 0; i < cheatCodesList.length; i++) {
+            this.add.uiElement(UIElementType.LABEL, FizzRun_Layers.PAUSE_HELP, {
+                position: new Vec2(100 + i * 50, 130),
+                text: cheatCodesList[i],
+            });
+        }
+
+        let enterText: String = "Enter Cheatcode:";
+        this.add.uiElement(
+            UIElementType.LABEL,
+            FizzRun_Layers.PAUSE_HELP,
+            {
+                position: new Vec2(125, 150),
+                text: enterText,
+            }
+        );
+
+        let inputBox: TextInput = <TextInput>this.add.uiElement(
+            UIElementType.TEXT_INPUT,
+            FizzRun_Layers.PAUSE_HELP,
+            {
+                position: new Vec2(200, 150),
+                text: "",
+            }
+        );
+        inputBox.setPadding(new Vec2(250, 7.5));
+        inputBox.backgroundColor = new Color(255, 255, 255);
+
+        let backBtn = <Button>this.add.uiElement(
+            UIElementType.BUTTON,
+            FizzRun_Layers.PAUSE_HELP,
+            {
+                position: new Vec2(150, 170),
+                text: "Back to pause menu",
+            }
+        );
+        backBtn.backgroundColor = new Color(153, 217, 234, 1);
+        backBtn.borderRadius = 0;
+        backBtn.font = "Arial";
+        backBtn.setPadding(new Vec2(50, 10));
+        backBtn.scale.set(0.25, 0.25);
+        backBtn.onClick = () => {
+            this.uiLayers.get(FizzRun_Layers.PAUSE_HELP).setHidden(true);
+            this.uiLayers.get(FizzRun_Layers.PAUSE).setHidden(false);
         }
     }
 
