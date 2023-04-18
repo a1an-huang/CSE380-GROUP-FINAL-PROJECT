@@ -90,6 +90,11 @@ export const FizzRunResourceKeys = {
 export type DebuffResourceKeys = "BLINDED_ICON";
 // The layers as a type
 export type FizzRun_Layers = typeof FizzRun_Layers[keyof typeof FizzRun_Layers]
+//Icon duration tuples to keep track of remaining duration for debuffs
+type IconDurationTuple = {
+    icon: Sprite,
+    durationMs: number, //Duration in miliseconds
+}
 
 /**
  * An abstract HW4 scene class.
@@ -180,6 +185,9 @@ export default abstract class FizzRun_Level extends Scene {
     /** The enemy pool */
     public robotPool: Array<AnimatedSprite>;
 
+    /** The debuff pool */
+    protected allDebuffTuples: IconDurationTuple[];
+
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, {...options, physics: {
             groupNames: ["GROUND", "PLAYER", "WEAPON", "DESTRUCTABLE"],
@@ -212,6 +220,8 @@ export default abstract class FizzRun_Level extends Scene {
         // Initialize the powerup and enemy pools
         this.initPowerUpPool();
         this.initEnemyPool();
+        // Initialize the debuff pool
+        this.allDebuffTuples = [];
 
         // Initialize the viewport - this must come after the player has been initialized
         this.initializeViewport();
@@ -243,20 +253,32 @@ export default abstract class FizzRun_Level extends Scene {
         const pauseLayer: Layer = this.uiLayers.get(FizzRun_Layers.PAUSE);
         if (Input.isJustPressed(FizzRun_Controls.PAUSE_GAME)) {
             //TODO Freeze the nodes and disable user inputs here!
-            const pauseMenuIsHidden: boolean = pauseLayer.isHidden();
-            if (pauseMenuIsHidden) {
+            if (pauseLayer.isHidden()) {
                 Input.disableKeys();
                 pauseLayer.setHidden(false);
                 this.freezeOrUnFreezeAnimatedSprites(true);
                 console.log("Game Paused");
             }
         }
-        this.handlePlayerPowerUpCollision();
-        this.handleEnemyCollision();
         // Handle all game events
         while (this.receiver.hasNextEvent()) {
             this.handleEvent(this.receiver.getNextEvent());
         }
+        if (!pauseLayer.isHidden()) { return; } //If the pause menu is open, don't update the game
+        this.handlePlayerPowerUpCollision();
+        this.handleEnemyCollision();
+        //Handle debuff durations here
+        for (let debuffTuple of this.allDebuffTuples) {
+            //console.log(debuffTuple)
+            if (debuffTuple.durationMs > 0) {
+                //console.log(debuffTuple.durationMs);
+                debuffTuple.durationMs -= 1000 * deltaT;
+                if (debuffTuple.durationMs <= 0) {
+                    debuffTuple.icon.destroy();
+                    this.allDebuffTuples.splice(this.allDebuffTuples.indexOf(debuffTuple), 1);
+                }
+            }
+        }        
     }
 
     public freezeOrUnFreezeAnimatedSprites(ifFreeze: boolean): void {
@@ -268,10 +290,12 @@ export default abstract class FizzRun_Level extends Scene {
             if (ifFreeze == true) {
                 animSprite.freeze();
                 animSprite.animation.pause();
+                animSprite.pauseAI();
             }
             else {
                 animSprite.unfreeze();
                 animSprite.animation.unpause();
+                animSprite.resumeAI();
             }
         }
     }   
@@ -1073,9 +1097,17 @@ export default abstract class FizzRun_Level extends Scene {
         let debuffIcon: Sprite = this.add.sprite(debuffKey, FizzRun_Layers.PRIMARY);
         debuffIcon.scale.set(0.75, 0.75);
         debuffIcon.position.copy(position);
-        setTimeout(() => {
-            debuffIcon.destroy();
-        }, debuffDurationSeconds * 1000);
+
+        let newDebuffTuple: IconDurationTuple = <IconDurationTuple>({
+            icon: debuffIcon,
+            durationMs: debuffDurationSeconds * 1000,
+        })
+
+        this.allDebuffTuples.push(newDebuffTuple);
+
+        // setTimeout(() => {
+        //     debuffIcon.destroy();
+        // }, debuffDurationSeconds * 1000);
     }
 
     /* Misc methods */
