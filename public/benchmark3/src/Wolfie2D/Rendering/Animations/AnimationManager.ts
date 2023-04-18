@@ -214,6 +214,10 @@ export default class AnimationManager {
         this.animationState = AnimationState.PAUSED;
     }
 
+    unpause(): void {
+        this.animationState = AnimationState.PLAYING;
+    }
+
     /** Resumes the current animation if possible */
     resume(): void {
         if(this.animationState === AnimationState.PAUSED){
