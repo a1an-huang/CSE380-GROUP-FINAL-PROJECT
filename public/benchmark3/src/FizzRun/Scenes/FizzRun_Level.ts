@@ -79,7 +79,7 @@ export const FizzRunResourceKeys = {
     COKE_ABILITY: "COKE_ABILITY",
     FANTA_LOGO: "FANTA_LOGO",
     FANTA_ABILITY: "FANTA_ABILITY",
-    //Powerup/Enemy resource keys
+    SUGAR: "SUGAR",
     MENTOS: "MENTOS",
     ROBOT: "ROBOT",
     //Debuff resource keys
@@ -129,8 +129,9 @@ export default abstract class FizzRun_Level extends Scene {
     /** Enemy spawn positions */
     protected robotSpawn: Vec2[];
 
-    protected sugarrSpriteKey: string;
+    /** Variables responsible for sugar powerup */
     protected sugarPOW: Array<AnimatedSprite>;
+    protected sugarpos: Array<Vec2>;
 
     private healthLabel: Label;
 	private healthBar: Label;
@@ -165,12 +166,15 @@ export default abstract class FizzRun_Level extends Scene {
     protected tilemapKey: string;
     protected destructibleLayerKey: string;
     protected wallsLayerKey: string;
+    protected obsLayerKey: string;
     /** The scale for the tilemap */
     protected tilemapScale: Vec2;
     /** The destrubtable layer of the tilemap */
     protected destructable: OrthogonalTilemap;
     /** The wall layer of the tilemap */
     protected walls: OrthogonalTilemap;
+    /** The obstacle layer of the tilemap */
+    protected obs: OrthogonalTilemap;
 
     /** Sound and music */
     protected levelMusicKey: string;
@@ -190,8 +194,8 @@ export default abstract class FizzRun_Level extends Scene {
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, {...options, physics: {
-            groupNames: ["GROUND", "PLAYER", "WEAPON", "DESTRUCTABLE"],
-            collisions: [[0, 1, 1, 0], [1, 0, 0, 1], [1, 0, 0, 1], [0, 1, 1, 0]]
+            groupNames: ["GROUND", "PLAYER", "WEAPON", "DESTRUCTABLE", "OBSTACLE"],
+            collisions: [[0, 1, 1, 0, 0], [1, 0, 0, 1, 1], [1, 0, 0, 1, 0], [0, 1, 1, 0, 0], [0, 1, 0, 0, 0]]
          }});
         this.add = new FizzRun_FactoryManager(this, this.tilemaps);
     }
@@ -365,6 +369,11 @@ export default abstract class FizzRun_Level extends Scene {
         }
     }
 	public handlePlayerPowerUpCollision(): void {
+        for (let sugar of this.sugarPOW) {
+			if(sugar.visible && this.player.collisionShape.overlaps(sugar.collisionShape)) {
+				this.emitter.fireEvent(FizzRun_Events.PLAYER_POWERUP, { type: 'sugar', powerId: sugar.id, owner: this.player.id });
+            }
+        }
 		for (let mentos of this.mentosPool) {
             // TODO Mentos collision sometimes super big
 			if (mentos.visible && this.player.collisionShape.overlaps(mentos.collisionShape)) {
@@ -496,7 +505,6 @@ export default abstract class FizzRun_Level extends Scene {
         this.activeSkillIcon.position.set(85, 19);
         this.activeSkillIcon.scale.set(0.45, 0.45);    
 
-
         this.player = this.add.animatedSprite(this.playerSpriteKey, FizzRun_Layers.PRIMARY);
         this.player.scale.set(0.25, 0.25); 
         this.player.position.copy(oldPos); 
@@ -541,11 +549,10 @@ export default abstract class FizzRun_Level extends Scene {
         this.player.addAI(PlayerController, { 
             weaponSystem: newSodaWeapon, 
             tilemap: "Destructable",
-            sodatype: this.playerSpriteKey,
             currHealth: currentHealth,
             maxHealth: maxHealth,
             currFizz: currentFizz,
-            maxFizz: maxHealth,
+            maxFizz: maxFizz,
         });
         SHARED_currentSodaType = this.playerSpriteKey;
         this.playerWeaponSystem = newSodaWeapon;
@@ -585,22 +592,40 @@ export default abstract class FizzRun_Level extends Scene {
         // Add the tilemap to the scene
         this.add.tilemap(this.tilemapKey, this.tilemapScale);
 
-        if (this.destructibleLayerKey === undefined || this.wallsLayerKey === undefined) {
-            throw new Error("Make sure the keys for the destuctible layer and wall layer are both set");
+        if (this.destructibleLayerKey === undefined || this.wallsLayerKey === undefined || this.obsLayerKey === undefined) {
+            throw new Error("Make sure the keys for the destuctible layer, wall layer, and obs layer are both set");
         }
 
         // Get the wall and destructible layers 
         this.walls = this.getTilemap(this.wallsLayerKey) as OrthogonalTilemap;
         this.destructable = this.getTilemap(this.destructibleLayerKey) as OrthogonalTilemap;
+        this.obs = this.getTilemap(this.obsLayerKey) as OrthogonalTilemap;
 
         // Add physicss to the wall layer
         this.walls.addPhysics();
         // Add physics to the destructible layer of the tilemap
         this.destructable.addPhysics();
         this.destructable.setTrigger("WEAPON", FizzRun_Events.PARTICLE_HIT_DESTRUCT, null);
+        // Add physics to the obstacle layer of the tilemap
+        this.obs.addPhysics();
+        this.obs.setTrigger("PLAYER", FizzRun_Events.PLAYER_DEAD, null);
     }
 
     protected initPowerUpPool(): void {
+        for (let i = 0; i < this.sugarPOW.length; i++) {
+			this.sugarPOW[i] = this.add.animatedSprite(FizzRunResourceKeys.SUGAR, FizzRun_Layers.PRIMARY);
+            // Make sugar visible and grab position
+			this.sugarPOW[i].visible = true; 
+            this.sugarPOW[i].position.copy(this.sugarpos[i]);
+            // Add AI and scale
+			this.sugarPOW[i].addAI(SugarBehavior);
+			this.sugarPOW[i].scale.set(0.2, 0.2);
+
+			let collider = new AABB(Vec2.ZERO, this.sugarPOW[i].sizeWithZoom);
+			this.sugarPOW[i].setCollisionShape(collider);
+        }
+
+
         this.mentosPool = new Array(this.mentosSpawn.length);
 		for (let i = 0; i < this.mentosPool.length; i++){
 			this.mentosPool[i] = this.add.animatedSprite(FizzRunResourceKeys.MENTOS, FizzRun_Layers.PRIMARY);
@@ -1063,7 +1088,6 @@ export default abstract class FizzRun_Level extends Scene {
         this.player.addAI(PlayerController, { 
             weaponSystem: this.playerWeaponSystem, 
             tilemap: "Destructable",
-            sodatype: this.playerSpriteKey,
             currHealth: 15,
             maxHealth: 15,
             currFizz: 1,

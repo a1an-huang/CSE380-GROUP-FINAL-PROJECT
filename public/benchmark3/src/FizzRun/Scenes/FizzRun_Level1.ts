@@ -44,6 +44,7 @@ export default class Level1 extends FizzRun_Level {
     public static readonly PLAYER_SPRITE_PATH_FANTA = "fizzrun_assets/spritesheets/fanta.json";
     public static readonly PLAYER_SPRITE_PATH_SPRITE = "fizzrun_assets/spritesheets/sprite.json";
 
+    public static readonly SPRITE_PATH_SUGAR = "fizzrun_assets/spritesheets/sugar.json";
     public static readonly SPRITE_PATH_MENTOS = "fizzrun_assets/spritesheets/mentos.json";
     public static readonly SPRITE_PATH_ROBOT = "fizzrun_assets/spritesheets/levitating_robot.json";
 
@@ -52,6 +53,7 @@ export default class Level1 extends FizzRun_Level {
     public static readonly TILEMAP_SCALE = new Vec2(2, 2);
     public static readonly DESTRUCTIBLE_LAYER_KEY = "Destructable";
     public static readonly WALLS_LAYER_KEY = "Main";
+    public static readonly OBSTACLE_LAYER_KEY = "Obstacle";
 
     public static readonly LEVEL_MUSIC_KEY = "LEVEL_MUSIC";
     public static readonly LEVEL_MUSIC_PATH = "fizzrun_assets/music/ThemeSong.wav";
@@ -81,11 +83,16 @@ export default class Level1 extends FizzRun_Level {
         this.tilemapScale = Level1.TILEMAP_SCALE;
         this.destructibleLayerKey = Level1.DESTRUCTIBLE_LAYER_KEY;
         this.wallsLayerKey = Level1.WALLS_LAYER_KEY;
+        this.obsLayerKey = Level1.OBSTACLE_LAYER_KEY;
 
         // Set the key for the player's sprite
         this.playerSpriteKey = Level1.PLAYER_SPRITE_KEY;
         // Set the player's spawn
         this.playerSpawn = Level1.PLAYER_SPAWN;
+
+        // Can specify how many powerups and their positions
+        this.sugarPOW = new Array(2);
+        this.sugarpos = [new Vec2(170, 160), new Vec2(200, 160)];
 
         //Set powerup spawn
         this.mentosSpawn = MENTOS_SPAWN_VECS;
@@ -116,6 +123,7 @@ export default class Level1 extends FizzRun_Level {
         this.load.spritesheet("FANTA", Level1.PLAYER_SPRITE_PATH_FANTA);
         this.load.spritesheet("SPRITE", Level1.PLAYER_SPRITE_PATH_SPRITE);
 
+        this.load.spritesheet("SUGAR", Level1.SPRITE_PATH_SUGAR);
         this.load.spritesheet("MENTOS", Level1.SPRITE_PATH_MENTOS);
         this.load.spritesheet("ROBOT", Level1.SPRITE_PATH_ROBOT);
         // Audio and music

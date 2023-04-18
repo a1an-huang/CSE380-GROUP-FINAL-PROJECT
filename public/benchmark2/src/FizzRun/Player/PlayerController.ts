@@ -15,6 +15,7 @@ import { FizzRun_Controls } from "../FizzRun_Controls";
 import FizzRun_AnimatedSprite from "../Nodes/FizzRun_AnimatedSprite";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 import { FizzRun_Events } from "../FizzRun_Events";
+import GameEvent from "../../Wolfie2D/Events/GameEvent";
 
 import { SHARED_currentSodaType } from "../Scenes/FizzRun_Level";
 
@@ -108,7 +109,25 @@ export default class PlayerController extends StateMachineAI {
         // Start the player in the Idle state
         this.initialize(PlayerStates.IDLE);
     }
+    public handleEvent(event: GameEvent): void {
+		switch(event.type) {
+			case FizzRun_Events.PLAYER_POWERUP: {
+				this.handlePlayerPowerUpCollision(event);
+				break;
+			}
+			default: {
+				throw new Error(`Unhandled event of type: ${event.type} caught in PlayerController`);
+			}
+		}
+	}
 
+    protected handlePlayerPowerUpCollision(event: GameEvent): void {
+        let id = event.data.get("owner");
+        let type = event.data.get("type");
+        if (id === this.owner.id && type === 'sugar') {
+            console.log('working');
+        }
+    }
     /** 
 	 * Get the inputs from the keyboard, or Vec2.Zero if nothing is being pressed
 	 */

@@ -20,6 +20,8 @@ import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import PlayerController, { PlayerTweens } from "../Player/PlayerController";
 import PlayerWeapon from "../Player/PlayerWeapon";
 
+import SugarBehavior from "../Items/SugarBehavior";
+
 import { FizzRun_Events } from "../FizzRun_Events";
 import { FizzRun_PhysicsGroups } from "../FizzRun_PhysicsGroups";
 import FizzRun_FactoryManager from "../Factory/FizzRun_FactoryManager";
@@ -93,11 +95,13 @@ export default abstract class FizzRun_Level extends Scene {
     /** The player's spawn position */
     protected playerSpawn: Vec2;
 
+    protected sugarSpriteKey: string;
     /** Powerup spawn positions */
     protected mentosSpawn: Vec2[];
 
     protected sugarrSpriteKey: string;
     protected sugarPOW: Array<AnimatedSprite>;
+    protected sugarpos: Array<Vec2>;
 
     private healthLabel: Label;
 	private healthBar: Label;
@@ -280,6 +284,9 @@ export default abstract class FizzRun_Level extends Scene {
         }
     }
 	public handlePlayerPowerUpCollision(): void {
+		for (let sugar of this.sugarPOW) {
+			if(this.player.collisionShape.overlaps(sugar.collisionShape)) {
+				this.emitter.fireEvent(FizzRun_Events.PLAYER_POWERUP, { type: 'sugar', powerId: sugar.id, owner: this.player.id });
 		for (let mentos of this.mentosPool) {
             // TODO Mentos collision sometimes super big
 			if (mentos.visible && this.player.collisionShape.overlaps(mentos.collisionShape)) {
@@ -508,8 +515,17 @@ export default abstract class FizzRun_Level extends Scene {
         this.destructable.addPhysics();
         this.destructable.setTrigger("WEAPON", FizzRun_Events.PARTICLE_HIT_DESTRUCT, null);
     }
-
+    // Spawn powerups 
     protected initPowerUpPool(): void {
+		for (let i = 0; i < this.sugarPOW.length; i++){
+			this.sugarPOW[i] = this.add.animatedSprite(this.sugarSpriteKey, FizzRun_Layers.PRIMARY);
+			this.sugarPOW[i].addAI(SugarBehavior);
+			this.sugarPOW[i].scale.set(0.2, 0.2);
+
+			let collider = new AABB(Vec2.ZERO, this.sugarPOW[i].sizeWithZoom);
+			this.sugarPOW[i].setCollisionShape(collider);
+
+            this.sugarPOW[i].position = this.sugarpos[i];
         this.mentosPool = new Array(this.mentosSpawn.length);
 		for (let i = 0; i < this.mentosPool.length; i++){
 			this.mentosPool[i] = this.add.animatedSprite(FizzRunResourceKeys.MENTOS, FizzRun_Layers.PRIMARY);

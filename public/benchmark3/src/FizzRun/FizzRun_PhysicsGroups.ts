@@ -11,6 +11,6 @@ export const FizzRun_PhysicsGroups = {
         set the physics group for a particular tilemap layer.
     */
     GROUND: "GROUND",
-    DESTRUCTABLE: "DESTRUCTABLE"
-    
+    DESTRUCTABLE: "DESTRUCTABLE",
+    OBSTACLE: "OBSTACLE"
 } as const;

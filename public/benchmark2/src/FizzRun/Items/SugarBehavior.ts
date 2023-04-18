@@ -38,7 +38,7 @@ export default class SugarBehavior implements AI {
                 break;
             }
             default: {
-                throw new Error("Unhandled event in MineBehavior! Event type: " + event.type);
+                throw new Error("Unhandled event! Event type: " + event.type);
             }
         }
     }
@@ -60,8 +60,9 @@ export default class SugarBehavior implements AI {
     }  
 
     protected handlePlayerPowerUp(event: GameEvent): void {
-        let id = event.data.get("mineId");
-        if (id === this.owner.id) {
+        let id = event.data.get("powerId");
+        let type = event.data.get("type");
+        if (id === this.owner.id && type === 'sugar') {
             this.owner.position.copy(Vec2.ZERO);
             this.owner.visible = false;
         }
