@@ -45,7 +45,7 @@ export default class Level1 extends FizzRun_Level {
     public static readonly PLAYER_SPRITE_PATH_SPRITE = "fizzrun_assets/spritesheets/sprite.json";
 
     public static readonly SPRITE_PATH_MENTOS = "fizzrun_assets/spritesheets/mentos.json";
-    public static readonly SPRITE_PATH_ROBOT = "fizzrun_assets/spritesheets/blue_box.json";
+    public static readonly SPRITE_PATH_ROBOT = "fizzrun_assets/spritesheets/levitating_robot.json";
 
     public static readonly TILEMAP_KEY = "LEVEL1";
     public static readonly TILEMAP_PATH = "fizzrun_assets/tilemaps/FizzRunTest.json";

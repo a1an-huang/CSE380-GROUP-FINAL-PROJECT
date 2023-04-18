@@ -14,7 +14,7 @@ import { FizzRunResourceKeys } from "../Scenes/FizzRun_Level";
 export default class RobotBehavior implements AI {
     private owner: AnimatedSprite;
     private receiver: Receiver;
-    private isBlinded: boolean;
+    private blindedDuration: number;
 
     private emitter: Emitter;
 
@@ -23,7 +23,7 @@ export default class RobotBehavior implements AI {
      */
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
-        this.isBlinded = false;
+        this.blindedDuration = 0;
 
         this.receiver = new Receiver();
         this.receiver.subscribe(FizzRun_Events.PLAYER_ROBOT_COLLISION);
@@ -66,6 +66,13 @@ export default class RobotBehavior implements AI {
         while (this.receiver.hasNextEvent()) {
             this.handleEvent(this.receiver.getNextEvent());
         }
+        //console.log("blinded duration: " + this.blindedDuration)
+        if (this.blindedDuration > 0) {
+            this.blindedDuration -= 1000 * deltaT;
+            if (this.blindedDuration < 0) {
+                this.blindedDuration = 0;
+            }
+        }
     }
 
     /**
@@ -80,7 +87,7 @@ export default class RobotBehavior implements AI {
       let robotId = event.data.get("robotId");
       if (robotId != this.owner.id) { return; }
       //Don't kill the player if the robot is blinded
-      if (this.isBlinded) {
+      if (this.blindedDuration > 0) {
           return;
       }
       SHARED_playerController.health = 0;
@@ -91,16 +98,12 @@ export default class RobotBehavior implements AI {
         if (robotId != this.owner.id) { return; }
         //Blind for 5 seconds
         console.log("robot blinded at: " + this.owner.position);
-        this.isBlinded = true;
+        this.blindedDuration = 5000;
         this.emitter.fireEvent(FizzRun_Events.PLACE_DEBUFF_ICON, 
             { debuffKey: FizzRunResourceKeys.BLINDED_ICON, 
               debuffDurationSeconds: 5, 
               position: new Vec2(this.owner.position.x, this.owner.position.y - 25)
             });
-        setTimeout(() => {
-            this.isBlinded = false;
-            console.log("not blinded anymore");
-        }, 5000);
     }
 }
 

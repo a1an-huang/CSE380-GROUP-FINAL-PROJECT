@@ -372,6 +372,14 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 		}
 	}
 
+	pauseAI(): void {
+		this.aiActive = false;
+	}
+
+	resumeAI(): void {
+		this.aiActive = true;
+	}
+
 	/*---------- TWEENABLE PROPERTIES ----------*/
 	set positionX(value: number) {
 		this.position.x = value;
