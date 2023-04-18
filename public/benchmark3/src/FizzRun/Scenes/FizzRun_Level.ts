@@ -718,13 +718,17 @@ export default abstract class FizzRun_Level extends Scene {
         this.activeSkillIcon.scale.set(0.45, 0.45);
         
         // End of level label (start off screen)
-        this.levelEndLabel = <Label>this.add.uiElement(UIElementType.LABEL, FizzRun_Layers.UI, { position: new Vec2(-300, 100), text: "Level Complete" });
+        this.levelEndLabel = <Label>this.add.uiElement(
+            UIElementType.LABEL, 
+            FizzRun_Layers.UI, 
+            { position: new Vec2(-300, 100), text: "Level Complete" }
+        );
         this.levelEndLabel.size.set(1200, 60);
         this.levelEndLabel.borderRadius = 0;
         this.levelEndLabel.backgroundColor = new Color(34, 32, 52);
         this.levelEndLabel.textColor = Color.WHITE;
         this.levelEndLabel.fontSize = 48;
-        this.levelEndLabel.font = "PixelSimple";
+        this.levelEndLabel.font = "Arial";
 
         // Add a tween to move the label on screen
         this.levelEndLabel.tweens.add("slideIn", {
@@ -734,7 +738,7 @@ export default abstract class FizzRun_Level extends Scene {
                 {
                     property: TweenableProperties.posX,
                     start: -300,
-                    end: 300,
+                    end: 150,
                     ease: EaseFunctionType.OUT_SINE
                 }
             ]
