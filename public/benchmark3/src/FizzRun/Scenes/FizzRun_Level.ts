@@ -621,7 +621,7 @@ export default abstract class FizzRun_Level extends Scene {
 			this.sugarPOW[i].addAI(SugarBehavior);
 			this.sugarPOW[i].scale.set(0.2, 0.2);
 
-			let collider = new AABB(Vec2.ZERO, this.sugarPOW[i].sizeWithZoom);
+			let collider = this.sugarPOW[i].boundary;
 			this.sugarPOW[i].setCollisionShape(collider);
         }
 
