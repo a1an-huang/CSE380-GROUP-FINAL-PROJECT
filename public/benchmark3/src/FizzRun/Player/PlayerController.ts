@@ -24,7 +24,7 @@ import { SHARED_currentSodaType } from "../Scenes/FizzRun_Level";
  * Animation keys for the player spritesheet
  */
 export const PlayerAnimations = {
-    IDLE: "IDLE",
+    IDLE: "IDLE", 
     RUNNING_RIGHT: "RUNNING_RIGHT",
     RUNNING_LEFT: "RUNNING_LEFT",
     TAKING_DAMAGE: "TAKING_DAMAGE",
@@ -142,10 +142,11 @@ export default class PlayerController extends StateMachineAI {
         }
         // If the player hits the attack button and the weapon system isn't running, restart the system and fire!
         if (Input.isPressed(FizzRun_Controls.ATTACK)) {
+            //WEAPON ALREADY UPDATED IN initializeAI, no need to update here
+
             if (SHARED_currentSodaType === PlayerSprite.SPRITE && !this.weapon.isSystemRunning()) {
                 // Start the particle system at the player's current position
                 this.weapon.startSystem(500, 0, this.owner.position);
-                this.owner.animation.play(PlayerAnimations.ATTACKING_RIGHT, false, PlayerAnimations.IDLE);
             }
             else if (SHARED_currentSodaType === PlayerSprite.FANTA) {
                 this.weapon.startSystem();
@@ -153,6 +154,7 @@ export default class PlayerController extends StateMachineAI {
             else if (SHARED_currentSodaType === PlayerSprite.COKE) {
                 this.weapon.startSystem(this.owner.position);
             }
+            this.owner.animation.play(PlayerAnimations.ATTACKING_RIGHT, false, PlayerAnimations.IDLE);
         }
         // Switch character
         if (Input.isJustPressed(FizzRun_Controls.SWITCH)) {

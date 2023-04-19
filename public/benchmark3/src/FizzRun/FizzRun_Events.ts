@@ -14,7 +14,6 @@ export const FizzRun_Events = {
 
     /**
      * The event that gets emitted when the player's health changes
-     * 
      * Has data: { curhp: number, maxhp: number }
      */
     HEALTH_CHANGE: "HEALTH_CHANGE",
@@ -31,13 +30,27 @@ export const FizzRun_Events = {
 
     PLAYER_MENTOS_COLLISION: "PLAYER_MENTOS_COLLISION",
     PLAYER_ROBOT_COLLISION: "PLAYER_ROBOT_COLLISION",
+    /**
+     * Has data: { robotId: robot.id }
+     */
+    INKSACK_ROBOT_COLLISION: "INKSACK_ROBOT_COLLISION",
+
+    /** 
+     * The event that gets emitted when the player uses an inksack
+     * Has data: { position: Vec2 }
+     */
+    ACTIVATE_INKSACK: "ACTIVATE_INKSACK",
     
     /**
      * The event that gets emitted when the player's fizz changes
-     * 
      * Has data: { curfizz: number, maxfizz: number }
      */
     FIZZ_CHANGE: "FIZZ_CHANGE",
+
+    /**
+     * Has data: { debuffKey: String, debuffDurationSeconds: number, position: Vec2 }
+     */
+    PLACE_DEBUFF_ICON: "PLACE_DEBUFF_ICON",
     
     OBSTACLE_DEATH: "OBSTACLE_DEATH"
     
