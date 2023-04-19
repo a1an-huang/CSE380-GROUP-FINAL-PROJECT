@@ -39,4 +39,6 @@ export const FizzRun_Events = {
      */
     FIZZ_CHANGE: "FIZZ_CHANGE",
     
+    OBSTACLE_DEATH: "OBSTACLE_DEATH"
+    
 } as const;
