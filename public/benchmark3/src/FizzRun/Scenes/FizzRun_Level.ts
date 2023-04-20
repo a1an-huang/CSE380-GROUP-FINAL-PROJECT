@@ -86,6 +86,17 @@ export const FizzRunResourceKeys = {
     BLINDED_ICON: "BLINDED_ICON",
 } as const;
 
+/**
+ * Use this object to access certain cheat code keys
+ */
+export const FizzRun_CheatCodes = {
+    CHEAT_GOTOLV1: "GOTOLV1",
+    CHEAT_GOTOLV2: "GOTOLV2",
+    CHEAT_INVINCIBLE: "INVINCIBLE",
+}
+
+let isCheatInvincibleOn: boolean = false;
+
 /*SECTION DECLARE TYPES HERE */
 export type DebuffResourceKeys = "BLINDED_ICON";
 // The layers as a type
@@ -147,6 +158,8 @@ export default abstract class FizzRun_Level extends Scene {
     private activeSkillLabel: Label;
     private activeSkillSquare: Graphic;
     private activeSkillIcon: Sprite;
+
+    private invincibleLabel: Label;
 
     /** The end of level stuff */
 
@@ -249,6 +262,10 @@ export default abstract class FizzRun_Level extends Scene {
 
         // Start playing the level music for the HW4 level
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: this.levelMusicKey, loop: true, holdReference: true});
+    
+        //FIXME Temp place to put invincible
+        SHARED_playerController.isInvincible = true;
+        isCheatInvincibleOn = true;
     }
 
     /* Update method for the scene */
@@ -378,7 +395,6 @@ export default abstract class FizzRun_Level extends Scene {
             }
         }
 		for (let mentos of this.mentosPool) {
-            // TODO Mentos collision sometimes super big
 			if (mentos.visible && this.player.collisionShape.overlaps(mentos.collisionShape)) {
 				this.emitter.fireEvent(FizzRun_Events.PLAYER_MENTOS_COLLISION, { mentosId: mentos.id, owner: this.player.id });
 				this.emitter.fireEvent(FizzRun_Events.FIZZ_CHANGE, {curfizz: MathUtils.clamp(this.currentFizz+1, 0, this.maxFizz), maxfizz: this.maxFizz});
@@ -500,7 +516,7 @@ export default abstract class FizzRun_Level extends Scene {
         //Change logo and ability
         this.activeSodaIcon.destroy();   
         this.activeSodaIcon = this.add.sprite(newSodaLogoKey, FizzRun_Layers.UI);
-        this.activeSodaIcon.position.set(45, 20);
+        this.activeSodaIcon.position.set(47.5, 19);
         this.activeSodaIcon.scale.set(0.75, 0.75);     
         
         this.activeSkillIcon.destroy();
@@ -649,7 +665,6 @@ export default abstract class FizzRun_Level extends Scene {
 		}
     }
 
-    //TODO Init enemy pool
     protected initEnemyPool(): void {
         this.robotPool = new Array(this.robotSpawn.length);
         for (let i = 0; i < this.robotPool.length; i++){
@@ -688,6 +703,21 @@ export default abstract class FizzRun_Level extends Scene {
      */
     protected initializeUI(): void {
 
+        // GUI Info Background
+        const sodaInfoBg = this.add.graphic(
+            GraphicType.RECT, 
+            FizzRun_Layers.UI, 
+            {position: new Vec2(60, 30), size: new Vec2(110, 50)}
+        );
+        sodaInfoBg.color = new Color(196, 195, 194, 0.75);
+
+        this.invincibleLabel = <Label>this.add.uiElement(
+            UIElementType.LABEL, 
+            FizzRun_Layers.UI, 
+            {position: new Vec2(40, 50), text: "INVINCIBLE"}
+        );
+        this.invincibleLabel.setTextColor(new Color(173, 128, 2, 1));
+
         // HP Label
 		this.healthLabel = <Label>this.add.uiElement(UIElementType.LABEL, FizzRun_Layers.UI, {position: new Vec2(20, 30), text: "Health "});
 		this.healthLabel.size.set(300, 30);
@@ -721,14 +751,14 @@ export default abstract class FizzRun_Level extends Scene {
 		this.fizzBarBg.borderColor = Color.BLACK; 
 
         // Active Soda Label
-        this.activeSodaLabel = <Label>this.add.uiElement(UIElementType.LABEL, FizzRun_Layers.UI, {position: new Vec2(20, 20), text: "Active Soda: "});
+        this.activeSodaLabel = <Label>this.add.uiElement(UIElementType.LABEL, FizzRun_Layers.UI, {position: new Vec2(25, 20), text: "Active Soda: "});
         this.activeSodaLabel.size.set(300, 20);
         this.activeSodaLabel.fontSize = 24;
         this.activeSodaLabel.font = "Arial";
 
         // Active Soda Icon
         this.activeSodaIcon = this.add.sprite(FizzRunResourceKeys.COKE_LOGO, FizzRun_Layers.UI);
-        this.activeSodaIcon.position.set(45, 20);
+        this.activeSodaIcon.position.set(47.5, 19);
         this.activeSodaIcon.scale.set(0.75, 0.75);
 
         // Active Skill Square

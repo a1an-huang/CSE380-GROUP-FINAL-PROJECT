@@ -68,6 +68,9 @@ export default class PlayerController extends StateMachineAI {
     public readonly MAX_SPEED: number = 400;
     public readonly MIN_SPEED: number = 100;
 
+    //CHEATCODE ATTRIBUTES
+    public isInvincible: boolean = false;
+
     public speedChange: boolean;
     private speedTimer: Timer
 
@@ -189,6 +192,8 @@ export default class PlayerController extends StateMachineAI {
 
     public get health(): number { return this._health; }
     public set health(health: number) { 
+        if (this.isInvincible) { return; }
+        
         this._health = MathUtils.clamp(health, 0, this.maxHealth);
         // When the health changes, fire an event up to the scene.
         this.emitter.fireEvent(FizzRun_Events.HEALTH_CHANGE, {curhp: this.health, maxhp: this.maxHealth});
