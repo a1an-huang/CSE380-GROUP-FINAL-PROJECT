@@ -51,5 +51,10 @@ export const FizzRun_Events = {
      * Has data: { debuffKey: String, debuffDurationSeconds: number, position: Vec2 }
      */
     PLACE_DEBUFF_ICON: "PLACE_DEBUFF_ICON",
+
+    /**
+     * Has data: { cheatCodeKey: String }
+     */
+    HANDLE_CHEAT_CODE: "HANDLE_CHEAT_CODE",
     
 } as const;
