@@ -18,6 +18,7 @@ export default class Level2 extends FizzRun_Level {
     public static readonly PLAYER_SPRITE_PATH = "fizzrun_assets/spritesheets/Hero.json";
 
     public static readonly TILEMAP_KEY = "LEVEL2";
+    //FIXME Change this with proper lv2 tilemap when needed
     public static readonly TILEMAP_PATH = "fizzrun_assets/tilemaps/FizzRun_Level2.json";
     public static readonly TILEMAP_SCALE = new Vec2(2, 2);
     public static readonly DESTRUCTIBLE_LAYER_KEY = "Destructable";
