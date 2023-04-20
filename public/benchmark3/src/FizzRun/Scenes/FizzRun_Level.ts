@@ -371,6 +371,9 @@ export default abstract class FizzRun_Level extends Scene {
                 this.handleFizzChange(event.data.get("curfizz"), event.data.get("maxfizz"));
                 break;
             }
+            case FizzRun_Events.OBSTACLE_DEATH: {
+                SHARED_playerController.health = 0;
+            }
             case FizzRun_Events.PLACE_DEBUFF_ICON: {
                 this.handleDebuffIcon(
                     event.data.get("debuffKey"), 
@@ -624,7 +627,7 @@ export default abstract class FizzRun_Level extends Scene {
         this.destructable.setTrigger("WEAPON", FizzRun_Events.PARTICLE_HIT_DESTRUCT, null);
         // Add physics to the obstacle layer of the tilemap
         this.obs.addPhysics();
-        this.obs.setTrigger("PLAYER", FizzRun_Events.PLAYER_DEAD, null);
+        this.obs.setTrigger("PLAYER", FizzRun_Events.OBSTACLE_DEATH, null);
     }
 
     protected initPowerUpPool(): void {
@@ -688,6 +691,7 @@ export default abstract class FizzRun_Level extends Scene {
         this.receiver.subscribe(FizzRun_Events.PLAYER_DEAD);
         this.receiver.subscribe(FizzRun_Events.PARTICLE_HIT_DESTRUCT);
         this.receiver.subscribe(FizzRun_Events.PLAYER_SWITCH);
+        this.receiver.subscribe(FizzRun_Events.OBSTACLE_DEATH);
 
         this.receiver.subscribe(FizzRun_Events.RESTART_GAME);
         this.receiver.subscribe(FizzRun_Events.MAIN_MENU);

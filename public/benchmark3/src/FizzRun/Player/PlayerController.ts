@@ -139,7 +139,7 @@ export default class PlayerController extends StateMachineAI {
 		super.update(deltaT);
         console.log(this.speed);
         if(this.speedChange) {
-            this.speed = 400;
+            this.speed = this.MAX_SPEED;
             this.speedTimer.start();
             this.speedChange = false;
         }
@@ -172,7 +172,7 @@ export default class PlayerController extends StateMachineAI {
 
     protected handleSpeedChange = () => {
 		if (!this.speedChange) {
-            this.speed = 100; 
+            this.speed = this.MIN_SPEED; 
 			//this.speedTimer.reset();
         }
 	}
