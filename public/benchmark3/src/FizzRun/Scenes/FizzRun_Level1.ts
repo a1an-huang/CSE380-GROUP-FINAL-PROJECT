@@ -5,7 +5,6 @@ import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import FizzRun_Level2 from "./FizzRun_Level2";
-import MainMenu from "./MainMenu";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 import { FizzRunResourceKeys } from "./FizzRun_Level";
@@ -32,10 +31,6 @@ export const ROBOT_SPAWN_VECS: Vec2[] = [
 
 export const PLAYER_SPAWN_VEC = new Vec2(150, 160);
 
-
-/**
- * The first level for HW4 - should be the one with the grass and the clouds.
- */
 export default class Level1 extends FizzRun_Level {
 
     public static readonly PLAYER_SPAWN = PLAYER_SPAWN_VEC;
@@ -49,7 +44,7 @@ export default class Level1 extends FizzRun_Level {
     public static readonly SPRITE_PATH_ROBOT = "fizzrun_assets/spritesheets/levitating_robot.json";
 
     public static readonly TILEMAP_KEY = "LEVEL1";
-    public static readonly TILEMAP_PATH = "fizzrun_assets/tilemaps/FizzRunTest.json";
+    public static readonly TILEMAP_PATH = "fizzrun_assets/tilemaps/FizzRun_Level1.json";
     public static readonly TILEMAP_SCALE = new Vec2(2, 2);
     public static readonly DESTRUCTIBLE_LAYER_KEY = "Destructable";
     public static readonly WALLS_LAYER_KEY = "Main";
@@ -133,7 +128,7 @@ export default class Level1 extends FizzRun_Level {
         this.load.audio(this.switchAudioKey, Level1.SWITCH_AUDIO_PATH);
         this.load.audio(this.tileDestroyedAudioKey, Level1.TILE_DESTROYED_PATH);
 
-        // LOAD IN REQUIRED ASSETS FOR IN GAME UI (done here because load scene not called in Hw3Level)
+        // LOAD IN REQUIRED ASSETS FOR IN GAME UI 
         this.load.image(FizzRunResourceKeys.SPRITE_LOGO, "fizzrun_assets/images/sprite_logo.png");
         this.load.image(FizzRunResourceKeys.SPRITE_ABILITY, "fizzrun_assets/images/sprite_ability.png");
         this.load.image(FizzRunResourceKeys.COKE_LOGO, "fizzrun_assets/images/coke_logo.png");
@@ -148,11 +143,17 @@ export default class Level1 extends FizzRun_Level {
      * Unload resources for level 1
      */
     public unloadScene(): void {
-        this.load.keepSpritesheet(this.playerSpriteKey);
+        this.load.keepSpritesheet("COKE");
+        this.load.keepSpritesheet("FANTA");
+        this.load.keepSpritesheet("SPRITE");
+
+        this.load.keepSpritesheet(FizzRunResourceKeys.SUGAR);
         this.load.keepSpritesheet(FizzRunResourceKeys.MENTOS);
         this.load.keepSpritesheet(FizzRunResourceKeys.ROBOT);
-        this.load.keepAudio(this.levelMusicKey);
+        
         this.load.keepAudio(this.jumpAudioKey);
+        this.load.keepAudio(this.deadAudioKey);
+        this.load.keepAudio(this.switchAudioKey);
         this.load.keepAudio(this.tileDestroyedAudioKey);
         this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: Level1.LEVEL_MUSIC_KEY});
 
@@ -169,8 +170,7 @@ export default class Level1 extends FizzRun_Level {
 
     public startScene(): void {
         super.startScene();
-        //FIXME Set the next level to be Level2
-        this.nextLevel = MainMenu;
+        this.nextLevel = FizzRun_Level2;
     }
 
     /**
@@ -181,7 +181,6 @@ export default class Level1 extends FizzRun_Level {
      */
     protected initializeViewport(): void {
         super.initializeViewport();
-        //this.viewport.setBounds(16, 16, 496, 512);
     }
 
 }
