@@ -137,7 +137,6 @@ export default class PlayerController extends StateMachineAI {
 
     public update(deltaT: number): void {
 		super.update(deltaT);
-        console.log(this.speed);
         if(this.speedChange) {
             this.speed = this.MAX_SPEED;
             this.speedTimer.start();
@@ -163,7 +162,6 @@ export default class PlayerController extends StateMachineAI {
         if (Input.isJustPressed(FizzRun_Controls.SWITCH)) {
             this.emitter.fireEvent(FizzRun_Events.PLAYER_SWITCH, {curhp: this.health, maxhp: this.maxHealth});
         }
-
         if(this.health === 0) {
             this.owner.animation.play(PlayerAnimations.DYING, false, PlayerStates.DEAD);
         }
