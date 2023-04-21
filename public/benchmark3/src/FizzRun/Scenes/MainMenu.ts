@@ -9,7 +9,10 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
+
 import Level1 from "./FizzRun_Level1";
+import Level2 from "./FizzRun_Level2";
+import { uncompleted_levels } from "./FizzRun_Level";
 
 // Layers for the main menu scene
 export const MenuLayers = {
@@ -331,9 +334,16 @@ export default class MainMenu extends Scene {
             }
         );
         levelTwoBtn.setPadding(new Vec2(50, 40));
-        let lockedIconLvTwo = this.add.sprite("ICON_LOCKEDLEVEL", MenuLayers.LEVELSELECT);
-        lockedIconLvTwo.position.set(size.x, size.y-200);
-        lockedIconLvTwo.scale.set(1, 1);
+
+        levelTwoBtn.onClick = () => {
+            if(!uncompleted_levels.includes(2))
+                this.sceneManager.changeToScene(Level2);
+        };
+        if(uncompleted_levels.includes(2)) {
+            let lockedIconLvTwo = this.add.sprite("ICON_LOCKEDLEVEL", MenuLayers.LEVELSELECT);
+            lockedIconLvTwo.position.set(size.x, size.y-200);
+            lockedIconLvTwo.scale.set(1, 1);
+        }
 
         let levelThreeBtn = <Button>this.add.uiElement(
             UIElementType.BUTTON,
@@ -344,9 +354,16 @@ export default class MainMenu extends Scene {
             }
         );
         levelThreeBtn.setPadding(new Vec2(50, 40));
-        let lockedIconLvThree = this.add.sprite("ICON_LOCKEDLEVEL", MenuLayers.LEVELSELECT);
-        lockedIconLvThree.position.set(size.x+250, size.y-200);
-        lockedIconLvThree.scale.set(1, 1);
+
+        // levelThreeBtn.onClick = () => {
+        //     if(!uncompleted_levels.includes(3))
+        //         this.sceneManager.changeToScene(Level3);
+        // };
+        if(uncompleted_levels.includes(3)) {
+            let lockedIconLvThree = this.add.sprite("ICON_LOCKEDLEVEL", MenuLayers.LEVELSELECT);
+            lockedIconLvThree.position.set(size.x+250, size.y-200);
+            lockedIconLvThree.scale.set(1, 1);
+        }
 
         let levelFourBtn = <Button>this.add.uiElement(
             UIElementType.BUTTON,
@@ -357,9 +374,16 @@ export default class MainMenu extends Scene {
             }
         );
         levelFourBtn.setPadding(new Vec2(50, 40));
-        let lockedIconLvFour = this.add.sprite("ICON_LOCKEDLEVEL", MenuLayers.LEVELSELECT);
-        lockedIconLvFour.position.set(size.x-250, size.y);
-        lockedIconLvFour.scale.set(1, 1);
+
+        // levelFourBtn.onClick = () => {
+        //     if(!uncompleted_levels.includes(4))
+        //         this.sceneManager.changeToScene(Level4);
+        // };
+        if(uncompleted_levels.includes(4)) {
+            let lockedIconLvFour = this.add.sprite("ICON_LOCKEDLEVEL", MenuLayers.LEVELSELECT);
+            lockedIconLvFour.position.set(size.x-250, size.y);
+            lockedIconLvFour.scale.set(1, 1);
+        }
 
         let levelFiveBtn = <Button>this.add.uiElement(
             UIElementType.BUTTON,
@@ -370,9 +394,15 @@ export default class MainMenu extends Scene {
             }
         );
         levelFiveBtn.setPadding(new Vec2(50, 40));
-        let lockedIconLvFive = this.add.sprite("ICON_LOCKEDLEVEL", MenuLayers.LEVELSELECT);
-        lockedIconLvFive.position.set(size.x, size.y);
-        lockedIconLvFive.scale.set(1, 1);
+        // levelFiveBtn.onClick = () => {
+        //     if(!uncompleted_levels.includes(5))
+        //         this.sceneManager.changeToScene(Level5);
+        // };
+        if(uncompleted_levels.includes(5)) {
+            let lockedIconLvFive = this.add.sprite("ICON_LOCKEDLEVEL", MenuLayers.LEVELSELECT);
+            lockedIconLvFive.position.set(size.x, size.y);
+            lockedIconLvFive.scale.set(1, 1);
+        }
 
         let levelSixBtn = <Button>this.add.uiElement(
             UIElementType.BUTTON,
@@ -383,9 +413,15 @@ export default class MainMenu extends Scene {
             }
         );
         levelSixBtn.setPadding(new Vec2(50, 40));
-        let lockedIconLvSix = this.add.sprite("ICON_LOCKEDLEVEL", MenuLayers.LEVELSELECT);
-        lockedIconLvSix.position.set(size.x+250, size.y);
-        lockedIconLvSix.scale.set(1, 1);
+        // levelSixBtn.onClick = () => {
+        //     if(!uncompleted_levels.includes(6))
+        //         this.sceneManager.changeToScene(Level6);
+        // };
+        if(uncompleted_levels.includes(6)) {
+            let lockedIconLvSix = this.add.sprite("ICON_LOCKEDLEVEL", MenuLayers.LEVELSELECT);
+            lockedIconLvSix.position.set(size.x+250, size.y);
+            lockedIconLvSix.scale.set(1, 1);
+        }
     }
 
     protected createHelpScreen(): void {
