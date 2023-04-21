@@ -72,7 +72,7 @@ export default class Level1 extends FizzRun_Level {
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, options);
-
+        this.levelNumber = 1;
         // Set the keys for the different layers of the tilemap
         this.tilemapKey = Level1.TILEMAP_KEY;
         this.tilemapScale = Level1.TILEMAP_SCALE;

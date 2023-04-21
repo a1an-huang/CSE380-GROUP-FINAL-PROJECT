@@ -107,9 +107,6 @@ type IconDurationTuple = {
     durationMs: number, //Duration in miliseconds
 }
 
-/**
- * An abstract HW4 scene class.
- */
 export default abstract class FizzRun_Level extends Scene {
 
     //SECTION TEMP ACCESS VARIABLES
@@ -175,6 +172,7 @@ export default abstract class FizzRun_Level extends Scene {
     protected levelTransitionTimer: Timer;
     protected levelTransitionScreen: Rect;
 
+    protected levelNumber: number;
     /** The keys to the tilemap and different tilemap layers */
     protected tilemapKey: string;
     protected destructibleLayerKey: string;
@@ -204,6 +202,8 @@ export default abstract class FizzRun_Level extends Scene {
 
     /** The debuff pool */
     protected allDebuffTuples: IconDurationTuple[];
+
+    protected uncompleted_levels: Array<number>;
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, {...options, physics: {
@@ -266,6 +266,8 @@ export default abstract class FizzRun_Level extends Scene {
         //FIXME Temp place to put invincible
         SHARED_playerController.isInvincible = true;
         isCheatInvincibleOn = true;
+
+        this.uncompleted_levels = [2, 3, 4, 5, 6];
     }
 
     /* Update method for the scene */
@@ -452,6 +454,9 @@ export default abstract class FizzRun_Level extends Scene {
         if (!this.levelEndTimer.hasRun() && this.levelEndTimer.isStopped()) {
             this.levelEndTimer.start();
             this.levelEndLabel.tweens.play("slideIn");
+            // Remove next level id at end of current level to make sure its unlocked
+            if(this.levelNumber != 6)
+                this.uncompleted_levels.splice(this.uncompleted_levels.indexOf(this.levelNumber + 1), 1)
         }
     }
     /**
