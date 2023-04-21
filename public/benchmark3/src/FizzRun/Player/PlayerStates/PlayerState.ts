@@ -40,14 +40,6 @@ export default abstract class PlayerState extends State {
         }
 	}
 
-    // protected handlePlayerPowerUpCollision(event: GameEvent): void {
-    //     let id = event.data.get("owner");
-    //     let type = event.data.get("type");
-    //     if (id === this.owner.id && type === 'sugar') {
-    //         console.log('working');
-    //     }
-    // }
-
 	public update(deltaT: number): void {
         // This updates the direction the player sprite is facing (left or right)
         let direction = this.parent.inputDir;

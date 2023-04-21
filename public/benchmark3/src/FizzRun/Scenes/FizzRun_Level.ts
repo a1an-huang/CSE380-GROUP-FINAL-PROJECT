@@ -375,6 +375,7 @@ export default abstract class FizzRun_Level extends Scene {
             }
             case FizzRun_Events.OBSTACLE_DEATH: {
                 SHARED_playerController.health = 0;
+                break;
             }
             case FizzRun_Events.PLACE_DEBUFF_ICON: {
                 this.handleDebuffIcon(
