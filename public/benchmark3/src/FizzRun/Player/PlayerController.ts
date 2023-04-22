@@ -18,6 +18,7 @@ import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import Timer from "../../Wolfie2D/Timing/Timer";
 
 import { SHARED_currentSodaType } from "../Scenes/FizzRun_Level";
+import { SHARED_isCheatInvincibleOn } from "../Scenes/FizzRun_Level";
 
 
 /**
@@ -109,6 +110,9 @@ export default class PlayerController extends StateMachineAI {
 
         this.speedChange = false;
         this.speedTimer = new Timer(2500, this.handleSpeedChange, false);
+
+        //Check if invincible is on
+        this.isInvincible = SHARED_isCheatInvincibleOn; 
 
         // Add the different states the player can be in to the PlayerController 
 		this.addState(PlayerStates.IDLE, new Idle(this, this.owner));
