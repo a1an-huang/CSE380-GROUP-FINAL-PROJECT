@@ -86,6 +86,7 @@ export const FizzRunResourceKeys = {
     FANTA_ABILITY: "FANTA_ABILITY",
     SUGAR: "SUGAR",
     MENTOS: "MENTOS",
+    ICE: "ICE",
     ROBOT: "ROBOT",
     //Debuff resource keys
     BLINDED_ICON: "BLINDED_ICON",
@@ -138,14 +139,12 @@ export default abstract class FizzRun_Level extends Scene {
     /** NOTE All spawn positions are located in respective level # files */
 
     /** Powerup spawn positions */
+    protected sugarSpawn: Vec2[];
     protected mentosSpawn: Vec2[];
+    protected iceSpawn: Vec2[];
 
     /** Enemy spawn positions */
     protected robotSpawn: Vec2[];
-
-    /** Variables responsible for sugar powerup */
-    protected sugarPOW: Array<AnimatedSprite>;
-    protected sugarpos: Array<Vec2>;
 
     private healthLabel: Label;
 	private healthBar: Label;
@@ -206,8 +205,9 @@ export default abstract class FizzRun_Level extends Scene {
     protected tileDestroyedAudioKey: string;
 
     /** The powerup pool */
+    protected sugarPool: Array<AnimatedSprite>;
     protected mentosPool: Array<AnimatedSprite>;
-
+    protected icePool: Array<AnimatedSprite>;
     /** The enemy pool */
     public robotPool: Array<AnimatedSprite>;
 
@@ -327,7 +327,7 @@ export default abstract class FizzRun_Level extends Scene {
     public freezeOrUnFreezeAnimatedSprites(ifFreeze: boolean): void {
         
         //ADD A SPRITE ARRAY TO THIS LIST THAT YOU WANT TO PAUSE
-        const allAnimSpritesArr: AnimatedSprite[] = [...this.mentosPool, ...this.robotPool];
+        const allAnimSpritesArr: AnimatedSprite[] = [...this.sugarPool, ...this.mentosPool, ...this.icePool, ...this.robotPool];
         
         for (let animSprite of allAnimSpritesArr) {
             if (ifFreeze == true) {
@@ -412,7 +412,7 @@ export default abstract class FizzRun_Level extends Scene {
         }
     }
 	public handlePlayerPowerUpCollision(): void {
-        for (let sugar of this.sugarPOW) {
+        for (let sugar of this.sugarPool) {
 			if(sugar.visible && this.player.collisionShape.overlaps(sugar.collisionShape)) {
 				this.emitter.fireEvent(FizzRun_Events.PLAYER_POWERUP, { type: 'sugar', powerId: sugar.id, owner: this.player.id });
             }
@@ -423,6 +423,11 @@ export default abstract class FizzRun_Level extends Scene {
 				this.emitter.fireEvent(FizzRun_Events.FIZZ_CHANGE, {curfizz: MathUtils.clamp(this.currentFizz+1, 0, this.maxFizz), maxfizz: this.maxFizz});
 			}
 		}	
+        // for (let icecube of this.icePool) {
+		// 	if(icecube.visible && this.player.collisionShape.overlaps(icecube.collisionShape)) {
+		// 		this.emitter.fireEvent(FizzRun_Events.PLAYER_POWERUP, { type: 'ice', powerId: icecube.id, owner: this.player.id });
+        //     }
+        // }
 	}
 
     public handleEnemyCollision(): void {
@@ -664,21 +669,19 @@ export default abstract class FizzRun_Level extends Scene {
     }
 
     protected initPowerUpPool(): void {
-        this.sugarPOW = new Array(this.sugarpos.length);
-        for (let i = 0; i < this.sugarPOW.length; i++) {
-			this.sugarPOW[i] = this.add.animatedSprite(FizzRunResourceKeys.SUGAR, FizzRun_Layers.PRIMARY);
+        this.sugarPool = new Array(this.sugarSpawn.length);
+        for (let i = 0; i < this.sugarPool.length; i++) {
+			this.sugarPool[i] = this.add.animatedSprite(FizzRunResourceKeys.SUGAR, FizzRun_Layers.PRIMARY);
             // Make sugar visible and grab position
-			this.sugarPOW[i].visible = true; 
-            this.sugarPOW[i].position.copy(this.sugarpos[i]);
+			this.sugarPool[i].visible = true; 
+            this.sugarPool[i].position.copy(this.sugarSpawn[i]);
             // Add AI and scale
-			this.sugarPOW[i].addAI(SugarBehavior);
-			this.sugarPOW[i].scale.set(0.2, 0.2);
+			this.sugarPool[i].addAI(SugarBehavior);
+			this.sugarPool[i].scale.set(0.2, 0.2);
 
-			let collider = this.sugarPOW[i].boundary;
-			this.sugarPOW[i].setCollisionShape(collider);
+			let collider = this.sugarPool[i].boundary;
+			this.sugarPool[i].setCollisionShape(collider);
         }
-
-
         this.mentosPool = new Array(this.mentosSpawn.length);
 		for (let i = 0; i < this.mentosPool.length; i++){
 			this.mentosPool[i] = this.add.animatedSprite(FizzRunResourceKeys.MENTOS, FizzRun_Layers.PRIMARY);
@@ -694,9 +697,20 @@ export default abstract class FizzRun_Level extends Scene {
 
 			//Use boundary instead of zoom to not have big hitbox
 			let collider = this.mentosPool[i].boundary; 
-            console.log(collider);
 			this.mentosPool[i].setCollisionShape(collider);
 		}
+        this.icePool = new Array(this.iceSpawn.length);
+        for (let i = 0; i < this.icePool.length; i++) {
+			this.icePool[i] = this.add.animatedSprite(FizzRunResourceKeys.ICE, FizzRun_Layers.PRIMARY);
+			this.icePool[i].visible = true; 
+            this.icePool[i].position.copy(this.iceSpawn[i]);
+            // Add AI and scale
+			this.icePool[i].addAI(SugarBehavior);
+			this.icePool[i].scale.set(0.2, 0.2);
+
+			let collider = this.icePool[i].boundary;
+			this.icePool[i].setCollisionShape(collider);
+        }
     }
 
     protected initEnemyPool(): void {

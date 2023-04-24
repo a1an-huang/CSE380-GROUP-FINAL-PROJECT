@@ -161,6 +161,7 @@ export default class PlayerController extends StateMachineAI {
                 this.weapon.startSystem(this.owner.position);
             }
             this.owner.animation.play(PlayerAnimations.ATTACKING_RIGHT, false, PlayerAnimations.IDLE);
+            console.log(this.owner.position)
         }
         // Switch character
         if (Input.isJustPressed(FizzRun_Controls.SWITCH)) {

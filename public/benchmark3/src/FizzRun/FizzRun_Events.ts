@@ -22,7 +22,7 @@ export const FizzRun_Events = {
     PLAYER_DEAD: "PLAYER_DEAD",
     // Switch event for switching current character
     PLAYER_SWITCH: "PLAYER_SWITCH",
-
+    // Used for sugar but could use for other power ups
     PLAYER_POWERUP: "PLAYER_POWERUP",
 
     RESTART_GAME: "RESTART_GAME",

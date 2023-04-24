@@ -12,5 +12,6 @@ export const FizzRun_PhysicsGroups = {
     */
     GROUND: "GROUND",
     DESTRUCTABLE: "DESTRUCTABLE",
-    OBSTACLE: "OBSTACLE"
+    OBSTACLE: "OBSTACLE",
+    WATER: "WATER",
 } as const;
