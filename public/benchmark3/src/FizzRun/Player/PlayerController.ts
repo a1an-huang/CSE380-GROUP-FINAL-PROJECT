@@ -75,6 +75,10 @@ export default class PlayerController extends StateMachineAI {
     public speedChange: boolean;
     private speedTimer: Timer
 
+    public iceEffect: boolean
+    public contEffect: boolean
+    private iceTimer: Timer
+
     /** Health and max health for the player */
     protected _health: number;
     protected _maxHealth: number;
@@ -107,6 +111,10 @@ export default class PlayerController extends StateMachineAI {
         
         this.fizz = options.currFizz;
         this.maxFizz = options.maxFizz;
+
+        this.iceEffect = false;
+        this.contEffect = false;
+        this.iceTimer = new Timer(4500, this.handleIceChange, false);
 
         this.speedChange = false;
         this.speedTimer = new Timer(2500, this.handleSpeedChange, false);
@@ -146,6 +154,10 @@ export default class PlayerController extends StateMachineAI {
             this.speedTimer.start();
             this.speedChange = false;
         }
+        if(this.iceEffect == true && this.contEffect == false) {
+            this.iceTimer.start();
+            this.contEffect = true;
+        }
         // If the player hits the attack button and the weapon system isn't running, restart the system and fire!
         if (Input.isPressed(FizzRun_Controls.ATTACK)) {
             //WEAPON ALREADY UPDATED IN initializeAI, no need to update here
@@ -177,6 +189,12 @@ export default class PlayerController extends StateMachineAI {
 		if (!this.speedChange) {
             this.speed = this.MIN_SPEED; 
 			//this.speedTimer.reset();
+        }
+	}
+    protected handleIceChange = () => {
+		if (this.iceEffect) {
+            this.iceEffect = false;
+            this.contEffect == false;
         }
 	}
 
