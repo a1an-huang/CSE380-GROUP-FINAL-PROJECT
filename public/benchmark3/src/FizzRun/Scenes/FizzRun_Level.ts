@@ -180,6 +180,7 @@ export default abstract class FizzRun_Level extends Scene {
     protected destructibleLayerKey: string;
     protected wallsLayerKey: string;
     protected obsLayerKey: string;
+    protected waterLayerKey: string;
     /** The scale for the tilemap */
     protected tilemapScale: Vec2;
     /** The destrubtable layer of the tilemap */
@@ -188,6 +189,8 @@ export default abstract class FizzRun_Level extends Scene {
     protected walls: OrthogonalTilemap;
     /** The obstacle layer of the tilemap */
     protected obs: OrthogonalTilemap;
+    /** The water layer of the tilemap */
+    protected water: OrthogonalTilemap;
 
     /** Sound and music */
     protected levelMusicKey: string;
@@ -207,10 +210,11 @@ export default abstract class FizzRun_Level extends Scene {
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, {...options, physics: {
-            groupNames: ["GROUND", "PLAYER", "WEAPON", "DESTRUCTABLE", "OBSTACLE"],
-            collisions: [[0, 1, 1, 0, 0], [1, 0, 0, 1, 1], [1, 0, 0, 1, 0], [0, 1, 1, 0, 0], [0, 1, 0, 0, 0]]
+            groupNames: ["GROUND", "PLAYER", "WEAPON", "DESTRUCTABLE", "OBSTACLE", "WATER"],
+            collisions: [[0, 1, 1, 0, 0, 0], [1, 0, 0, 1, 1, 1], [1, 0, 0, 1, 0, 0], [0, 1, 1, 0, 0, 0], [0, 1, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0]]
          }});
         this.add = new FizzRun_FactoryManager(this, this.tilemaps);
+        // Add a new physics group for water and just check if player has ice powerup active or else kill
     }
 
     public startScene(): void {
@@ -623,6 +627,7 @@ export default abstract class FizzRun_Level extends Scene {
         this.walls = this.getTilemap(this.wallsLayerKey) as OrthogonalTilemap;
         this.destructable = this.getTilemap(this.destructibleLayerKey) as OrthogonalTilemap;
         this.obs = this.getTilemap(this.obsLayerKey) as OrthogonalTilemap;
+        this.water = this.getTilemap(this.waterLayerKey) as OrthogonalTilemap;
 
         // Add physicss to the wall layer
         this.walls.addPhysics();
@@ -632,6 +637,9 @@ export default abstract class FizzRun_Level extends Scene {
         // Add physics to the obstacle layer of the tilemap
         this.obs.addPhysics();
         this.obs.setTrigger("PLAYER", FizzRun_Events.OBSTACLE_DEATH, null);
+
+        this.water.addPhysics();
+        this.water.setTrigger("PLAYER", FizzRun_Events.OBSTACLE_DEATH, null);
     }
 
     protected initPowerUpPool(): void {
