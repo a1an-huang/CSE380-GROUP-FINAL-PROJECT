@@ -10,9 +10,11 @@ import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 import { FizzRunResourceKeys } from "./FizzRun_Level";
 
+export const SUGAR_SPAWN_VECS_2: Vec2[] = [];
+
 export const MENTOS_SPAWN_VECS_2: Vec2[] = [];
 
-export const SUGAR_SPAWN_VECS_2: Vec2[] = [];
+export const ICE_SPAWN_VECS_2: Vec2[] = [];
 
 export const ROBOT_SPAWN_VECS_2: Vec2[] = [];
 
@@ -67,8 +69,9 @@ export default class Level2 extends FizzRun_Level {
         //SECTION Set the powerup/enemy pool here
 
         //Set powerup spawn
+        this.sugarSpawn = SUGAR_SPAWN_VECS_2;
         this.mentosSpawn = MENTOS_SPAWN_VECS_2;
-        this.sugarpos = SUGAR_SPAWN_VECS_2;
+        this.iceSpawn = ICE_SPAWN_VECS_2;
 
         //Set enemy spawn
         this.robotSpawn = ROBOT_SPAWN_VECS_2;
@@ -98,6 +101,7 @@ export default class Level2 extends FizzRun_Level {
 
         this.load.getSpritesheet(FizzRunResourceKeys.SUGAR);
         this.load.getSpritesheet(FizzRunResourceKeys.MENTOS);
+        this.load.getSpritesheet(FizzRunResourceKeys.ICE);
         this.load.getSpritesheet(FizzRunResourceKeys.ROBOT);
         // Audio and music
         this.load.audio(this.levelMusicKey, Level2.LEVEL_MUSIC_PATH);

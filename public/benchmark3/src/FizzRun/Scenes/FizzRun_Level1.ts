@@ -11,27 +11,36 @@ import { FizzRunResourceKeys } from "./FizzRun_Level";
 
 /* SECTION LIST POWERUP/NPC SPAWNPOINTS HERE, DO IT FOR EVERY LEVEL! */
 
-export const MENTOS_SPAWN_VECS: Vec2[] = [
-    new Vec2(300, 180), 
-    new Vec2(320, 180), 
-    new Vec2(340, 180), 
-    new Vec2(360, 180),
-    new Vec2(380, 180), 
-    new Vec2(400, 180), 
-    new Vec2(420, 180), 
-    new Vec2(440, 180), 
-    new Vec2(460, 180), 
-    new Vec2(480, 180), 
-    new Vec2(500, 180), 
+export const SUGAR_SPAWN_VECS: Vec2[] = [
+    new Vec2(373, 432), 
+    new Vec2(628, 448),
+    new Vec2(680, 784),
 ];
 
-export const SUGAR_SPAWN_VECS: Vec2[] = [
-    new Vec2(170, 160), 
-    new Vec2(200, 160),
+export const MENTOS_SPAWN_VECS: Vec2[] = [
+    // new Vec2(300, 180), 
+    // new Vec2(320, 180), 
+    // new Vec2(340, 180), 
+    // new Vec2(360, 180),
+    // new Vec2(380, 180), 
+    // new Vec2(400, 180), 
+    // new Vec2(420, 180), 
+    // new Vec2(440, 180), 
+    // new Vec2(460, 180), 
+    // new Vec2(480, 180), 
+    // new Vec2(500, 180), 
+];
+
+export const ICE_SPAWN_VECS: Vec2[] = [
+    new Vec2(503, 652), 
+    new Vec2(54, 992),
+    new Vec2(452, 912),
+    new Vec2(111, 288),
+    new Vec2(936, 352),
 ];
 
 export const ROBOT_SPAWN_VECS: Vec2[] = [
-    new Vec2(250, 180),
+    //new Vec2(250, 180),
 ];
 
 export const PLAYER_SPAWN_VEC = new Vec2(150, 160);
@@ -48,6 +57,7 @@ export default class Level1 extends FizzRun_Level {
 
     public static readonly SPRITE_PATH_SUGAR = "fizzrun_assets/spritesheets/sugar.json";
     public static readonly SPRITE_PATH_MENTOS = "fizzrun_assets/spritesheets/mentos.json";
+    public static readonly SPRITE_PATH_ICE = "fizzrun_assets/spritesheets/icecube.json";
     public static readonly SPRITE_PATH_ROBOT = "fizzrun_assets/spritesheets/levitating_robot.json";
 
     public static readonly TILEMAP_KEY = "LEVEL1";
@@ -97,8 +107,9 @@ export default class Level1 extends FizzRun_Level {
         //SECTION Set the powerup/enemy pool here
 
         //Set powerup spawn
+        this.sugarSpawn = SUGAR_SPAWN_VECS;
         this.mentosSpawn = MENTOS_SPAWN_VECS;
-        this.sugarpos = SUGAR_SPAWN_VECS;
+        this.iceSpawn = ICE_SPAWN_VECS;
 
         //Set enemy spawn
         this.robotSpawn = ROBOT_SPAWN_VECS;
@@ -128,6 +139,7 @@ export default class Level1 extends FizzRun_Level {
 
         this.load.spritesheet("SUGAR", Level1.SPRITE_PATH_SUGAR);
         this.load.spritesheet("MENTOS", Level1.SPRITE_PATH_MENTOS);
+        this.load.spritesheet("ICE", Level1.SPRITE_PATH_ICE);
         this.load.spritesheet("ROBOT", Level1.SPRITE_PATH_ROBOT);
         // Audio and music
         this.load.audio(this.levelMusicKey, Level1.LEVEL_MUSIC_PATH);
@@ -158,6 +170,7 @@ export default class Level1 extends FizzRun_Level {
         this.load.keepSpritesheet(FizzRunResourceKeys.SUGAR);
         this.load.keepSpritesheet(FizzRunResourceKeys.MENTOS);
         this.load.keepSpritesheet(FizzRunResourceKeys.ROBOT);
+        this.load.keepSpritesheet(FizzRunResourceKeys.ICE);
         
         this.load.keepAudio(this.jumpAudioKey);
         this.load.keepAudio(this.deadAudioKey);
