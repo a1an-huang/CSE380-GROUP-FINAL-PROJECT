@@ -10,13 +10,28 @@ import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 import { FizzRunResourceKeys } from "./FizzRun_Level";
 
-export const SUGAR_SPAWN_VECS_2: Vec2[] = [];
+export const SUGAR_SPAWN_VECS_2: Vec2[] = [
+    new Vec2(297, 352),
+    new Vec2(190, 608),
+    new Vec2(737, 608),
+    new Vec2(912, 480),
+];
 
-export const MENTOS_SPAWN_VECS_2: Vec2[] = [];
+export const MENTOS_SPAWN_VECS_2: Vec2[] = [
 
-export const ICE_SPAWN_VECS_2: Vec2[] = [];
+];
 
-export const ROBOT_SPAWN_VECS_2: Vec2[] = [];
+export const ICE_SPAWN_VECS_2: Vec2[] = [
+    new Vec2(360, 64),
+    new Vec2(70, 544),
+    new Vec2(513, 672),
+];
+
+export const ROBOT_SPAWN_VECS_2: Vec2[] = [
+    new Vec2(339, 64),
+    new Vec2(489, 192),
+    new Vec2(699, 192),
+];
 
 export const PLAYER_SPAWN_VEC_2 = new Vec2(120, 160);
 
@@ -84,7 +99,7 @@ export default class Level2 extends FizzRun_Level {
         this.tileDestroyedAudioKey = Level2.TILE_DESTROYED_KEY;
 
         // Level end size and position
-        this.levelEndPosition = new Vec2(32, 216).mult(this.tilemapScale);
+        this.levelEndPosition = new Vec2(800, 64).mult(this.tilemapScale);
         this.levelEndHalfSize = new Vec2(32, 32).mult(this.tilemapScale);
 
     }
