@@ -306,7 +306,7 @@ export default abstract class FizzRun_Level extends Scene {
     /* Update method for the scene */
 
     public updateScene(deltaT: number) {
-        console.log(this.player.position.x, this.player.position.y);
+        //console.log(this.player.position.x, this.player.position.y);
         const pauseLayer: Layer = this.uiLayers.get(FizzRun_Layers.PAUSE);
         if (Input.isJustPressed(FizzRun_Controls.PAUSE_GAME)) {
             //TODO Freeze the nodes and disable user inputs here!
