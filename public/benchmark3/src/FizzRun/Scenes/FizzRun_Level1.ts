@@ -49,6 +49,7 @@ export default class Level1 extends FizzRun_Level {
     public static readonly DESTRUCTIBLE_LAYER_KEY = "Destructable";
     public static readonly WALLS_LAYER_KEY = "Main";
     public static readonly OBSTACLE_LAYER_KEY = "Obstacle";
+    public static readonly WATER_LAYER_KEY = "Water";
 
     public static readonly LEVEL_MUSIC_KEY = "LEVEL_MUSIC";
     public static readonly LEVEL_MUSIC_PATH = "fizzrun_assets/music/ThemeSong.wav";
@@ -79,6 +80,7 @@ export default class Level1 extends FizzRun_Level {
         this.destructibleLayerKey = Level1.DESTRUCTIBLE_LAYER_KEY;
         this.wallsLayerKey = Level1.WALLS_LAYER_KEY;
         this.obsLayerKey = Level1.OBSTACLE_LAYER_KEY;
+        this.waterLayerKey = Level1.WATER_LAYER_KEY;
 
         // Set the key for the player's sprite
         this.playerSpriteKey = Level1.PLAYER_SPRITE_KEY;
