@@ -664,6 +664,7 @@ export default abstract class FizzRun_Level extends Scene {
     }
 
     protected initPowerUpPool(): void {
+        this.sugarPOW = new Array(this.sugarpos.length);
         for (let i = 0; i < this.sugarPOW.length; i++) {
 			this.sugarPOW[i] = this.add.animatedSprite(FizzRunResourceKeys.SUGAR, FizzRun_Layers.PRIMARY);
             // Make sugar visible and grab position
@@ -1055,6 +1056,9 @@ export default abstract class FizzRun_Level extends Scene {
                 text: "2 (Goto Lv2)",
             }
         );
+        cheatBtnLv2.onClick = () => {
+            this.sceneManager.changeToScene(this.nextLevel);
+        }
 
         this.invincibleCheatBtn = <Button>this.add.uiElement(
             UIElementType.BUTTON,
