@@ -54,6 +54,9 @@ export let SHARED_robotPool = {
     poolArr: [] as AnimatedSprite[],
 };
 
+//Used to see if cheatcode is on in PlayerController
+export let SHARED_isCheatInvincibleOn: boolean = false;
+
 /**
  * A const object for the layer names
  */
@@ -67,6 +70,8 @@ export const FizzRun_Layers = {
     //Pause Sub Layers
     PAUSE_CONTROLS: "PAUSE_CONTROLS",
     PAUSE_HELP: "PAUSE_HELP",
+    //Misc Layers
+    IS_INVINCIBLE: "IS_INVINCIBLE",
 } as const;
 
 /**
@@ -95,7 +100,6 @@ export const FizzRun_CheatCodes = {
     CHEAT_INVINCIBLE: "INVINCIBLE",
 }
 
-let isCheatInvincibleOn: boolean = false;
 
 /*SECTION DECLARE TYPES HERE */
 export type DebuffResourceKeys = "BLINDED_ICON";
@@ -159,6 +163,8 @@ export default abstract class FizzRun_Level extends Scene {
     private activeSkillIcon: Sprite;
 
     private invincibleLabel: Label;
+
+    private invincibleCheatBtn: Button;
 
     /** The end of level stuff */
 
@@ -267,9 +273,11 @@ export default abstract class FizzRun_Level extends Scene {
         // Start playing the level music for the HW4 level
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: this.levelMusicKey, loop: true, holdReference: true});
     
-        //FIXME Temp place to put invincible
-        SHARED_playerController.isInvincible = true;
-        isCheatInvincibleOn = true;
+    }
+
+    public setInvincibleStatus(isInvincible: boolean) {
+        SHARED_playerController.isInvincible = isInvincible;
+        SHARED_isCheatInvincibleOn = isInvincible;
     }
 
     /* Update method for the scene */
@@ -288,6 +296,16 @@ export default abstract class FizzRun_Level extends Scene {
         // Handle all game events
         while (this.receiver.hasNextEvent()) {
             this.handleEvent(this.receiver.getNextEvent());
+        }
+        //Handle GUI changes
+        const invincibleLayer = this.uiLayers.get(FizzRun_Layers.IS_INVINCIBLE);
+        if (SHARED_playerController.isInvincible) {
+            invincibleLayer.setHidden(false);
+            this.invincibleCheatBtn.backgroundColor = Color.GREEN;
+        }
+        else {
+            invincibleLayer.setHidden(true);
+            this.invincibleCheatBtn.backgroundColor = Color.RED;
         }
         if (!pauseLayer.isHidden()) { return; } //If the pause menu is open, don't update the game
         this.handlePlayerPowerUpCollision();
@@ -606,6 +624,9 @@ export default abstract class FizzRun_Level extends Scene {
         pauseControlsLayer.setHidden(true);
         const pauseHelpLayer: Layer = this.addUILayer(FizzRun_Layers.PAUSE_HELP);
         pauseHelpLayer.setHidden(true);
+
+        const invincibleLayer = this.addUILayer(FizzRun_Layers.IS_INVINCIBLE);
+        invincibleLayer.setHidden(true);
     }
     /**
      * Initializes the tilemaps
@@ -643,6 +664,7 @@ export default abstract class FizzRun_Level extends Scene {
     }
 
     protected initPowerUpPool(): void {
+        this.sugarPOW = new Array(this.sugarpos.length);
         for (let i = 0; i < this.sugarPOW.length; i++) {
 			this.sugarPOW[i] = this.add.animatedSprite(FizzRunResourceKeys.SUGAR, FizzRun_Layers.PRIMARY);
             // Make sugar visible and grab position
@@ -725,7 +747,7 @@ export default abstract class FizzRun_Level extends Scene {
 
         this.invincibleLabel = <Label>this.add.uiElement(
             UIElementType.LABEL, 
-            FizzRun_Layers.UI, 
+            FizzRun_Layers.IS_INVINCIBLE, 
             {position: new Vec2(40, 50), text: "INVINCIBLE"}
         );
         this.invincibleLabel.setTextColor(new Color(173, 128, 2, 1));
@@ -1014,34 +1036,73 @@ export default abstract class FizzRun_Level extends Scene {
             }
         );
 
-        let cheatCodesList: Array<String> = ["1 (Goto Lv1)", "2 (Goto Lv2)", "I (Invincible)"];
-        for (let i = 0; i < cheatCodesList.length; i++) {
-            this.add.uiElement(UIElementType.LABEL, FizzRun_Layers.PAUSE_HELP, {
-                position: new Vec2(100 + i * 50, 130),
-                text: cheatCodesList[i],
-            });
+        let cheatBtnLv1: Button = <Button>this.add.uiElement(
+            UIElementType.BUTTON,
+            FizzRun_Layers.PAUSE_HELP,
+            {
+                position: new Vec2(100, 130),
+                text: "1 (Goto Lv1)",
+            }
+        );
+        cheatBtnLv1.onClick = () => {
+            this.sceneManager.changeToScene(Level1);
         }
 
-        let enterText: String = "Enter Cheatcode:";
-        this.add.uiElement(
-            UIElementType.LABEL,
+        let cheatBtnLv2: Button = <Button>this.add.uiElement(
+            UIElementType.BUTTON,
             FizzRun_Layers.PAUSE_HELP,
             {
-                position: new Vec2(125, 150),
-                text: enterText,
+                position: new Vec2(150, 130),
+                text: "2 (Goto Lv2)",
             }
         );
+        cheatBtnLv2.onClick = () => {
+            this.sceneManager.changeToScene(this.nextLevel);
+        }
 
-        let inputBox: TextInput = <TextInput>this.add.uiElement(
-            UIElementType.TEXT_INPUT,
+        this.invincibleCheatBtn = <Button>this.add.uiElement(
+            UIElementType.BUTTON,
             FizzRun_Layers.PAUSE_HELP,
             {
-                position: new Vec2(200, 150),
-                text: "",
+                position: new Vec2(200, 130),
+                text: "I (Invincible)",
             }
         );
-        inputBox.setPadding(new Vec2(250, 7.5));
-        inputBox.backgroundColor = new Color(255, 255, 255);
+        this.invincibleCheatBtn.onClick = () => {
+            const newInvincibleStatus: boolean = !SHARED_isCheatInvincibleOn
+            this.setInvincibleStatus(newInvincibleStatus);
+        }
+        
+        const cheatBtnsArr = [cheatBtnLv1, cheatBtnLv2, this.invincibleCheatBtn];
+
+        for (let i = 0; i < cheatBtnsArr.length; i++) {
+            cheatBtnsArr[i].backgroundColor = new Color(153, 217, 234, 1);
+            cheatBtnsArr[i].borderRadius = 0;
+            cheatBtnsArr[i].font = "Arial";
+            cheatBtnsArr[i].setPadding(new Vec2(10, 10));
+            cheatBtnsArr[i].scale.set(0.25, 0.25);
+        }
+
+        // let enterText: String = "Enter Cheatcode:";
+        // this.add.uiElement(
+        //     UIElementType.LABEL,
+        //     FizzRun_Layers.PAUSE_HELP,
+        //     {
+        //         position: new Vec2(125, 150),
+        //         text: enterText,
+        //     }
+        // );
+
+        // let inputBox: TextInput = <TextInput>this.add.uiElement(
+        //     UIElementType.TEXT_INPUT,
+        //     FizzRun_Layers.PAUSE_HELP,
+        //     {
+        //         position: new Vec2(200, 150),
+        //         text: "",
+        //     }
+        // );
+        // inputBox.setPadding(new Vec2(250, 7.5));
+        // inputBox.backgroundColor = new Color(255, 255, 255);
 
         let backBtn = <Button>this.add.uiElement(
             UIElementType.BUTTON,
