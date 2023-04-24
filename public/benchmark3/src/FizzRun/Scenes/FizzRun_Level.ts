@@ -38,6 +38,7 @@ import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import Level1 from "./FizzRun_Level1";
 import SugarBehavior from "../Items/SugarBehavior";
 import MentosBehavior from "../Items/MentosBehavior";
+import IceBehavior from "../Items/IceBehavior";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 
 import RobotBehavior from "../Enemies/RobotBehavior";
@@ -397,6 +398,11 @@ export default abstract class FizzRun_Level extends Scene {
                 SHARED_playerController.health = 0;
                 break;
             }
+            case FizzRun_Events.WATER_DEATH: {
+                if(!SHARED_playerController.iceEffect)
+                    SHARED_playerController.health = 0;
+                break;
+            }
             case FizzRun_Events.PLACE_DEBUFF_ICON: {
                 this.handleDebuffIcon(
                     event.data.get("debuffKey"), 
@@ -423,11 +429,11 @@ export default abstract class FizzRun_Level extends Scene {
 				this.emitter.fireEvent(FizzRun_Events.FIZZ_CHANGE, {curfizz: MathUtils.clamp(this.currentFizz+1, 0, this.maxFizz), maxfizz: this.maxFizz});
 			}
 		}	
-        // for (let icecube of this.icePool) {
-		// 	if(icecube.visible && this.player.collisionShape.overlaps(icecube.collisionShape)) {
-		// 		this.emitter.fireEvent(FizzRun_Events.PLAYER_POWERUP, { type: 'ice', powerId: icecube.id, owner: this.player.id });
-        //     }
-        // }
+        for (let icecube of this.icePool) {
+			if(icecube.visible && this.player.collisionShape.overlaps(icecube.collisionShape)) {
+				this.emitter.fireEvent(FizzRun_Events.PLAYER_POWERUP, { type: 'ice', powerId: icecube.id, owner: this.player.id });
+            }
+        }
 	}
 
     public handleEnemyCollision(): void {
@@ -665,7 +671,7 @@ export default abstract class FizzRun_Level extends Scene {
         this.obs.setTrigger("PLAYER", FizzRun_Events.OBSTACLE_DEATH, null);
 
         this.water.addPhysics();
-        this.water.setTrigger("PLAYER", FizzRun_Events.OBSTACLE_DEATH, null);
+        this.water.setTrigger("PLAYER", FizzRun_Events.WATER_DEATH, null);
     }
 
     protected initPowerUpPool(): void {
@@ -705,7 +711,7 @@ export default abstract class FizzRun_Level extends Scene {
 			this.icePool[i].visible = true; 
             this.icePool[i].position.copy(this.iceSpawn[i]);
             // Add AI and scale
-			this.icePool[i].addAI(SugarBehavior);
+			this.icePool[i].addAI(IceBehavior);
 			this.icePool[i].scale.set(0.2, 0.2);
 
 			let collider = this.icePool[i].boundary;
@@ -740,6 +746,7 @@ export default abstract class FizzRun_Level extends Scene {
         this.receiver.subscribe(FizzRun_Events.PARTICLE_HIT_DESTRUCT);
         this.receiver.subscribe(FizzRun_Events.PLAYER_SWITCH);
         this.receiver.subscribe(FizzRun_Events.OBSTACLE_DEATH);
+        this.receiver.subscribe(FizzRun_Events.WATER_DEATH);
 
         this.receiver.subscribe(FizzRun_Events.RESTART_GAME);
         this.receiver.subscribe(FizzRun_Events.MAIN_MENU);

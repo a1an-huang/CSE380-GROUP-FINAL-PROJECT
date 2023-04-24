@@ -57,6 +57,8 @@ export const FizzRun_Events = {
      */
     HANDLE_CHEAT_CODE: "HANDLE_CHEAT_CODE",
     
-    OBSTACLE_DEATH: "OBSTACLE_DEATH"
+    OBSTACLE_DEATH: "OBSTACLE_DEATH",
+
+    WATER_DEATH: "WATER_DEATH",
     
 } as const;
