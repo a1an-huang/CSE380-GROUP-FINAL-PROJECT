@@ -10,9 +10,19 @@ import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 import { FizzRunResourceKeys } from "./FizzRun_Level";
 
+export const MENTOS_SPAWN_VECS_2: Vec2[] = [];
+
+export const SUGAR_SPAWN_VECS_2: Vec2[] = [];
+
+export const ROBOT_SPAWN_VECS_2: Vec2[] = [];
+
+export const PLAYER_SPAWN_VEC_2 = new Vec2(120, 160);
+
+export const LEVEL_END_AREA_2 = new AABB(new Vec2(224, 232), new Vec2(24, 16));
+
 export default class Level2 extends FizzRun_Level {
 
-    public static readonly PLAYER_SPAWN = new Vec2(150, 160);
+    public static readonly PLAYER_SPAWN = PLAYER_SPAWN_VEC_2;
     public static readonly PLAYER_SPRITE_KEY = "COKE";
 
     public static readonly TILEMAP_KEY = "LEVEL2";
@@ -36,7 +46,7 @@ export default class Level2 extends FizzRun_Level {
 
     public static readonly SWITCH_AUDIO_KEY = "PLAYER_SWITCH";
 
-    public static readonly LEVEL_END = new AABB(new Vec2(224, 232), new Vec2(24, 16));
+    public static readonly LEVEL_END = LEVEL_END_AREA_2
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, options);
@@ -53,6 +63,15 @@ export default class Level2 extends FizzRun_Level {
         this.playerSpriteKey = Level2.PLAYER_SPRITE_KEY;
         // Set the player's spawn
         this.playerSpawn = Level2.PLAYER_SPAWN;
+
+        //SECTION Set the powerup/enemy pool here
+
+        //Set powerup spawn
+        this.mentosSpawn = MENTOS_SPAWN_VECS_2;
+        this.sugarpos = SUGAR_SPAWN_VECS_2;
+
+        //Set enemy spawn
+        this.robotSpawn = ROBOT_SPAWN_VECS_2;
 
         // Music and sound
         this.levelMusicKey = Level2.LEVEL_MUSIC_KEY

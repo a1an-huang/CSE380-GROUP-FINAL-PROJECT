@@ -23,13 +23,20 @@ export const MENTOS_SPAWN_VECS: Vec2[] = [
     new Vec2(460, 180), 
     new Vec2(480, 180), 
     new Vec2(500, 180), 
-  ];
+];
+
+export const SUGAR_SPAWN_VECS: Vec2[] = [
+    new Vec2(170, 160), 
+    new Vec2(200, 160),
+];
 
 export const ROBOT_SPAWN_VECS: Vec2[] = [
     new Vec2(250, 180),
-]
+];
 
 export const PLAYER_SPAWN_VEC = new Vec2(150, 160);
+
+export const LEVEL_END_AREA = new AABB(new Vec2(478, 496), new Vec2(12, 16));
 
 export default class Level1 extends FizzRun_Level {
 
@@ -69,7 +76,7 @@ export default class Level1 extends FizzRun_Level {
     public static readonly SWITCH_AUDIO_KEY = "PLAYER_SWITCH";
     public static readonly SWITCH_AUDIO_PATH = "fizzrun_assets/sounds/switch.wav";
 
-    public static readonly LEVEL_END = new AABB(new Vec2(478, 496), new Vec2(12, 16));
+    public static readonly LEVEL_END = LEVEL_END_AREA;
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, options);
@@ -87,12 +94,11 @@ export default class Level1 extends FizzRun_Level {
         // Set the player's spawn
         this.playerSpawn = Level1.PLAYER_SPAWN;
 
-        // Can specify how many powerups and their positions
-        this.sugarPOW = new Array(2);
-        this.sugarpos = [new Vec2(170, 160), new Vec2(200, 160)];
+        //SECTION Set the powerup/enemy pool here
 
         //Set powerup spawn
         this.mentosSpawn = MENTOS_SPAWN_VECS;
+        this.sugarpos = SUGAR_SPAWN_VECS;
 
         //Set enemy spawn
         this.robotSpawn = ROBOT_SPAWN_VECS;
