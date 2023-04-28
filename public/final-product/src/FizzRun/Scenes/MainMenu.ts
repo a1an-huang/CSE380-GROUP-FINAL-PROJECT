@@ -13,6 +13,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import Level1 from "./FizzRun_Level1";
 import Level2 from "./FizzRun_Level2";
 import { uncompleted_levels } from "./FizzRun_Level";
+import TrainLevel from "./FizzRun_TrainLevel";
 
 // Layers for the main menu scene
 export const MenuLayers = {
@@ -422,6 +423,20 @@ export default class MainMenu extends Scene {
             lockedIconLvSix.position.set(size.x+250, size.y);
             lockedIconLvSix.scale.set(1, 1);
         }
+
+        let levelTrainingBtn = <Button>this.add.uiElement(
+            UIElementType.BUTTON,
+            MenuLayers.LEVELSELECT,
+            {
+                position: new Vec2(size.x, size.y + 180),
+                text: "TRAINING",
+            }
+        );
+        levelTrainingBtn.setPadding(new Vec2(50, 40));
+        levelTrainingBtn.backgroundColor = new Color(255, 202, 61, 0.8);
+        levelTrainingBtn.onClick = () => {
+            this.sceneManager.changeToScene(TrainLevel);
+        };
     }
 
     protected createHelpScreen(): void {

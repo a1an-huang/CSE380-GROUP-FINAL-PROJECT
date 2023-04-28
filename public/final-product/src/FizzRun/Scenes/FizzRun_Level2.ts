@@ -38,6 +38,11 @@ export const SIGN_SPAWN_VECS_2: Vec2[] = [
     new Vec2(415, 38),
 ];
 
+export const SIGN_SIZE_VECS2: Vec2[] = [
+    new Vec2(90, 40),
+    new Vec2(90, 40),
+];
+
 export const SIGN_WORDS_VECS_2: string[] = [
     "Use E with Coke to blind the robot",
     "Blind only lasts 5 seconds!"
@@ -103,6 +108,7 @@ export default class Level2 extends FizzRun_Level {
 
         //Set sign spawn
         this.signSpawn = SIGN_SPAWN_VECS_2;
+        this.signSize = SIGN_SIZE_VECS2;
         this.signWords = SIGN_WORDS_VECS_2;
 
         // Music and sound
@@ -157,6 +163,8 @@ export default class Level2 extends FizzRun_Level {
         super.startScene();
         this.currentLevel = Level2;
         this.nextLevel = MainMenu;
+
+        this.theLevel2Scene = Level2;
     }
 
 }

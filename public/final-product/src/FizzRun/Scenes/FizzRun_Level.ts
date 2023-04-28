@@ -112,6 +112,17 @@ type IconDurationTuple = {
     icon: Sprite,
     durationMs: number, //Duration in miliseconds
 }
+//Make an object type to track vecs
+// export type Struct_SpawnInfo = {
+//     PLAYER_SPAWN_VEC: Vec2,
+//     LEVEL_END_AREA: AABB,
+//     SUGAR_SPAWN_VECS: Vec2[],
+//     MENTOS_SPAWN_VECS: Vec2[],
+//     ICE_SPAWN_VECS: Vec2[],
+//     ROBOT_SPAWN_VECS: Vec2[],
+//     SIGN_SPAWN_VECS: Vec2[],
+//     SIGN_WORDS_VECS: Vec2[],
+// }
 
 export let uncompleted_levels = [2, 3, 4, 5, 6];
 
@@ -149,6 +160,7 @@ export default abstract class FizzRun_Level extends Scene {
 
     /** Sign spawn positions */
     protected signSpawn: Vec2[];
+    protected signSize: Vec2[];
     protected signWords: string[];
 
     private healthLabel: Label;
@@ -176,8 +188,13 @@ export default abstract class FizzRun_Level extends Scene {
     protected levelEndHalfSize: Vec2;
 
     protected levelEndArea: Rect;
+
+    /** Store current level info */
     protected currentLevel: new (...args: any) => Scene;
     protected nextLevel: new (...args: any) => Scene;
+    
+    protected theLevel2Scene: new (...args: any) => Scene;
+
     protected levelEndTimer: Timer;
     protected levelEndLabel: Label;
 
@@ -262,15 +279,16 @@ export default abstract class FizzRun_Level extends Scene {
             const curSign = this.add.graphic(
                 GraphicType.RECT, 
                 FizzRun_Layers.PRIMARY, 
-                {position: new Vec2(this.signSpawn[i].x, this.signSpawn[i].y), size: new Vec2(90, 40)}
+                {position: new Vec2(this.signSpawn[i].x, this.signSpawn[i].y), size: this.signSize[i].clone()}
             );
             curSign.color = new Color(0, 0, 0, 0.5)
             //Add the label to the sign
-            this.add.uiElement(
+            let newSignLabel: Label = <Label>this.add.uiElement(
                 UIElementType.LABEL, 
                 FizzRun_Layers.PRIMARY, 
                 {position: new Vec2(this.signSpawn[i].x, this.signSpawn[i].y), text: this.signWords[i]},
             );
+            newSignLabel.setFontSize(20);
         }
 
         // Initialize the viewport - this must come after the player has been initialized
@@ -392,7 +410,7 @@ export default abstract class FizzRun_Level extends Scene {
                 break;
             }
             case FizzRun_Events.PLAYER_DEAD: {
-                this.sceneManager.changeToScene(MainMenu);
+                this.sceneManager.changeToScene(this.currentLevel);
                 break;
             }
             case FizzRun_Events.PARTICLE_HIT_DESTRUCT: {
@@ -1101,7 +1119,7 @@ export default abstract class FizzRun_Level extends Scene {
             }
         );
         cheatBtnLv2.onClick = () => {
-            this.sceneManager.changeToScene(this.nextLevel);
+            this.sceneManager.changeToScene(this.theLevel2Scene);
         }
 
         this.invincibleCheatBtn = <Button>this.add.uiElement(
@@ -1198,7 +1216,10 @@ export default abstract class FizzRun_Level extends Scene {
         this.player.position.copy(this.playerSpawn); // fix spawn location
 
         // Give the player physics
-        this.player.addPhysics(new AABB(this.player.position.clone(), this.player.boundary.getHalfSize().clone()));
+        this.player.addPhysics(new AABB(
+            this.player.position.clone(), 
+            this.player.boundary.getHalfSize().clone()
+        ));
         this.player.setGroup("PLAYER");
 
         this.player.tweens.add(PlayerTweens.FLIP, {

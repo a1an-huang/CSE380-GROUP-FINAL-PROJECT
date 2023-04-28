@@ -137,6 +137,10 @@ export default class Label extends UIElement{
 	sizeToText(): void {
 		this.sizeAssigned = false;
 	}
+
+	setFontSize(size: number): void {
+		this.fontSize = size;
+	}
 }
 
 export enum VAlign {
