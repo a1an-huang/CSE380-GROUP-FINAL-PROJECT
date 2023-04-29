@@ -33,6 +33,16 @@ export const ROBOT_SPAWN_VECS_2: Vec2[] = [
     new Vec2(699, 192),
 ];
 
+export const SIGN_SPAWN_VECS_2: Vec2[] = [
+    new Vec2(241, 38),
+    new Vec2(415, 38),
+];
+
+export const SIGN_WORDS_VECS_2: string[] = [
+    "Use E with Coke to blind the robot",
+    "Blind only lasts 5 seconds!"
+];
+
 export const PLAYER_SPAWN_VEC_2 = new Vec2(120, 160);
 
 export const LEVEL_END_AREA_2 = new AABB(new Vec2(224, 232), new Vec2(24, 16));
@@ -91,6 +101,10 @@ export default class Level2 extends FizzRun_Level {
         //Set enemy spawn
         this.robotSpawn = ROBOT_SPAWN_VECS_2;
 
+        //Set sign spawn
+        this.signSpawn = SIGN_SPAWN_VECS_2;
+        this.signWords = SIGN_WORDS_VECS_2;
+
         // Music and sound
         this.levelMusicKey = Level2.LEVEL_MUSIC_KEY
         this.jumpAudioKey = Level2.JUMP_AUDIO_KEY;
@@ -141,6 +155,7 @@ export default class Level2 extends FizzRun_Level {
 
     public startScene(): void {
         super.startScene();
+        this.currentLevel = Level2;
         this.nextLevel = MainMenu;
     }
 

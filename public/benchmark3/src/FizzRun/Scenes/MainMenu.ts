@@ -469,7 +469,7 @@ export default class MainMenu extends Scene {
             });
         }
 
-        let titleTwoText: String = "Cheat Codes:";
+        let titleTwoText: String = "Cheat Codes provided in the in-game Help menu.";
         let titleTwo: Label = <Label>this.add.uiElement(
             UIElementType.LABEL,
             MenuLayers.HELP,
@@ -478,36 +478,37 @@ export default class MainMenu extends Scene {
                 text: titleTwoText,
             }
         );
+        titleTwo.textColor = Color.WHITE;
 
-        let cheatCodesList: Array<String> = ["enemy", "laser", "box"];
-        for (let i = 0; i < cheatCodesList.length; i++) {
-            this.add.uiElement(UIElementType.LABEL, MenuLayers.HELP, {
-                position: new Vec2(size.x - 20 + i * 150, size.y + 100),
-                text: cheatCodesList[i],
-            });
-        }
+        // let cheatCodesList: Array<String> = ["enemy", "laser", "box"];
+        // for (let i = 0; i < cheatCodesList.length; i++) {
+        //     this.add.uiElement(UIElementType.LABEL, MenuLayers.HELP, {
+        //         position: new Vec2(size.x - 20 + i * 150, size.y + 100),
+        //         text: cheatCodesList[i],
+        //     });
+        // }
 
-        let enterText: String = "Enter Cheatcode:";
+        // let enterText: String = "Enter Cheatcode:";
 
-        let enterLabel: Label = <Label>this.add.uiElement(
-            UIElementType.LABEL,
-            MenuLayers.HELP,
-            {
-                position: new Vec2(size.x - 200, size.y + 200),
-                text: enterText,
-            }
-        );
+        // let enterLabel: Label = <Label>this.add.uiElement(
+        //     UIElementType.LABEL,
+        //     MenuLayers.HELP,
+        //     {
+        //         position: new Vec2(size.x - 200, size.y + 200),
+        //         text: enterText,
+        //     }
+        // );
 
-        let inputBox: TextInput = <TextInput>this.add.uiElement(
-            UIElementType.TEXT_INPUT,
-            MenuLayers.HELP,
-            {
-                position: new Vec2(size.x + 175, size.y + 200),
-                text: "",
-            }
-        );
-        inputBox.setPadding(new Vec2(250, 7.5));
-        inputBox.backgroundColor = new Color(255, 255, 255);
+        // let inputBox: TextInput = <TextInput>this.add.uiElement(
+        //     UIElementType.TEXT_INPUT,
+        //     MenuLayers.HELP,
+        //     {
+        //         position: new Vec2(size.x + 175, size.y + 200),
+        //         text: "",
+        //     }
+        // );
+        // inputBox.setPadding(new Vec2(250, 7.5));
+        // inputBox.backgroundColor = new Color(255, 255, 255);
 
         backBtn.backgroundColor = new Color(153, 217, 234, 1);
         backBtn.borderRadius = 0;

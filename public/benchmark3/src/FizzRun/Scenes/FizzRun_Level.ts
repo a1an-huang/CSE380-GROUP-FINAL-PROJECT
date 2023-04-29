@@ -147,6 +147,10 @@ export default abstract class FizzRun_Level extends Scene {
     /** Enemy spawn positions */
     protected robotSpawn: Vec2[];
 
+    /** Sign spawn positions */
+    protected signSpawn: Vec2[];
+    protected signWords: string[];
+
     private healthLabel: Label;
 	private healthBar: Label;
 	private healthBarBg: Label;
@@ -172,6 +176,7 @@ export default abstract class FizzRun_Level extends Scene {
     protected levelEndHalfSize: Vec2;
 
     protected levelEndArea: Rect;
+    protected currentLevel: new (...args: any) => Scene;
     protected nextLevel: new (...args: any) => Scene;
     protected levelEndTimer: Timer;
     protected levelEndLabel: Label;
@@ -251,6 +256,23 @@ export default abstract class FizzRun_Level extends Scene {
         // Initialize the debuff pool
         this.allDebuffTuples = [];
 
+        //Initialize signs
+        for (let i = 0; i < this.signSpawn.length; i++) {
+            //Add the sign
+            const curSign = this.add.graphic(
+                GraphicType.RECT, 
+                FizzRun_Layers.PRIMARY, 
+                {position: new Vec2(this.signSpawn[i].x, this.signSpawn[i].y), size: new Vec2(90, 40)}
+            );
+            curSign.color = new Color(0, 0, 0, 0.5)
+            //Add the label to the sign
+            this.add.uiElement(
+                UIElementType.LABEL, 
+                FizzRun_Layers.PRIMARY, 
+                {position: new Vec2(this.signSpawn[i].x, this.signSpawn[i].y), text: this.signWords[i]},
+            );
+        }
+
         // Initialize the viewport - this must come after the player has been initialized
         this.initializeViewport();
         this.subscribeToEvents();
@@ -284,6 +306,7 @@ export default abstract class FizzRun_Level extends Scene {
     /* Update method for the scene */
 
     public updateScene(deltaT: number) {
+        //console.log(this.player.position.x, this.player.position.y);
         const pauseLayer: Layer = this.uiLayers.get(FizzRun_Layers.PAUSE);
         if (Input.isJustPressed(FizzRun_Controls.PAUSE_GAME)) {
             //TODO Freeze the nodes and disable user inputs here!
@@ -382,7 +405,7 @@ export default abstract class FizzRun_Level extends Scene {
             }
             case FizzRun_Events.RESTART_GAME: {
                 console.log("Restarting Level");
-                this.sceneManager.changeToScene(Level1);
+                this.sceneManager.changeToScene(this.currentLevel);
                 break;
             }     
             case FizzRun_Events.MAIN_MENU: {

@@ -43,6 +43,27 @@ export const ROBOT_SPAWN_VECS: Vec2[] = [
     //new Vec2(250, 180),
 ];
 
+export const SIGN_SPAWN_VECS: Vec2[] = [
+    new Vec2(120, 160),
+    new Vec2(242, 160),
+    new Vec2(185, 250),
+    new Vec2(80, 272),
+    new Vec2(126, 350),
+    new Vec2(420, 415),
+    new Vec2(638, 750),
+
+];
+
+export const SIGN_WORDS_VECS: string[] = [
+    "Welcome to FizzRun!",
+    "Use W A S D to move",
+    "Ice freezes water for 4.5 seconds",
+    "Water below!",
+    "Move fast and don't drown!",
+    "Sugar makes you fast for 2.5 seconds",
+    "Avoid the lasers with the sugar!"
+];
+
 export const PLAYER_SPAWN_VEC = new Vec2(150, 160);
 
 export const LEVEL_END_AREA = new AABB(new Vec2(478, 496), new Vec2(12, 16));
@@ -113,6 +134,10 @@ export default class Level1 extends FizzRun_Level {
 
         //Set enemy spawn
         this.robotSpawn = ROBOT_SPAWN_VECS;
+
+        //Set sign spawn and words
+        this.signSpawn = SIGN_SPAWN_VECS;
+        this.signWords = SIGN_WORDS_VECS;
 
         // Music and sound
         this.levelMusicKey = Level1.LEVEL_MUSIC_KEY
@@ -192,6 +217,7 @@ export default class Level1 extends FizzRun_Level {
     public startScene(): void {
         super.startScene();
         this.nextLevel = FizzRun_Level2;
+        this.currentLevel = Level1;
     }
 
     /**
