@@ -608,6 +608,8 @@ export default abstract class FizzRun_Level extends Scene {
         this.player.scale.set(0.25, 0.25); 
         this.player.position.copy(oldPos); 
 
+        this.player.boundary.setHalfSize(new Vec2(this.player.boundary.getHalfSize().x - 6, this.player.boundary.getHalfSize().y - 2))
+
         // Give the player physics
         this.player.addPhysics(new AABB(this.player.position.clone(), this.player.boundary.getHalfSize().clone()));
         this.player.setGroup("PLAYER");
@@ -1216,6 +1218,8 @@ export default abstract class FizzRun_Level extends Scene {
         this.player = this.add.animatedSprite(key, FizzRun_Layers.PRIMARY);
         this.player.scale.set(0.25, 0.25); // fixing scaling of 128 x 128
         this.player.position.copy(this.playerSpawn); // fix spawn location
+        
+        this.player.boundary.setHalfSize(new Vec2(this.player.boundary.getHalfSize().x - 6, this.player.boundary.getHalfSize().y - 2))
 
         // Give the player physics
         this.player.addPhysics(new AABB(
