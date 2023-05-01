@@ -21,7 +21,7 @@ export const MENTOS_SPAWN_VECS: Vec2[] = [
 ];
 
 export const ICE_SPAWN_VECS: Vec2[] = [
-
+  new Vec2(449, 704),
 ];
 
 export const ROBOT_SPAWN_VECS: Vec2[] = [
@@ -44,6 +44,10 @@ export const SIGN_SPAWN_VECS: Vec2[] = [
   new Vec2(120, 702),
   new Vec2(275, 680),
   new Vec2(199, 658),
+  new Vec2(449, 658),
+  new Vec2(449, 680),
+  new Vec2(582, 690),
+  new Vec2(776, 680),
 ];
 
 export const SIGN_SIZE_VECS: Vec2[] = [
@@ -62,15 +66,19 @@ export const SIGN_SIZE_VECS: Vec2[] = [
   new Vec2(120, 20),
   new Vec2(90, 20),
   new Vec2(120, 20),
+  new Vec2(120, 20),
+  new Vec2(90, 20),
+  new Vec2(90, 20),
+  new Vec2(120, 20),
 ];
 
 export const SIGN_WORDS_VECS: string[] = [
   "Welcome to FizzRun!",
-  "Use A and D to move left and right",
-  "Use W to jump",
+  "Use A and D to move left and right.",
+  "Use W to jump.",
   "Lasers will kill you!",
   "Jump over the laser to not die!",
-  "Drop down to continue",
+  "Drop down to continue.",
 
   "Ouch! You took some fall damage, but its nothing :)",
   "Sugar makes you super fast for 2.5 seconds!",
@@ -78,13 +86,17 @@ export const SIGN_WORDS_VECS: string[] = [
 
   "Robots will instantly kill you if touched!",
   "Press E to send out an ink sack and blind the robot!",
-  "Blind lasts 5 seconds",
-  "You can move through the robot when it is blinded"
+  "Blind lasts 5 seconds.",
+  "You can move through the robot when it is blinded.",
+  "This is an ice cube. Use it to walk over water!",
+  "The powerup lasts 5 seconds.",
+  "Without ice, you will drown!",
+  "That is all the training for now. Enjoy Fizzrun!"
 ];
 
-export const PLAYER_SPAWN_VEC = new Vec2(58, 700); //50,160 OG
+export const PLAYER_SPAWN_VEC = new Vec2(776, 700); //50,160 OG
 
-export const LEVEL_END_AREA = new AABB(new Vec2(478, 496), new Vec2(12, 16));
+export const LEVEL_END_AREA = new AABB(new Vec2(890, 704), new Vec2(12, 16));
 
 /* SECTION SPAWN SECTION DONE*/
 
@@ -168,8 +180,9 @@ export default class TrainLevel extends FizzRun_Level {
         this.tileDestroyedAudioKey = TrainLevel.TILE_DESTROYED_KEY;
 
         // Level end size and position
-        this.levelEndPosition = new Vec2(478, 496).mult(this.tilemapScale);
-        this.levelEndHalfSize = new Vec2(32, 16).mult(this.tilemapScale);
+        console.log(this.tilemapScale);
+        this.levelEndPosition = new Vec2(464, 344).mult(this.tilemapScale);
+        this.levelEndHalfSize = new Vec2(32, 32).mult(this.tilemapScale);
     }
 
     /**
