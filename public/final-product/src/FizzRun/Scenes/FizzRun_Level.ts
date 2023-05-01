@@ -437,11 +437,13 @@ export default abstract class FizzRun_Level extends Scene {
             }
             case FizzRun_Events.OBSTACLE_DEATH: {
                 SHARED_playerController.health = 0;
+                console.log("obstacle death");
                 break;
             }
             case FizzRun_Events.WATER_DEATH: {
                 if(!SHARED_playerController.iceEffect)
                     SHARED_playerController.health = 0;
+                console.log("water death");
                 break;
             }
             case FizzRun_Events.PLACE_DEBUFF_ICON: {
@@ -1285,7 +1287,6 @@ export default abstract class FizzRun_Level extends Scene {
         if (!this.layers.has(FizzRun_Layers.PRIMARY)) {
             throw new Error("Can't initialize the level ends until the primary layer has been added to the scene!");
         }
-        
         this.levelEndArea = <Rect>this.add.graphic(GraphicType.RECT, FizzRun_Layers.PRIMARY, { position: this.levelEndPosition, size: this.levelEndHalfSize });
         this.levelEndArea.addPhysics(undefined, undefined, false, true); // FIX
         this.levelEndArea.setTrigger(FizzRun_PhysicsGroups.PLAYER, FizzRun_Events.PLAYER_ENTERED_LEVEL_END, null);
