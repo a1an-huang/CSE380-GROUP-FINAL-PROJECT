@@ -90,6 +90,7 @@ export default class RobotBehavior implements AI {
       if (this.blindedDuration > 0) {
           return;
       }
+      console.log("robt death");
       SHARED_playerController.health = 0;
     }
 
