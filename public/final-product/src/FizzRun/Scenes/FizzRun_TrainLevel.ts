@@ -94,7 +94,7 @@ export const SIGN_WORDS_VECS: string[] = [
   "That is all the training for now. Enjoy Fizzrun!"
 ];
 
-export const PLAYER_SPAWN_VEC = new Vec2(776, 700); //50,160 OG
+export const PLAYER_SPAWN_VEC = new Vec2(50, 160); //50,160 OG
 
 export const LEVEL_END_AREA = new AABB(new Vec2(890, 704), new Vec2(12, 16));
 
