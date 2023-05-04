@@ -5,6 +5,7 @@ import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import FizzRun_Level2 from "./FizzRun_Level2";
+import FizzRun_Level3 from "./FizzRun_Level3";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 import { FizzRunResourceKeys } from "./FizzRun_Level";
@@ -214,6 +215,7 @@ export default class Level1 extends FizzRun_Level {
         this.currentLevel = Level1;
 
         this.theLevel2Scene = FizzRun_Level2;
+        this.theLevel3Scene = FizzRun_Level3;
     }
 
     /**
