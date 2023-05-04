@@ -194,6 +194,7 @@ export default abstract class FizzRun_Level extends Scene {
     protected nextLevel: new (...args: any) => Scene;
     
     protected theLevel2Scene: new (...args: any) => Scene;
+    protected theLevel3Scene: new (...args: any) => Scene;
 
     protected levelEndTimer: Timer;
     protected levelEndLabel: Label;
@@ -530,7 +531,7 @@ export default abstract class FizzRun_Level extends Scene {
             this.levelEndTimer.start();
             this.levelEndLabel.tweens.play("slideIn");
             // Remove next level id at end of current level to make sure its unlocked
-            if(this.levelNumber != 6)
+            if(this.levelNumber != 6 && this.levelNumber > 0)
                 uncompleted_levels.splice(uncompleted_levels.indexOf(this.levelNumber + 1), 1)
         }
     }
@@ -1126,6 +1127,18 @@ export default abstract class FizzRun_Level extends Scene {
             this.sceneManager.changeToScene(this.theLevel2Scene);
         }
 
+        let cheatBtnLv3: Button = <Button>this.add.uiElement(
+            UIElementType.BUTTON,
+            FizzRun_Layers.PAUSE_HELP,
+            {
+                position: new Vec2(100, 140),
+                text: "3 (Goto Lv3)",
+            }
+        );
+        cheatBtnLv3.onClick = () => {
+            this.sceneManager.changeToScene(this.theLevel3Scene);
+        }
+
         this.invincibleCheatBtn = <Button>this.add.uiElement(
             UIElementType.BUTTON,
             FizzRun_Layers.PAUSE_HELP,
@@ -1139,7 +1152,7 @@ export default abstract class FizzRun_Level extends Scene {
             this.setInvincibleStatus(newInvincibleStatus);
         }
         
-        const cheatBtnsArr = [cheatBtnLv1, cheatBtnLv2, this.invincibleCheatBtn];
+        const cheatBtnsArr = [cheatBtnLv1, cheatBtnLv2, cheatBtnLv3, this.invincibleCheatBtn];
 
         for (let i = 0; i < cheatBtnsArr.length; i++) {
             cheatBtnsArr[i].backgroundColor = new Color(153, 217, 234, 1);
