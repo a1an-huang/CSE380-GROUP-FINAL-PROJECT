@@ -1131,7 +1131,7 @@ export default abstract class FizzRun_Level extends Scene {
             UIElementType.BUTTON,
             FizzRun_Layers.PAUSE_HELP,
             {
-                position: new Vec2(100, 140),
+                position: new Vec2(100, 150),
                 text: "3 (Goto Lv3)",
             }
         );

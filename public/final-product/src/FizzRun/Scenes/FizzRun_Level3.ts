@@ -12,7 +12,7 @@ import { FizzRunResourceKeys } from "./FizzRun_Level";
 import Level2 from "./FizzRun_Level2";
 
 export const SUGAR_SPAWN_VECS_3: Vec2[] = [
-
+  new Vec2(565, 448)
 ];
 
 export const MENTOS_SPAWN_VECS_3: Vec2[] = [
@@ -24,22 +24,34 @@ export const ICE_SPAWN_VECS_3: Vec2[] = [
 ];
 
 export const ROBOT_SPAWN_VECS_3: Vec2[] = [
-
+  new Vec2(432, 842),
 ];
 
 export const SIGN_SPAWN_VECS_3: Vec2[] = [
-
+  new Vec2(120, 950),
+  new Vec2(845, 580),
+  new Vec2(845, 600),
+  new Vec2(845, 620),
+  new Vec2(565, 400),
 ];
 
 export const SIGN_SIZE_VECS3: Vec2[] = [
-
+  new Vec2(120, 30),
+  new Vec2(120, 15),
+  new Vec2(120, 15),
+  new Vec2(120, 15),
+  new Vec2(90, 15),
 ];
 
 export const SIGN_WORDS_VECS_3: string[] = [
-
+  "You can use the ink sack to climb to higher areas!",
+  "Click F to switch to your new companion Sprite!",
+  "Sprite's ability can shoot particles toward the mouse!",
+  "<<< Aim the particles toward the trees to break them!",
+  "Can you make this jump?"
 ];
 
-export const PLAYER_SPAWN_VEC_3 = new Vec2(120, 160);
+export const PLAYER_SPAWN_VEC_3 = new Vec2(120, 900); //120, 900 //991 402 end
 
 export const LEVEL_END_AREA_3 = new AABB(new Vec2(224, 232), new Vec2(24, 16));
 
@@ -110,15 +122,14 @@ export default class Level3 extends FizzRun_Level {
         this.tileDestroyedAudioKey = Level3.TILE_DESTROYED_KEY;
 
         // Level end size and position
-        this.levelEndPosition = new Vec2(976, 56);
-        this.levelEndHalfSize = new Vec2(32, 40).mult(this.tilemapScale);
+        this.levelEndPosition = new Vec2(992, 333);
+        this.levelEndHalfSize = new Vec2(16, 10).mult(this.tilemapScale);
 
     }
     /**
      * Load in resources for level 2.
      */
     public loadScene(): void {
-      console.log("loading in")
         // Load in the tilemap
         this.load.tilemap(this.tilemapKey, Level3.TILEMAP_PATH);
         // Load in the player's sprite
