@@ -72,6 +72,10 @@ export default class PlayerController extends StateMachineAI {
     //CHEATCODE ATTRIBUTES
     public isInvincible: boolean = false;
 
+    public jumpChange: boolean;
+    public contJump: boolean;
+    private jumpTimer: Timer;
+
     public speedChange: boolean;
     private speedTimer: Timer
 
@@ -119,6 +123,10 @@ export default class PlayerController extends StateMachineAI {
         this.speedChange = false;
         this.speedTimer = new Timer(2500, this.handleSpeedChange, false);
 
+        this.jumpChange = false;
+        this.contJump = false;
+        this.jumpTimer = new Timer(2500, this.handleJumpChange, false);
+
         //Check if invincible is on
         this.isInvincible = SHARED_isCheatInvincibleOn; 
 
@@ -149,12 +157,17 @@ export default class PlayerController extends StateMachineAI {
 
     public update(deltaT: number): void {
 		super.update(deltaT);
+        if(this.jumpChange && !this.contJump) {
+            this.velocity.y = -300;
+            this.jumpTimer.start();
+            this.contJump = true;
+        }
         if(this.speedChange) {
             this.speed = this.MAX_SPEED;
             this.speedTimer.start();
             this.speedChange = false;
         }
-        if(this.iceEffect == true && this.contEffect == false) {
+        if(this.iceEffect && !this.contEffect) {
             this.iceTimer.start();
             this.contEffect = true;
         }
@@ -167,13 +180,13 @@ export default class PlayerController extends StateMachineAI {
                 this.weapon.startSystem(500, 0, this.owner.position);
             }
             else if (SHARED_currentSodaType === PlayerSprite.FANTA) {
-                this.weapon.startSystem();
+                console.log('lol');
+                this.jumpChange = true;
             }
             else if (SHARED_currentSodaType === PlayerSprite.COKE) {
                 this.weapon.startSystem(this.owner.position);
             }
             this.owner.animation.play(PlayerAnimations.ATTACKING_RIGHT, false, PlayerAnimations.IDLE);
-            console.log(this.owner.position)
         }
         // Switch character
         if (Input.isJustPressed(FizzRun_Controls.SWITCH)) {
@@ -184,7 +197,13 @@ export default class PlayerController extends StateMachineAI {
         }
 
 	}
-
+    protected handleJumpChange = () => {
+		if (this.jumpChange) {
+            this.velocity.y = 0; 
+            this.jumpChange = false;
+            this.contJump = false;
+        }
+	}
     protected handleSpeedChange = () => {
 		if (!this.speedChange) {
             this.speed = this.MIN_SPEED; 
@@ -194,7 +213,7 @@ export default class PlayerController extends StateMachineAI {
     protected handleIceChange = () => {
 		if (this.iceEffect) {
             this.iceEffect = false;
-            this.contEffect == false;
+            this.contEffect = false;
         }
 	}
 
