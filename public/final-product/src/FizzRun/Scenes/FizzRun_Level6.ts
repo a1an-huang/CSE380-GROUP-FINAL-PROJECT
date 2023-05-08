@@ -17,17 +17,14 @@ import Level5 from "./FizzRun_Level5";
 export const SUGAR_SPAWN_VECS_6: Vec2[] = [];
 
 export const MENTOS_SPAWN_VECS_6: Vec2[] = [];
+
 export const ICE_SPAWN_VECS_6: Vec2[] = [];
 
-export const ROBOT_SPAWN_VECS_6: Vec2[] = [
-    new Vec2(275, 898),
-    new Vec2(536, 825),
-    new Vec2(808, 810),
-];
+export const ROBOT_SPAWN_VECS_6: Vec2[] = [];
 
 export const SIGN_SPAWN_VECS_6: Vec2[] = [];
 
-export const SIGN_SIZE_VECS_6: Vec2[] = [];
+export const SIGN_SIZE_VECS6: Vec2[] = [];
 
 export const SIGN_WORDS_VECS_6: string[] = [];
 
@@ -97,7 +94,7 @@ export default class Level6 extends FizzRun_Level {
 
         //Set sign spawn
         this.signSpawn = SIGN_SPAWN_VECS_6;
-        this.signSize = SIGN_SIZE_VECS_6;
+        this.signSize = SIGN_SIZE_VECS6;
         this.signWords = SIGN_WORDS_VECS_6;
 
         // Music and sound
