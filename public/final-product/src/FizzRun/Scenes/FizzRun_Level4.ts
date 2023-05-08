@@ -11,6 +11,7 @@ import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import { FizzRunResourceKeys } from "./FizzRun_Level";
 import Level2 from "./FizzRun_Level2";
 import Level3 from "./FizzRun_Level3";
+import Level5 from "./FizzRun_Level5";
 
 export const SUGAR_SPAWN_VECS_4: Vec2[] = [];
 
@@ -151,7 +152,7 @@ export default class Level4 extends FizzRun_Level {
     public startScene(): void {
         super.startScene();
         this.currentLevel = Level4;
-        this.nextLevel = MainMenu;
+        this.nextLevel = Level5;
 
         this.theLevel2Scene = Level2;
         this.theLevel3Scene = Level3;

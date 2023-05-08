@@ -10,31 +10,33 @@ import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 import { FizzRunResourceKeys } from "./FizzRun_Level";
 import Level4 from "./FizzRun_Level4";
+import Level5 from "./FizzRun_Level5";
+import Level6 from "./FizzRun_Level6";
 
 /* SECTION LIST POWERUP/NPC SPAWNPOINTS HERE, DO IT FOR EVERY LEVEL! */
 
 export const SUGAR_SPAWN_VECS: Vec2[] = [
-    new Vec2(373, 432), 
+    new Vec2(373, 432),
     new Vec2(628, 448),
     new Vec2(680, 784),
 ];
 
 export const MENTOS_SPAWN_VECS: Vec2[] = [
-    // new Vec2(300, 180), 
-    // new Vec2(320, 180), 
-    // new Vec2(340, 180), 
+    // new Vec2(300, 180),
+    // new Vec2(320, 180),
+    // new Vec2(340, 180),
     // new Vec2(360, 180),
-    // new Vec2(380, 180), 
-    // new Vec2(400, 180), 
-    // new Vec2(420, 180), 
-    // new Vec2(440, 180), 
-    // new Vec2(460, 180), 
-    // new Vec2(480, 180), 
-    // new Vec2(500, 180), 
+    // new Vec2(380, 180),
+    // new Vec2(400, 180),
+    // new Vec2(420, 180),
+    // new Vec2(440, 180),
+    // new Vec2(460, 180),
+    // new Vec2(480, 180),
+    // new Vec2(500, 180),
 ];
 
 export const ICE_SPAWN_VECS: Vec2[] = [
-    new Vec2(503, 652), 
+    new Vec2(503, 652),
     new Vec2(54, 992),
     new Vec2(452, 912),
     new Vec2(111, 288),
@@ -45,17 +47,11 @@ export const ROBOT_SPAWN_VECS: Vec2[] = [
     //new Vec2(250, 180),
 ];
 
-export const SIGN_SPAWN_VECS: Vec2[] = [
+export const SIGN_SPAWN_VECS: Vec2[] = [];
 
-];
+export const SIGN_SIZE_VECS: Vec2[] = [];
 
-export const SIGN_SIZE_VECS: Vec2[] = [
-
-];
-
-export const SIGN_WORDS_VECS: string[] = [
-
-];
+export const SIGN_WORDS_VECS: string[] = [];
 
 export const PLAYER_SPAWN_VEC = new Vec2(150, 160);
 
@@ -64,20 +60,27 @@ export const LEVEL_END_AREA = new AABB(new Vec2(478, 496), new Vec2(12, 16));
 /* SECTION SPAWN SECTION DONE*/
 
 export default class Level1 extends FizzRun_Level {
-
     public static readonly PLAYER_SPAWN = PLAYER_SPAWN_VEC;
     public static readonly PLAYER_SPRITE_KEY = "COKE";
-    public static readonly PLAYER_SPRITE_PATH_COKE = "fizzrun_assets/spritesheets/coke.json";
-    public static readonly PLAYER_SPRITE_PATH_FANTA = "fizzrun_assets/spritesheets/fanta.json";
-    public static readonly PLAYER_SPRITE_PATH_SPRITE = "fizzrun_assets/spritesheets/sprite.json";
+    public static readonly PLAYER_SPRITE_PATH_COKE =
+        "fizzrun_assets/spritesheets/coke.json";
+    public static readonly PLAYER_SPRITE_PATH_FANTA =
+        "fizzrun_assets/spritesheets/fanta.json";
+    public static readonly PLAYER_SPRITE_PATH_SPRITE =
+        "fizzrun_assets/spritesheets/sprite.json";
 
-    public static readonly SPRITE_PATH_SUGAR = "fizzrun_assets/spritesheets/sugar.json";
-    public static readonly SPRITE_PATH_MENTOS = "fizzrun_assets/spritesheets/mentos.json";
-    public static readonly SPRITE_PATH_ICE = "fizzrun_assets/spritesheets/icecube.json";
-    public static readonly SPRITE_PATH_ROBOT = "fizzrun_assets/spritesheets/levitating_robot.json";
+    public static readonly SPRITE_PATH_SUGAR =
+        "fizzrun_assets/spritesheets/sugar.json";
+    public static readonly SPRITE_PATH_MENTOS =
+        "fizzrun_assets/spritesheets/mentos.json";
+    public static readonly SPRITE_PATH_ICE =
+        "fizzrun_assets/spritesheets/icecube.json";
+    public static readonly SPRITE_PATH_ROBOT =
+        "fizzrun_assets/spritesheets/levitating_robot.json";
 
     public static readonly TILEMAP_KEY = "LEVEL1";
-    public static readonly TILEMAP_PATH = "fizzrun_assets/tilemaps/FizzRun_Level1.json";
+    public static readonly TILEMAP_PATH =
+        "fizzrun_assets/tilemaps/FizzRun_Level1.json";
     public static readonly TILEMAP_SCALE = new Vec2(2, 2);
     public static readonly DESTRUCTIBLE_LAYER_KEY = "Destructable";
     public static readonly WALLS_LAYER_KEY = "Main";
@@ -85,7 +88,8 @@ export default class Level1 extends FizzRun_Level {
     public static readonly WATER_LAYER_KEY = "Water";
 
     public static readonly LEVEL_MUSIC_KEY = "LEVEL_MUSIC";
-    public static readonly LEVEL_MUSIC_PATH = "fizzrun_assets/music/ThemeSong.wav";
+    public static readonly LEVEL_MUSIC_PATH =
+        "fizzrun_assets/music/ThemeSong.wav";
 
     public static readonly JUMP_AUDIO_KEY = "PLAYER_JUMP";
     public static readonly JUMP_AUDIO_PATH = "fizzrun_assets/sounds/jump.wav";
@@ -94,17 +98,25 @@ export default class Level1 extends FizzRun_Level {
     public static readonly DEAD_AUDIO_PATH = "fizzrun_assets/sounds/dead.wav";
 
     public static readonly TILE_DESTROYED_KEY = "TILE_DESTROYED";
-    public static readonly TILE_DESTROYED_PATH = "fizzrun_assets/sounds/break.wav";
+    public static readonly TILE_DESTROYED_PATH =
+        "fizzrun_assets/sounds/break.wav";
 
     public static readonly FIZZ_BOOM_KEY = "FIZZ_BOOM";
-    public static readonly FIZZ_BOOM_PATH = "fizzrun_assets/sounds/fizzboom.wav";
+    public static readonly FIZZ_BOOM_PATH =
+        "fizzrun_assets/sounds/fizzboom.wav";
 
     public static readonly SWITCH_AUDIO_KEY = "PLAYER_SWITCH";
-    public static readonly SWITCH_AUDIO_PATH = "fizzrun_assets/sounds/switch.wav";
+    public static readonly SWITCH_AUDIO_PATH =
+        "fizzrun_assets/sounds/switch.wav";
 
     public static readonly LEVEL_END = LEVEL_END_AREA;
 
-    public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
+    public constructor(
+        viewport: Viewport,
+        sceneManager: SceneManager,
+        renderingManager: RenderingManager,
+        options: Record<string, any>
+    ) {
         super(viewport, sceneManager, renderingManager, options);
         this.levelNumber = 1;
         // Set the keys for the different layers of the tilemap
@@ -136,7 +148,7 @@ export default class Level1 extends FizzRun_Level {
         this.signWords = SIGN_WORDS_VECS;
 
         // Music and sound
-        this.levelMusicKey = Level1.LEVEL_MUSIC_KEY
+        this.levelMusicKey = Level1.LEVEL_MUSIC_KEY;
         this.jumpAudioKey = Level1.JUMP_AUDIO_KEY;
         this.deadAudioKey = Level1.DEAD_AUDIO_KEY;
         this.switchAudioKey = Level1.SWITCH_AUDIO_KEY;
@@ -169,15 +181,36 @@ export default class Level1 extends FizzRun_Level {
         this.load.audio(this.switchAudioKey, Level1.SWITCH_AUDIO_PATH);
         this.load.audio(this.tileDestroyedAudioKey, Level1.TILE_DESTROYED_PATH);
 
-        // LOAD IN REQUIRED ASSETS FOR IN GAME UI 
-        this.load.image(FizzRunResourceKeys.SPRITE_LOGO, "fizzrun_assets/images/sprite_logo.png");
-        this.load.image(FizzRunResourceKeys.SPRITE_ABILITY, "fizzrun_assets/images/sprite_ability.png");
-        this.load.image(FizzRunResourceKeys.COKE_LOGO, "fizzrun_assets/images/coke_logo.png");
-        this.load.image(FizzRunResourceKeys.COKE_ABILITY, "fizzrun_assets/images/coke_ability.png");
-        this.load.image(FizzRunResourceKeys.FANTA_LOGO, "fizzrun_assets/images/fanta_logo.png");
-        this.load.image(FizzRunResourceKeys.FANTA_ABILITY, "fizzrun_assets/images/fanta_ability.png");
+        // LOAD IN REQUIRED ASSETS FOR IN GAME UI
+        this.load.image(
+            FizzRunResourceKeys.SPRITE_LOGO,
+            "fizzrun_assets/images/sprite_logo.png"
+        );
+        this.load.image(
+            FizzRunResourceKeys.SPRITE_ABILITY,
+            "fizzrun_assets/images/sprite_ability.png"
+        );
+        this.load.image(
+            FizzRunResourceKeys.COKE_LOGO,
+            "fizzrun_assets/images/coke_logo.png"
+        );
+        this.load.image(
+            FizzRunResourceKeys.COKE_ABILITY,
+            "fizzrun_assets/images/coke_ability.png"
+        );
+        this.load.image(
+            FizzRunResourceKeys.FANTA_LOGO,
+            "fizzrun_assets/images/fanta_logo.png"
+        );
+        this.load.image(
+            FizzRunResourceKeys.FANTA_ABILITY,
+            "fizzrun_assets/images/fanta_ability.png"
+        );
 
-        this.load.image(FizzRunResourceKeys.BLINDED_ICON, "fizzrun_assets/images/blinded_status.png");
+        this.load.image(
+            FizzRunResourceKeys.BLINDED_ICON,
+            "fizzrun_assets/images/blinded_status.png"
+        );
     }
 
     /**
@@ -192,12 +225,14 @@ export default class Level1 extends FizzRun_Level {
         this.load.keepSpritesheet(FizzRunResourceKeys.MENTOS);
         this.load.keepSpritesheet(FizzRunResourceKeys.ROBOT);
         this.load.keepSpritesheet(FizzRunResourceKeys.ICE);
-        
+
         this.load.keepAudio(this.jumpAudioKey);
         this.load.keepAudio(this.deadAudioKey);
         this.load.keepAudio(this.switchAudioKey);
         this.load.keepAudio(this.tileDestroyedAudioKey);
-        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: Level1.LEVEL_MUSIC_KEY});
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {
+            key: Level1.LEVEL_MUSIC_KEY,
+        });
 
         // Keep UI assets
         this.load.keepImage(FizzRunResourceKeys.SPRITE_LOGO);
@@ -218,16 +253,17 @@ export default class Level1 extends FizzRun_Level {
         this.theLevel2Scene = FizzRun_Level2;
         this.theLevel3Scene = FizzRun_Level3;
         this.theLevel4Scene = Level4;
+        this.theLevel5Scene = Level5;
+        this.theLevel6Scene = Level6;
     }
 
     /**
-     * I had to override this method to adjust the viewport for the first level. I screwed up 
+     * I had to override this method to adjust the viewport for the first level. I screwed up
      * when I was making the tilemap for the first level is what it boils down to.
-     * 
+     *
      * - Peter
      */
     protected initializeViewport(): void {
         super.initializeViewport();
     }
-
 }

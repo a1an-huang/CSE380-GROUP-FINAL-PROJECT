@@ -12,6 +12,7 @@ import { FizzRunResourceKeys } from "./FizzRun_Level";
 import Level2 from "./FizzRun_Level2";
 import Level3 from "./FizzRun_Level3";
 import Level4 from "./FizzRun_Level4";
+import Level6 from "./FizzRun_Level6";
 
 export const SUGAR_SPAWN_VECS_5: Vec2[] = [];
 
@@ -23,7 +24,7 @@ export const ROBOT_SPAWN_VECS_5: Vec2[] = [];
 
 export const SIGN_SPAWN_VECS_5: Vec2[] = [];
 
-export const SIGN_SIZE_VECS_5: Vec2[] = [];
+export const SIGN_SIZE_VECS5: Vec2[] = [];
 
 export const SIGN_WORDS_VECS_5: string[] = [];
 
@@ -37,7 +38,7 @@ export default class Level5 extends FizzRun_Level {
 
     public static readonly TILEMAP_KEY = "LEVEL5";
     public static readonly TILEMAP_PATH =
-        "fizzrun_assets/tilemaps/FizzRun_Level4.json";
+        "fizzrun_assets/tilemaps/FizzRun_Level5.json";
     public static readonly TILEMAP_SCALE = new Vec2(2, 2);
     public static readonly DESTRUCTIBLE_LAYER_KEY = "Destructable";
     public static readonly WALLS_LAYER_KEY = "Main";
@@ -93,7 +94,7 @@ export default class Level5 extends FizzRun_Level {
 
         //Set sign spawn
         this.signSpawn = SIGN_SPAWN_VECS_5;
-        this.signSize = SIGN_SIZE_VECS_5;
+        this.signSize = SIGN_SIZE_VECS5;
         this.signWords = SIGN_WORDS_VECS_5;
 
         // Music and sound
@@ -152,7 +153,6 @@ export default class Level5 extends FizzRun_Level {
 
         this.theLevel2Scene = Level2;
         this.theLevel3Scene = Level3;
-        this.theLevel4Scene = Level4;
         this.theLevel5Scene = Level5;
     }
 }
