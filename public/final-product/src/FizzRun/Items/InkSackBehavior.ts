@@ -9,12 +9,16 @@ import Emitter from "../../Wolfie2D/Events/Emitter";
 
 import { SHARED_playerController } from "../Player/PlayerStates/PlayerState";
 import { SHARED_robotPool } from "../Scenes/FizzRun_Level";
+import Input from "../../Wolfie2D/Input/Input";
+import { FizzRun_Controls } from "../FizzRun_Controls";
 
 export default class InkSackBehavior implements AI {
   public readonly FIXED_POS_SPEED: Vec2 = new Vec2(1.6, 0);
   public readonly FIXED_NEG_SPEED: Vec2 = new Vec2(-1.6, 0);
   public readonly NO_SPEED: Vec2 = new Vec2(0, 0);
   private currentSpeed: Vec2;
+
+  private isFacingRight: boolean = true;
   
   private owner: Sprite;
   private receiver: Receiver;
@@ -65,6 +69,12 @@ export default class InkSackBehavior implements AI {
   }
 
   update(deltaT: number): void {
+    if (Input.isJustPressed(FizzRun_Controls.MOVE_LEFT)) {
+      this.isFacingRight = false;
+    }
+    else if (Input.isJustPressed(FizzRun_Controls.MOVE_RIGHT)) {
+      this.isFacingRight = true;
+    }
     while (this.receiver.hasNextEvent()) {
       this.handleEvent(this.receiver.getNextEvent());
     }
@@ -79,11 +89,10 @@ export default class InkSackBehavior implements AI {
   private activateInkSack(event: GameEvent): void {
     let startPoint = event.data.get("position");
     this.owner.visible = true;
-    if (SHARED_playerController.inputDir.x >= 0) {
+    if (this.isFacingRight) {
       this.owner.position.copy(new Vec2(startPoint.x+10, startPoint.y));
       this.currentSpeed.copy(this.FIXED_POS_SPEED);
     }
-    //FIXME - Shooting left doesn't work
     else {
       this.owner.position.copy(new Vec2(startPoint.x-10, startPoint.y));
       this.currentSpeed.copy(this.FIXED_NEG_SPEED);

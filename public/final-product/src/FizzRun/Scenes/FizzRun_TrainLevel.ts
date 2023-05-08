@@ -9,6 +9,8 @@ import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 import { FizzRunResourceKeys } from "./FizzRun_Level";
 import MainMenu from "./MainMenu";
+import Level3 from "./FizzRun_Level3";
+import Level4 from "./FizzRun_Level4";
 
 /* SECTION LIST POWERUP/NPC SPAWNPOINTS HERE, DO IT FOR EVERY LEVEL! */
 
@@ -143,7 +145,7 @@ export default class TrainLevel extends FizzRun_Level {
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, options);
-        this.levelNumber = 1;
+        this.levelNumber = -1;
         // Set the keys for the different layers of the tilemap
         this.tilemapKey = TrainLevel.TILEMAP_KEY;
         this.tilemapScale = TrainLevel.TILEMAP_SCALE;
@@ -254,6 +256,8 @@ export default class TrainLevel extends FizzRun_Level {
         this.currentLevel = TrainLevel;
 
         this.theLevel2Scene = FizzRun_Level2;
+        this.theLevel3Scene = Level3;
+        this.theLevel4Scene = Level4;
     }
 
     /**

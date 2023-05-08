@@ -14,6 +14,8 @@ import Level1 from "./FizzRun_Level1";
 import Level2 from "./FizzRun_Level2";
 import { uncompleted_levels } from "./FizzRun_Level";
 import TrainLevel from "./FizzRun_TrainLevel";
+import Level3 from "./FizzRun_Level3";
+import Level4 from "./FizzRun_Level4";
 
 // Layers for the main menu scene
 export const MenuLayers = {
@@ -356,10 +358,10 @@ export default class MainMenu extends Scene {
         );
         levelThreeBtn.setPadding(new Vec2(50, 40));
 
-        // levelThreeBtn.onClick = () => {
-        //     if(!uncompleted_levels.includes(3))
-        //         this.sceneManager.changeToScene(Level3);
-        // };
+        levelThreeBtn.onClick = () => {
+            if(!uncompleted_levels.includes(3))
+                this.sceneManager.changeToScene(Level3);
+        };
         if(uncompleted_levels.includes(3)) {
             let lockedIconLvThree = this.add.sprite("ICON_LOCKEDLEVEL", MenuLayers.LEVELSELECT);
             lockedIconLvThree.position.set(size.x+250, size.y-200);
@@ -376,10 +378,10 @@ export default class MainMenu extends Scene {
         );
         levelFourBtn.setPadding(new Vec2(50, 40));
 
-        // levelFourBtn.onClick = () => {
-        //     if(!uncompleted_levels.includes(4))
-        //         this.sceneManager.changeToScene(Level4);
-        // };
+        levelFourBtn.onClick = () => {
+            if(!uncompleted_levels.includes(4))
+                this.sceneManager.changeToScene(Level4);
+        };
         if(uncompleted_levels.includes(4)) {
             let lockedIconLvFour = this.add.sprite("ICON_LOCKEDLEVEL", MenuLayers.LEVELSELECT);
             lockedIconLvFour.position.set(size.x-250, size.y);
