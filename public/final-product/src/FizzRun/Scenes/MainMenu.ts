@@ -16,6 +16,8 @@ import { uncompleted_levels } from "./FizzRun_Level";
 import TrainLevel from "./FizzRun_TrainLevel";
 import Level3 from "./FizzRun_Level3";
 import Level4 from "./FizzRun_Level4";
+import Level5 from "./FizzRun_Level5";
+import Level6 from "./FizzRun_Level6";
 
 // Layers for the main menu scene
 export const MenuLayers = {
@@ -57,7 +59,10 @@ export default class MainMenu extends Scene {
             "LEVELSELECT_BG",
             "fizzrun_assets/images/levelselect_bg.png"
         );
-        this.load.image("ICON_LOCKEDLEVEL", "fizzrun_assets/images/menu_lockedlevel_icon.png");
+        this.load.image(
+            "ICON_LOCKEDLEVEL",
+            "fizzrun_assets/images/menu_lockedlevel_icon.png"
+        );
     }
 
     public startScene(): void {
@@ -339,12 +344,15 @@ export default class MainMenu extends Scene {
         levelTwoBtn.setPadding(new Vec2(50, 40));
 
         levelTwoBtn.onClick = () => {
-            if(!uncompleted_levels.includes(2))
+            if (!uncompleted_levels.includes(2))
                 this.sceneManager.changeToScene(Level2);
         };
-        if(uncompleted_levels.includes(2)) {
-            let lockedIconLvTwo = this.add.sprite("ICON_LOCKEDLEVEL", MenuLayers.LEVELSELECT);
-            lockedIconLvTwo.position.set(size.x, size.y-200);
+        if (uncompleted_levels.includes(2)) {
+            let lockedIconLvTwo = this.add.sprite(
+                "ICON_LOCKEDLEVEL",
+                MenuLayers.LEVELSELECT
+            );
+            lockedIconLvTwo.position.set(size.x, size.y - 200);
             lockedIconLvTwo.scale.set(1, 1);
         }
 
@@ -359,12 +367,15 @@ export default class MainMenu extends Scene {
         levelThreeBtn.setPadding(new Vec2(50, 40));
 
         levelThreeBtn.onClick = () => {
-            if(!uncompleted_levels.includes(3))
+            if (!uncompleted_levels.includes(3))
                 this.sceneManager.changeToScene(Level3);
         };
-        if(uncompleted_levels.includes(3)) {
-            let lockedIconLvThree = this.add.sprite("ICON_LOCKEDLEVEL", MenuLayers.LEVELSELECT);
-            lockedIconLvThree.position.set(size.x+250, size.y-200);
+        if (uncompleted_levels.includes(3)) {
+            let lockedIconLvThree = this.add.sprite(
+                "ICON_LOCKEDLEVEL",
+                MenuLayers.LEVELSELECT
+            );
+            lockedIconLvThree.position.set(size.x + 250, size.y - 200);
             lockedIconLvThree.scale.set(1, 1);
         }
 
@@ -379,12 +390,15 @@ export default class MainMenu extends Scene {
         levelFourBtn.setPadding(new Vec2(50, 40));
 
         levelFourBtn.onClick = () => {
-            if(!uncompleted_levels.includes(4))
+            if (!uncompleted_levels.includes(4))
                 this.sceneManager.changeToScene(Level4);
         };
-        if(uncompleted_levels.includes(4)) {
-            let lockedIconLvFour = this.add.sprite("ICON_LOCKEDLEVEL", MenuLayers.LEVELSELECT);
-            lockedIconLvFour.position.set(size.x-250, size.y);
+        if (uncompleted_levels.includes(4)) {
+            let lockedIconLvFour = this.add.sprite(
+                "ICON_LOCKEDLEVEL",
+                MenuLayers.LEVELSELECT
+            );
+            lockedIconLvFour.position.set(size.x - 250, size.y);
             lockedIconLvFour.scale.set(1, 1);
         }
 
@@ -401,8 +415,11 @@ export default class MainMenu extends Scene {
         //     if(!uncompleted_levels.includes(5))
         //         this.sceneManager.changeToScene(Level5);
         // };
-        if(uncompleted_levels.includes(5)) {
-            let lockedIconLvFive = this.add.sprite("ICON_LOCKEDLEVEL", MenuLayers.LEVELSELECT);
+        if (uncompleted_levels.includes(5)) {
+            let lockedIconLvFive = this.add.sprite(
+                "ICON_LOCKEDLEVEL",
+                MenuLayers.LEVELSELECT
+            );
             lockedIconLvFive.position.set(size.x, size.y);
             lockedIconLvFive.scale.set(1, 1);
         }
@@ -420,9 +437,12 @@ export default class MainMenu extends Scene {
         //     if(!uncompleted_levels.includes(6))
         //         this.sceneManager.changeToScene(Level6);
         // };
-        if(uncompleted_levels.includes(6)) {
-            let lockedIconLvSix = this.add.sprite("ICON_LOCKEDLEVEL", MenuLayers.LEVELSELECT);
-            lockedIconLvSix.position.set(size.x+250, size.y);
+        if (uncompleted_levels.includes(6)) {
+            let lockedIconLvSix = this.add.sprite(
+                "ICON_LOCKEDLEVEL",
+                MenuLayers.LEVELSELECT
+            );
+            lockedIconLvSix.position.set(size.x + 250, size.y);
             lockedIconLvSix.scale.set(1, 1);
         }
 
@@ -486,7 +506,8 @@ export default class MainMenu extends Scene {
             });
         }
 
-        let titleTwoText: String = "Cheat Codes provided in the in-game Help menu.";
+        let titleTwoText: String =
+            "Cheat Codes provided in the in-game Help menu.";
         let titleTwo: Label = <Label>this.add.uiElement(
             UIElementType.LABEL,
             MenuLayers.HELP,
