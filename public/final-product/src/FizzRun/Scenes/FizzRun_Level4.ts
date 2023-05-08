@@ -20,9 +20,13 @@ export const MENTOS_SPAWN_VECS_4: Vec2[] = [];
 export const ICE_SPAWN_VECS_4: Vec2[] = [];
 
 export const ROBOT_SPAWN_VECS_4: Vec2[] = [
-    new Vec2(275, 898),
+    new Vec2(260, 898),
     new Vec2(536, 825),
     new Vec2(808, 810),
+
+    new Vec2(516, 300),
+    new Vec2(516, 300),
+    new Vec2(516, 300),
 ];
 
 export const SIGN_SPAWN_VECS_4: Vec2[] = [];
@@ -31,7 +35,7 @@ export const SIGN_SIZE_VECS4: Vec2[] = [];
 
 export const SIGN_WORDS_VECS_4: string[] = [];
 
-export const PLAYER_SPAWN_VEC_4 = new Vec2(228, 350); //OG 120, 740
+export const PLAYER_SPAWN_VEC_4 = new Vec2(120, 740); //Temp 581, 320
 
 export const LEVEL_END_AREA_4 = new AABB(new Vec2(224, 232), new Vec2(24, 16));
 
@@ -71,7 +75,7 @@ export default class Level4 extends FizzRun_Level {
         options: Record<string, any>
     ) {
         super(viewport, sceneManager, renderingManager, options);
-        this.levelNumber = 3;
+        this.levelNumber = 4;
         // Set the keys for the different layers of the tilemap
         this.tilemapKey = Level4.TILEMAP_KEY;
         this.tilemapScale = Level4.TILEMAP_SCALE;
@@ -108,7 +112,7 @@ export default class Level4 extends FizzRun_Level {
         this.tileDestroyedAudioKey = Level4.TILE_DESTROYED_KEY;
 
         // Level end size and position
-        this.levelEndPosition = new Vec2(992, 333);
+        this.levelEndPosition = new Vec2(480, 200);
         this.levelEndHalfSize = new Vec2(16, 10).mult(this.tilemapScale);
     }
     /**
