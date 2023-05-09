@@ -707,16 +707,16 @@ export default abstract class FizzRun_Level extends Scene {
         let newSodaAbilityKey: string = "";
         let newSodaWeapon: any;
         // Switch keys
-        if (this.playerSpriteKey === "COKE") {
-            this.playerSpriteKey = "FANTA";
-            newSodaLogoKey = FizzRunResourceKeys.FANTA_LOGO;
-            newSodaAbilityKey = FizzRunResourceKeys.FANTA_ABILITY;
-            newSodaWeapon = this.INITIALIZED_FANTA_WEAPON;
-        } else if (this.playerSpriteKey === "FANTA") {
+        if (this.playerSpriteKey === "COKE" && this.levelNumber > 2) {
             this.playerSpriteKey = "SPRITE";
             newSodaLogoKey = FizzRunResourceKeys.SPRITE_LOGO;
             newSodaAbilityKey = FizzRunResourceKeys.SPRITE_ABILITY;
             newSodaWeapon = this.INITIALIZED_SPRITE_WEAPON;
+        } else if (this.playerSpriteKey === "SPRITE" && this.levelNumber > 4) {
+            this.playerSpriteKey = "FANTA";
+            newSodaLogoKey = FizzRunResourceKeys.FANTA_LOGO;
+            newSodaAbilityKey = FizzRunResourceKeys.FANTA_ABILITY;
+            newSodaWeapon = this.INITIALIZED_FANTA_WEAPON;
         } else {
             this.playerSpriteKey = "COKE";
             newSodaLogoKey = FizzRunResourceKeys.COKE_LOGO;
