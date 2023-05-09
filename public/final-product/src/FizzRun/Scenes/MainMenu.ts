@@ -412,7 +412,7 @@ export default class MainMenu extends Scene {
         );
         levelFiveBtn.setPadding(new Vec2(50, 40));
         levelFiveBtn.onClick = () => {
-            if(!uncompleted_levels.includes(5))
+            if (!uncompleted_levels.includes(5))
                 this.sceneManager.changeToScene(Level5);
         };
         if (uncompleted_levels.includes(5)) {
@@ -434,7 +434,7 @@ export default class MainMenu extends Scene {
         );
         levelSixBtn.setPadding(new Vec2(50, 40));
         levelSixBtn.onClick = () => {
-            if(!uncompleted_levels.includes(6))
+            if (!uncompleted_levels.includes(6))
                 this.sceneManager.changeToScene(Level6);
         };
         if (uncompleted_levels.includes(6)) {
