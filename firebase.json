@@ -1,41 +1,39 @@
 {
-  "hosting": {
-    "site": "fizz-run",
-    "public": "public/dist",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ]
-  },
-  "redirects":[{
-      "source": "/benchmark1",
-      "destination": "benchmark1/benchmark1.html",
-      "type": 302
-  },
-  {
-    "source": "/benchmark2",
-    "destination": "benchmark2/dist/benchmark2.html",
-    "type": 302
-  },
-  {
-    "source": "/benchmark3",
-    "destination": "benchmark3/dist/benchmark3.html",
-    "type": 302
-  },{
-    "source": "/",
-    "destination": "final-product/dist/index.html",
-    "type": 302
-  }
-
-  ],
-  "emulators": {
     "hosting": {
-      "port": 5055
+        "site": "fizz-run",
+        "public": "public",
+        "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+        "redirects": [
+            {
+                "source": "/benchmark1",
+                "destination": "/benchmark1/benchmark1.html",
+                "type": 301
+            },
+            {
+                "source": "/benchmark2",
+                "destination": "/benchmark2/dist/index.html",
+                "type": 301
+            },
+            {
+                "source": "/benchmark3",
+                "destination": "/benchmark3/dist/index.html",
+                "type": 301
+            },
+            {
+                "source": "/",
+                "destination": "/final-product/dist/index.html",
+                "type": 301
+            }
+        ]
     },
-    "ui": {
-      "enabled": true
-    },
-    "singleProjectMode": true
-  }
+
+    "emulators": {
+        "hosting": {
+            "port": 5055
+        },
+        "ui": {
+            "enabled": true
+        },
+        "singleProjectMode": true
+    }
 }
