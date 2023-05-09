@@ -33,8 +33,8 @@ export default class IceBehavior implements AI {
     /**
      * @see {AI.handleEvent}
      */
-    handleEvent(event: GameEvent): void { 
-        switch(event.type) {
+    handleEvent(event: GameEvent): void {
+        switch (event.type) {
             case FizzRun_Events.PLAYER_POWERUP: {
                 this.handlePlayerPowerUp(event);
                 break;
@@ -57,22 +57,17 @@ export default class IceBehavior implements AI {
     /**
      * @see {AI.destroy}
      */
-    destroy(): void { 
+    destroy(): void {
         this.receiver.destroy();
-    }  
+    }
 
     protected handlePlayerPowerUp(event: GameEvent): void {
         let id = event.data.get("powerId");
         let type = event.data.get("type");
-        if (id === this.owner.id && type === 'ice') {
+        if (id === this.owner.id && type === "ice") {
             this.owner.position.copy(Vec2.ZERO);
             this.owner.visible = false;
             SHARED_playerController.iceEffect = true;
         }
     }
 }
-
-
-
-
-

@@ -7,22 +7,26 @@ import Emitter from "../../Wolfie2D/Events/Emitter";
 import { FizzRun_Events } from "../FizzRun_Events";
 
 export default class CokeWeapon {
+    public name: string = "CokeWeapon";
 
-  public name: string = "CokeWeapon";
+    protected theInkSack: Sprite;
+    protected emitter: Emitter;
 
-  protected theInkSack: Sprite;
-  protected emitter: Emitter;
+    constructor() {
+        this.emitter = new Emitter();
+    }
 
-  constructor() {
-    this.emitter = new Emitter();
-  }
+    initializeInkSack(scene: Scene, layer: string) {
+        this.theInkSack = scene.add.sprite(
+            FizzRunResourceKeys.COKE_ABILITY,
+            layer
+        );
+        this.theInkSack.addAI(InkSackBehavior);
+    }
 
-  initializeInkSack(scene: Scene, layer: string) {
-    this.theInkSack = scene.add.sprite(FizzRunResourceKeys.COKE_ABILITY, layer);
-    this.theInkSack.addAI(InkSackBehavior);
-  }
-  
-  startSystem(startPoint: Vec2) {
-    this.emitter.fireEvent(FizzRun_Events.ACTIVATE_INKSACK, {position: startPoint});
-  }
+    startSystem(startPoint: Vec2) {
+        this.emitter.fireEvent(FizzRun_Events.ACTIVATE_INKSACK, {
+            position: startPoint,
+        });
+    }
 }
