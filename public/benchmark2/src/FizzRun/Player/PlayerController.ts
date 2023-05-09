@@ -15,6 +15,9 @@ import { FizzRun_Controls } from "../FizzRun_Controls";
 import FizzRun_AnimatedSprite from "../Nodes/FizzRun_AnimatedSprite";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 import { FizzRun_Events } from "../FizzRun_Events";
+import GameEvent from "../../Wolfie2D/Events/GameEvent";
+
+import { SHARED_currentSodaType } from "../Scenes/FizzRun_Level";
 
 /**
  * Animation keys for the player spritesheet
@@ -93,8 +96,8 @@ export default class PlayerController extends StateMachineAI {
         this.health = options.currHealth;
         this.maxHealth = options.maxHealth;
 
-        // this.fizz = options.currFizz;
-        // this.maxFizz = options.maxFizz;
+        this.fizz = options.currFizz;
+        this.maxFizz = options.maxFizz;
 
         // Add the different states the player can be in to the PlayerController 
 		this.addState(PlayerStates.IDLE, new Idle(this, this.owner));
@@ -106,7 +109,25 @@ export default class PlayerController extends StateMachineAI {
         // Start the player in the Idle state
         this.initialize(PlayerStates.IDLE);
     }
+    public handleEvent(event: GameEvent): void {
+		switch(event.type) {
+			case FizzRun_Events.PLAYER_POWERUP: {
+				this.handlePlayerPowerUpCollision(event);
+				break;
+			}
+			default: {
+				throw new Error(`Unhandled event of type: ${event.type} caught in PlayerController`);
+			}
+		}
+	}
 
+    protected handlePlayerPowerUpCollision(event: GameEvent): void {
+        let id = event.data.get("owner");
+        let type = event.data.get("type");
+        if (id === this.owner.id && type === 'sugar') {
+            console.log('working');
+        }
+    }
     /** 
 	 * Get the inputs from the keyboard, or Vec2.Zero if nothing is being pressed
 	 */
@@ -126,12 +147,22 @@ export default class PlayerController extends StateMachineAI {
 
         // If the player hits the attack button and the weapon system isn't running, restart the system and fire!
         if (Input.isPressed(FizzRun_Controls.ATTACK) && !this.weapon.isSystemRunning()) {
-            // Start the particle system at the player's current position
-            this.weapon.startSystem(500, 0, this.owner.position);
-            this.owner.animation.play(PlayerAnimations.ATTACKING_RIGHT, false, PlayerAnimations.IDLE);
+            if (SHARED_currentSodaType === PlayerSprite.SPRITE) {
+                // Start the particle system at the player's current position
+                this.weapon.startSystem(500, 0, this.owner.position);
+                this.owner.animation.play(PlayerAnimations.ATTACKING_RIGHT, false, PlayerAnimations.IDLE);
+
+                console.log(SHARED_currentSodaType);
+            }
+            else if (SHARED_currentSodaType === PlayerSprite.FANTA) {
+                console.log("Fanta attacks");
+            }
+            else if (SHARED_currentSodaType === PlayerSprite.COKE) {
+                console.log("Coke attacks");
+            }
         }
         // Switch character
-        if (Input.isPressed(FizzRun_Controls.SWITCH)) {
+        if (Input.isJustPressed(FizzRun_Controls.SWITCH)) {
             this.emitter.fireEvent(FizzRun_Events.PLAYER_SWITCH, {curhp: this.health, maxhp: this.maxHealth});
         }
 
@@ -164,17 +195,17 @@ export default class PlayerController extends StateMachineAI {
         if (this.health === 0) { this.changeState(PlayerStates.DEAD); }
     }
 
-    // public get maxFizz(): number { return this._maxFizz; }
-    // public set maxFizz(maxFizz: number) { 
-    //     this._maxFizz = maxFizz; 
-    //     // When the health changes, fire an event up to the scene.
-    //     this.emitter.fireEvent(FizzRun_Events.FIZZ_CHANGE, {curfizz: this.fizz, maxfizz: this.maxFizz});
-    // }
+    public get maxFizz(): number { return this._maxFizz; }
+    public set maxFizz(maxFizz: number) { 
+        this._maxFizz = maxFizz; 
+        // When the fizz changes, fire an event up to the scene.
+        this.emitter.fireEvent(FizzRun_Events.FIZZ_CHANGE, {curfizz: this.fizz, maxfizz: this.maxFizz});
+    }
 
-    // public get fizz(): number { return this._fizz; }
-    // public set fizz(fizz: number) { 
-    //     this.fizz = MathUtils.clamp(fizz, 0, this.maxFizz);
-    //     // When the health changes, fire an event up to the scene.
-    //     this.emitter.fireEvent(FizzRun_Events.HEALTH_CHANGE, {curfizz: this.fizz, maxfizz: this.maxFizz});
-    // }
+    public get fizz(): number { return this._fizz; }
+    public set fizz(fizz: number) { 
+        this._fizz = MathUtils.clamp(fizz, 0, this.maxFizz);
+        // When the fizz changes, fire an event up to the scene.
+        this.emitter.fireEvent(FizzRun_Events.FIZZ_CHANGE, {curfizz: this.fizz, maxfizz: this.maxFizz});
+    }
 }

@@ -20,6 +20,8 @@ import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import PlayerController, { PlayerTweens } from "../Player/PlayerController";
 import PlayerWeapon from "../Player/PlayerWeapon";
 
+import SugarBehavior from "../Items/SugarBehavior";
+
 import { FizzRun_Events } from "../FizzRun_Events";
 import { FizzRun_PhysicsGroups } from "../FizzRun_PhysicsGroups";
 import FizzRun_FactoryManager from "../Factory/FizzRun_FactoryManager";
@@ -36,6 +38,13 @@ import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import Level1 from "./FizzRun_Level1";
 import SugarBehavior from "../Items/SugarBehavior";
 import MentosBehavior from "../Items/MentosBehavior";
+import MathUtils from "../../Wolfie2D/Utils/MathUtils";
+
+/**
+ * Shared variables for the FizzRun game
+ */
+let SHARED_currentSodaType: String;
+export { SHARED_currentSodaType };
 
 /**
  * A const object for the layer names
@@ -55,6 +64,10 @@ export const FizzRun_Layers = {
 export const FizzRunResourceKeys = {
     SPRITE_LOGO: "SPRITE_LOGO",
     SPRITE_ABILITY: "SPRITE_ABILITY",
+    COKE_LOGO: "COKE_LOGO",
+    COKE_ABILITY: "COKE_ABILITY",
+    FANTA_LOGO: "FANTA_LOGO",
+    FANTA_ABILITY: "FANTA_ABILITY",
     MENTOS: "MENTOS",
 } as const;
 
@@ -65,6 +78,10 @@ export type FizzRun_Layers = typeof FizzRun_Layers[keyof typeof FizzRun_Layers]
  * An abstract HW4 scene class.
  */
 export default abstract class FizzRun_Level extends Scene {
+
+    //SECTION TEMP ACCESS VARIABLES
+    protected currentFizz: number;
+    protected maxFizz: number;
 
     /** Overrride the factory manager */
     public add: FizzRun_FactoryManager;
@@ -78,11 +95,13 @@ export default abstract class FizzRun_Level extends Scene {
     /** The player's spawn position */
     protected playerSpawn: Vec2;
 
+    protected sugarSpriteKey: string;
     /** Powerup spawn positions */
     protected mentosSpawn: Vec2[];
 
     protected sugarrSpriteKey: string;
     protected sugarPOW: Array<AnimatedSprite>;
+    protected sugarpos: Array<Vec2>;
 
     private healthLabel: Label;
 	private healthBar: Label;
@@ -135,7 +154,6 @@ export default abstract class FizzRun_Level extends Scene {
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, {...options, physics: {
-            // TODO configure the collision groups and collision map
             groupNames: ["GROUND", "PLAYER", "WEAPON", "DESTRUCTABLE"],
             collisions: [[0, 1, 1, 0], [1, 0, 0, 1], [1, 0, 0, 1], [0, 1, 1, 0]]
          }});
@@ -189,17 +207,19 @@ export default abstract class FizzRun_Level extends Scene {
         const pauseLayer: Layer = this.uiLayers.get(FizzRun_Layers.PAUSE);
         if (Input.isJustPressed(FizzRun_Controls.PAUSE_GAME)) {
             console.log("PAUSE GAME");
+            //TODO Freeze the nodes and disable user inputs here!
             const pauseMenuIsHidden: boolean = pauseLayer.isHidden();
             pauseLayer.setHidden(!pauseMenuIsHidden);
         }
-        if (!pauseLayer.isHidden()) {
-            if (Input.isJustPressed(FizzRun_Controls.RESTART_GAME)) {
-                this.emitter.fireEvent(FizzRun_Events.RESTART_GAME);
-            }
-            else if (Input.isJustPressed(FizzRun_Controls.MAIN_MENU)) {
-                this.emitter.fireEvent(FizzRun_Events.MAIN_MENU);
-            }
-        }
+        // NOTE Old key inputs used for pause menu
+        // if (!pauseLayer.isHidden()) {
+        //     if (Input.isJustPressed(FizzRun_Controls.RESTART_GAME)) {
+        //         this.emitter.fireEvent(FizzRun_Events.RESTART_GAME);
+        //     }
+        //     else if (Input.isJustPressed(FizzRun_Controls.MAIN_MENU)) {
+        //         this.emitter.fireEvent(FizzRun_Events.MAIN_MENU);
+        //     }
+        // }
         this.handlePlayerPowerUpCollision();
         // Handle all game events
         while (this.receiver.hasNextEvent()) {
@@ -240,7 +260,7 @@ export default abstract class FizzRun_Level extends Scene {
                 break;
             }
             case FizzRun_Events.PLAYER_SWITCH: {
-                this.handleCharSwitch(event.data.get("curhp"), event.data.get("maxhp"));
+                this.handleCharSwitch(event.data.get("curhp"), event.data.get("maxhp"), this.currentFizz, this.maxFizz);
                 break;
             }
             case FizzRun_Events.RESTART_GAME: {
@@ -253,6 +273,10 @@ export default abstract class FizzRun_Level extends Scene {
                 this.sceneManager.changeToScene(MainMenu);
                 break;
             }   
+            case FizzRun_Events.FIZZ_CHANGE: {
+                this.handleFizzChange(event.data.get("curfizz"), event.data.get("maxfizz"));
+                break;
+            }
             // Default: Throw an error! No unhandled events allowed.
             default: {
                 throw new Error(`Unhandled event caught in scene with type ${event.type}`)
@@ -260,11 +284,14 @@ export default abstract class FizzRun_Level extends Scene {
         }
     }
 	public handlePlayerPowerUpCollision(): void {
-		let collisions = 0;
+		for (let sugar of this.sugarPOW) {
+			if(this.player.collisionShape.overlaps(sugar.collisionShape)) {
+				this.emitter.fireEvent(FizzRun_Events.PLAYER_POWERUP, { type: 'sugar', powerId: sugar.id, owner: this.player.id });
 		for (let mentos of this.mentosPool) {
+            // TODO Mentos collision sometimes super big
 			if (mentos.visible && this.player.collisionShape.overlaps(mentos.collisionShape)) {
 				this.emitter.fireEvent(FizzRun_Events.PLAYER_MENTOS_COLLISION, { mentosId: mentos.id, owner: this.player.id });
-				collisions += 1;
+				this.emitter.fireEvent(FizzRun_Events.FIZZ_CHANGE, {curfizz: MathUtils.clamp(this.currentFizz+1, 0, this.maxFizz), maxfizz: this.maxFizz});
 			}
 		}	
 	}
@@ -295,7 +322,6 @@ export default abstract class FizzRun_Level extends Scene {
                     // If the tile is collideable -> check if this particle is colliding with the tile
                     if(tilemap.isTileCollidable(col, row) && this.particleHitTile(tilemap, particle, col, row)){
                         this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: this.tileDestroyedAudioKey, loop: false, holdReference: false });
-                        // TODO Destroy the tile
                         tilemap.setTileAtRowCol(new Vec2(col, row), 0);
                     }
                 }
@@ -313,9 +339,6 @@ export default abstract class FizzRun_Level extends Scene {
      * @returns true of the particle hit the tile; false otherwise
      */
     protected particleHitTile(tilemap: OrthogonalTilemap, particle: Particle, col: number, row: number): boolean {
-        // TODO detect whether a particle hit a tile
-        //if(tilemap.getTileAtRowCol(new Vec2(row, col)) === 1)
-            
         return true;
     }
 
@@ -337,7 +360,7 @@ export default abstract class FizzRun_Level extends Scene {
      * @param maxHealth the maximum health of the player
      */
     protected handleHealthChange(currentHealth: number, maxHealth: number): void {
-        console.log(currentHealth);
+        console.log("current health: " + currentHealth);
 		let unit = this.healthBarBg.size.x / maxHealth;
         
 		this.healthBar.size.set(this.healthBarBg.size.x - unit * (maxHealth - currentHealth), this.healthBarBg.size.y);
@@ -346,16 +369,55 @@ export default abstract class FizzRun_Level extends Scene {
 		this.healthBar.backgroundColor = currentHealth < maxHealth * 1/4 ? Color.RED: currentHealth < maxHealth * 3/4 ? Color.YELLOW : Color.GREEN;
 	}
 
-    protected handleCharSwitch(currentHealth: number, maxHealth: number): void {
+    protected handleFizzChange(currentFizz: number, maxFizz: number): void {
+        console.log("current fizz: " + currentFizz);
+
+        //Temp variable setting
+        this.currentFizz = currentFizz;
+        this.maxFizz = maxFizz;
+
+        let unit = this.fizzBarBg.size.x / maxFizz;
+        
+		this.fizzBar.size.set(this.fizzBarBg.size.x - unit * (maxFizz - currentFizz), this.fizzBarBg.size.y);
+		this.fizzBar.position.set(this.fizzBarBg.position.x - (unit / 2 / this.getViewScale()) * (maxFizz - currentFizz), this.fizzBarBg.position.y);
+
+		this.fizzBar.backgroundColor = new Color(153, 217, 234, 1);
+    }
+
+    protected handleCharSwitch(currentHealth: number, maxHealth: number, currentFizz: number, maxFizz: number): void {
         console.log(this.playerSpriteKey);
         let oldPos = this.player.position;
         this.player.destroy();
 
+        let newSodaLogoKey: string = "";
+        let newSodaAbilityKey: string = "";
         // Switch keys
-        if(this.playerSpriteKey === 'COKE')
+        if (this.playerSpriteKey === 'COKE') {
             this.playerSpriteKey = 'FANTA';
-        else
+            newSodaLogoKey = FizzRunResourceKeys.FANTA_LOGO;
+            newSodaAbilityKey = FizzRunResourceKeys.FANTA_ABILITY;
+        }           
+        else if (this.playerSpriteKey === 'FANTA') {
+            this.playerSpriteKey = 'SPRITE';
+            newSodaLogoKey = FizzRunResourceKeys.SPRITE_LOGO;
+            newSodaAbilityKey = FizzRunResourceKeys.SPRITE_ABILITY;
+        }
+        else {
             this.playerSpriteKey = 'COKE';
+            newSodaLogoKey = FizzRunResourceKeys.COKE_LOGO;  
+            newSodaAbilityKey = FizzRunResourceKeys.COKE_ABILITY; 
+        }
+        //Change logo and ability
+        this.activeSodaIcon.destroy();   
+        this.activeSodaIcon = this.add.sprite(newSodaLogoKey, FizzRun_Layers.UI);
+        this.activeSodaIcon.position.set(45, 20);
+        this.activeSodaIcon.scale.set(0.75, 0.75);     
+        
+        this.activeSkillIcon.destroy();
+        this.activeSkillIcon = this.add.sprite(newSodaAbilityKey, FizzRun_Layers.UI);
+        this.activeSkillIcon.position.set(85, 19);
+        this.activeSkillIcon.scale.set(0.45, 0.45);    
+
 
         this.player = this.add.animatedSprite(this.playerSpriteKey, FizzRun_Layers.PRIMARY);
         this.player.scale.set(0.25, 0.25); 
@@ -403,8 +465,11 @@ export default abstract class FizzRun_Level extends Scene {
             tilemap: "Destructable",
             sodatype: this.playerSpriteKey,
             currHealth: currentHealth,
-            maxHealth: maxHealth
+            maxHealth: maxHealth,
+            currFizz: currentFizz,
+            maxFizz: maxHealth,
         });
+        SHARED_currentSodaType = this.playerSpriteKey;
         this.viewport.follow(this.player);
     }
 
@@ -422,6 +487,7 @@ export default abstract class FizzRun_Level extends Scene {
         // Add pause UI layer
         const pauseLayer: Layer = this.addUILayer(FizzRun_Layers.PAUSE);
         pauseLayer.setHidden(true);
+        //pauseLayer.setDepth(100);
     }
     /**
      * Initializes the tilemaps
@@ -449,9 +515,18 @@ export default abstract class FizzRun_Level extends Scene {
         this.destructable.addPhysics();
         this.destructable.setTrigger("WEAPON", FizzRun_Events.PARTICLE_HIT_DESTRUCT, null);
     }
-
+    // Spawn powerups 
     protected initPowerUpPool(): void {
-        this.mentosPool = new Array(1);
+		for (let i = 0; i < this.sugarPOW.length; i++){
+			this.sugarPOW[i] = this.add.animatedSprite(this.sugarSpriteKey, FizzRun_Layers.PRIMARY);
+			this.sugarPOW[i].addAI(SugarBehavior);
+			this.sugarPOW[i].scale.set(0.2, 0.2);
+
+			let collider = new AABB(Vec2.ZERO, this.sugarPOW[i].sizeWithZoom);
+			this.sugarPOW[i].setCollisionShape(collider);
+
+            this.sugarPOW[i].position = this.sugarpos[i];
+        this.mentosPool = new Array(this.mentosSpawn.length);
 		for (let i = 0; i < this.mentosPool.length; i++){
 			this.mentosPool[i] = this.add.animatedSprite(FizzRunResourceKeys.MENTOS, FizzRun_Layers.PRIMARY);
 
@@ -466,6 +541,7 @@ export default abstract class FizzRun_Level extends Scene {
 
 			// Give them a collision shape
 			let collider = new AABB(Vec2.ZERO, this.mentosPool[i].sizeWithZoom);
+            console.log(collider);
 			this.mentosPool[i].setCollisionShape(collider);
 		}
     }
@@ -483,6 +559,7 @@ export default abstract class FizzRun_Level extends Scene {
 
         this.receiver.subscribe(FizzRun_Events.RESTART_GAME);
         this.receiver.subscribe(FizzRun_Events.MAIN_MENU);
+        this.receiver.subscribe(FizzRun_Events.FIZZ_CHANGE);
     }
     /**
      * Adds in any necessary UI to the game
@@ -528,7 +605,7 @@ export default abstract class FizzRun_Level extends Scene {
         this.activeSodaLabel.font = "Arial";
 
         // Active Soda Icon
-        this.activeSodaIcon = this.add.sprite(FizzRunResourceKeys.SPRITE_LOGO, FizzRun_Layers.UI);
+        this.activeSodaIcon = this.add.sprite(FizzRunResourceKeys.COKE_LOGO, FizzRun_Layers.UI);
         this.activeSodaIcon.position.set(45, 20);
         this.activeSodaIcon.scale.set(0.75, 0.75);
 
@@ -543,7 +620,7 @@ export default abstract class FizzRun_Level extends Scene {
         this.activeSkillLabel.font = "Arial";
 
         // Active Skill Icon
-        this.activeSkillIcon = this.add.sprite(FizzRunResourceKeys.SPRITE_ABILITY, FizzRun_Layers.UI);
+        this.activeSkillIcon = this.add.sprite(FizzRunResourceKeys.COKE_ABILITY, FizzRun_Layers.UI);
         this.activeSkillIcon.position.set(85, 19);
         this.activeSkillIcon.scale.set(0.45, 0.45);
         
@@ -627,6 +704,7 @@ export default abstract class FizzRun_Level extends Scene {
         // restartBtn.onClick = () => {
         //     console.log("hi");
         // };
+        restartBtn.onClickEventId = FizzRun_Events.RESTART_GAME;
 
         // let displayControlsBtn: Button = <Button>this.add.uiElement(
         //     UIElementType.BUTTON,
@@ -654,6 +732,7 @@ export default abstract class FizzRun_Level extends Scene {
                 text: "Main Menu (Press 9)",
             }
         );
+        returnMenuBtn.onClickEventId = FizzRun_Events.MAIN_MENU;
         
         // const pauseBtns: Button[] = [restartBtn, displayControlsBtn, helpBtn, returnMenuBtn];
         const pauseBtns: Button[] = [restartBtn, returnMenuBtn];
@@ -661,6 +740,7 @@ export default abstract class FizzRun_Level extends Scene {
             pauseBtns[i].backgroundColor = new Color(255, 0, 64, 1);
             pauseBtns[i].borderRadius = 0;
             pauseBtns[i].setPadding(new Vec2(50, 10));
+            pauseBtns[i].scale.set(0.25, 0.25);
         }
     }
 
@@ -690,8 +770,6 @@ export default abstract class FizzRun_Level extends Scene {
         // Give the player physics
         this.player.addPhysics(new AABB(this.player.position.clone(), this.player.boundary.getHalfSize().clone()));
         this.player.setGroup("PLAYER");
-
-        // TODO - give the player their flip tween
 
         this.player.tweens.add(PlayerTweens.FLIP, {
             startDelay: 0,
@@ -737,6 +815,7 @@ export default abstract class FizzRun_Level extends Scene {
             currFizz: 1,
             maxFizz: 10,
         });
+        SHARED_currentSodaType = this.playerSpriteKey;
     }
     /**
      * Initializes the viewport
