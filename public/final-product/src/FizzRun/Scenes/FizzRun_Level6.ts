@@ -20,7 +20,13 @@ export const MENTOS_SPAWN_VECS_6: Vec2[] = [];
 
 export const ICE_SPAWN_VECS_6: Vec2[] = [];
 
-export const ROBOT_SPAWN_VECS_6: Vec2[] = [];
+export const ROBOT_SPAWN_VECS_6: Vec2[] = [
+    new Vec2(26, 306),
+    new Vec2(299.2686462402344, 178),
+    new Vec2(398.68603515625, 594),
+    new Vec2(175.7123565673828, 754),
+    new Vec2(353.11773681640625, 754),
+];
 
 export const SIGN_SPAWN_VECS_6: Vec2[] = [];
 

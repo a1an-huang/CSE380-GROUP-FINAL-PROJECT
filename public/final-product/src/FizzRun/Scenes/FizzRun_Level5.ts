@@ -20,7 +20,13 @@ export const MENTOS_SPAWN_VECS_5: Vec2[] = [];
 
 export const ICE_SPAWN_VECS_5: Vec2[] = [];
 
-export const ROBOT_SPAWN_VECS_5: Vec2[] = [];
+export const ROBOT_SPAWN_VECS_5: Vec2[] = [
+    new Vec2(138, 450),
+    new Vec2(104.8570327758789, 178),
+    new Vec2(291.7145690917969, 114),
+    new Vec2(291.7145690917969, 178),
+    new Vec2(204.8270263671875, 994),
+];
 
 export const SIGN_SPAWN_VECS_5: Vec2[] = [];
 
@@ -30,7 +36,7 @@ export const SIGN_WORDS_VECS_5: string[] = [];
 
 export const PLAYER_SPAWN_VEC_5 = new Vec2(228, 350); //OG 120, 740
 
-export const LEVEL_END_AREA_5 = new AABB(new Vec2(224, 232), new Vec2(24, 16));
+export const LEVEL_END_AREA_5 = new AABB(new Vec2(478, 520), new Vec2(12, 16));
 
 export default class Level5 extends FizzRun_Level {
     public static readonly PLAYER_SPAWN = PLAYER_SPAWN_VEC_5;
@@ -149,10 +155,11 @@ export default class Level5 extends FizzRun_Level {
     public startScene(): void {
         super.startScene();
         this.currentLevel = Level5;
-        this.nextLevel = MainMenu;
+        this.nextLevel = Level6;
 
         this.theLevel2Scene = Level2;
         this.theLevel3Scene = Level3;
+        this.theLevel4Scene = Level4;
         this.theLevel5Scene = Level5;
     }
 }
