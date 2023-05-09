@@ -11,41 +11,34 @@ import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import { FizzRunResourceKeys } from "./FizzRun_Level";
 import Level2 from "./FizzRun_Level2";
 import Level3 from "./FizzRun_Level3";
-import Level5 from "./FizzRun_Level5";
+import Level4 from "./FizzRun_Level4";
+import Level6 from "./FizzRun_Level6";
 
-export const SUGAR_SPAWN_VECS_4: Vec2[] = [];
+export const SUGAR_SPAWN_VECS_5: Vec2[] = [];
 
-export const MENTOS_SPAWN_VECS_4: Vec2[] = [];
+export const MENTOS_SPAWN_VECS_5: Vec2[] = [];
 
-export const ICE_SPAWN_VECS_4: Vec2[] = [];
+export const ICE_SPAWN_VECS_5: Vec2[] = [];
 
-export const ROBOT_SPAWN_VECS_4: Vec2[] = [
-    new Vec2(260, 898),
-    new Vec2(536, 825),
-    new Vec2(808, 810),
+export const ROBOT_SPAWN_VECS_5: Vec2[] = [];
 
-    new Vec2(516, 300),
-    new Vec2(516, 300),
-    new Vec2(516, 300),
-];
+export const SIGN_SPAWN_VECS_5: Vec2[] = [];
 
-export const SIGN_SPAWN_VECS_4: Vec2[] = [];
+export const SIGN_SIZE_VECS5: Vec2[] = [];
 
-export const SIGN_SIZE_VECS4: Vec2[] = [];
+export const SIGN_WORDS_VECS_5: string[] = [];
 
-export const SIGN_WORDS_VECS_4: string[] = [];
+export const PLAYER_SPAWN_VEC_5 = new Vec2(228, 350); //OG 120, 740
 
-export const PLAYER_SPAWN_VEC_4 = new Vec2(120, 740); //Temp 581, 320
+export const LEVEL_END_AREA_5 = new AABB(new Vec2(224, 232), new Vec2(24, 16));
 
-export const LEVEL_END_AREA_4 = new AABB(new Vec2(224, 232), new Vec2(24, 16));
-
-export default class Level4 extends FizzRun_Level {
-    public static readonly PLAYER_SPAWN = PLAYER_SPAWN_VEC_4;
+export default class Level5 extends FizzRun_Level {
+    public static readonly PLAYER_SPAWN = PLAYER_SPAWN_VEC_5;
     public static readonly PLAYER_SPRITE_KEY = "COKE";
 
-    public static readonly TILEMAP_KEY = "LEVEL4";
+    public static readonly TILEMAP_KEY = "LEVEL5";
     public static readonly TILEMAP_PATH =
-        "fizzrun_assets/tilemaps/FizzRun_Level4.json";
+        "fizzrun_assets/tilemaps/FizzRun_Level5.json";
     public static readonly TILEMAP_SCALE = new Vec2(2, 2);
     public static readonly DESTRUCTIBLE_LAYER_KEY = "Destructable";
     public static readonly WALLS_LAYER_KEY = "Main";
@@ -66,7 +59,7 @@ export default class Level4 extends FizzRun_Level {
 
     public static readonly SWITCH_AUDIO_KEY = "PLAYER_SWITCH";
 
-    public static readonly LEVEL_END = LEVEL_END_AREA_4;
+    public static readonly LEVEL_END = LEVEL_END_AREA_5;
 
     public constructor(
         viewport: Viewport,
@@ -75,44 +68,44 @@ export default class Level4 extends FizzRun_Level {
         options: Record<string, any>
     ) {
         super(viewport, sceneManager, renderingManager, options);
-        this.levelNumber = 4;
+        this.levelNumber = 5;
         // Set the keys for the different layers of the tilemap
-        this.tilemapKey = Level4.TILEMAP_KEY;
-        this.tilemapScale = Level4.TILEMAP_SCALE;
-        this.destructibleLayerKey = Level4.DESTRUCTIBLE_LAYER_KEY;
-        this.wallsLayerKey = Level4.WALLS_LAYER_KEY;
-        this.obsLayerKey = Level4.OBSTACLE_LAYER_KEY;
-        this.waterLayerKey = Level4.WATER_LAYER_KEY;
+        this.tilemapKey = Level5.TILEMAP_KEY;
+        this.tilemapScale = Level5.TILEMAP_SCALE;
+        this.destructibleLayerKey = Level5.DESTRUCTIBLE_LAYER_KEY;
+        this.wallsLayerKey = Level5.WALLS_LAYER_KEY;
+        this.obsLayerKey = Level5.OBSTACLE_LAYER_KEY;
+        this.waterLayerKey = Level5.WATER_LAYER_KEY;
 
         // Set the key for the player's sprite
-        this.playerSpriteKey = Level4.PLAYER_SPRITE_KEY;
+        this.playerSpriteKey = Level5.PLAYER_SPRITE_KEY;
         // Set the player's spawn
-        this.playerSpawn = Level4.PLAYER_SPAWN;
+        this.playerSpawn = Level5.PLAYER_SPAWN;
 
         //SECTION Set the powerup/enemy pool here
 
         //Set powerup spawn
-        this.sugarSpawn = SUGAR_SPAWN_VECS_4;
-        this.mentosSpawn = MENTOS_SPAWN_VECS_4;
-        this.iceSpawn = ICE_SPAWN_VECS_4;
+        this.sugarSpawn = SUGAR_SPAWN_VECS_5;
+        this.mentosSpawn = MENTOS_SPAWN_VECS_5;
+        this.iceSpawn = ICE_SPAWN_VECS_5;
 
         //Set enemy spawn
-        this.robotSpawn = ROBOT_SPAWN_VECS_4;
+        this.robotSpawn = ROBOT_SPAWN_VECS_5;
 
         //Set sign spawn
-        this.signSpawn = SIGN_SPAWN_VECS_4;
-        this.signSize = SIGN_SIZE_VECS4;
-        this.signWords = SIGN_WORDS_VECS_4;
+        this.signSpawn = SIGN_SPAWN_VECS_5;
+        this.signSize = SIGN_SIZE_VECS5;
+        this.signWords = SIGN_WORDS_VECS_5;
 
         // Music and sound
-        this.levelMusicKey = Level4.LEVEL_MUSIC_KEY;
-        this.jumpAudioKey = Level4.JUMP_AUDIO_KEY;
-        this.deadAudioKey = Level4.DEAD_AUDIO_KEY;
-        this.switchAudioKey = Level4.SWITCH_AUDIO_KEY;
-        this.tileDestroyedAudioKey = Level4.TILE_DESTROYED_KEY;
+        this.levelMusicKey = Level5.LEVEL_MUSIC_KEY;
+        this.jumpAudioKey = Level5.JUMP_AUDIO_KEY;
+        this.deadAudioKey = Level5.DEAD_AUDIO_KEY;
+        this.switchAudioKey = Level5.SWITCH_AUDIO_KEY;
+        this.tileDestroyedAudioKey = Level5.TILE_DESTROYED_KEY;
 
         // Level end size and position
-        this.levelEndPosition = new Vec2(480, 200);
+        this.levelEndPosition = new Vec2(992, 333);
         this.levelEndHalfSize = new Vec2(16, 10).mult(this.tilemapScale);
     }
     /**
@@ -120,7 +113,7 @@ export default class Level4 extends FizzRun_Level {
      */
     public loadScene(): void {
         // Load in the tilemap
-        this.load.tilemap(this.tilemapKey, Level4.TILEMAP_PATH);
+        this.load.tilemap(this.tilemapKey, Level5.TILEMAP_PATH);
         // Load in the player's sprite
         this.load.getSpritesheet("COKE");
         this.load.getSpritesheet("FANTA");
@@ -131,11 +124,11 @@ export default class Level4 extends FizzRun_Level {
         this.load.getSpritesheet(FizzRunResourceKeys.ICE);
         this.load.getSpritesheet(FizzRunResourceKeys.ROBOT);
         // Audio and music
-        this.load.audio(this.levelMusicKey, Level4.LEVEL_MUSIC_PATH);
-        this.load.getAudio(Level4.JUMP_AUDIO_KEY);
-        this.load.getAudio(Level4.DEAD_AUDIO_KEY);
-        this.load.getAudio(Level4.SWITCH_AUDIO_KEY);
-        this.load.getAudio(Level4.TILE_DESTROYED_KEY);
+        this.load.audio(this.levelMusicKey, Level5.LEVEL_MUSIC_PATH);
+        this.load.getAudio(Level5.JUMP_AUDIO_KEY);
+        this.load.getAudio(Level5.DEAD_AUDIO_KEY);
+        this.load.getAudio(Level5.SWITCH_AUDIO_KEY);
+        this.load.getAudio(Level5.TILE_DESTROYED_KEY);
 
         this.load.getImage(FizzRunResourceKeys.SPRITE_LOGO);
         this.load.getImage(FizzRunResourceKeys.SPRITE_ABILITY);
@@ -149,17 +142,17 @@ export default class Level4 extends FizzRun_Level {
 
     public unloadScene(): void {
         this.emitter.fireEvent(GameEventType.STOP_SOUND, {
-            key: Level4.LEVEL_MUSIC_KEY,
+            key: Level5.LEVEL_MUSIC_KEY,
         });
     }
 
     public startScene(): void {
         super.startScene();
-        this.currentLevel = Level4;
-        this.nextLevel = Level5;
+        this.currentLevel = Level5;
+        this.nextLevel = MainMenu;
 
         this.theLevel2Scene = Level2;
         this.theLevel3Scene = Level3;
-        this.theLevel4Scene = Level4;
+        this.theLevel5Scene = Level5;
     }
 }
